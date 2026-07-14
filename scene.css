@@ -1,26 +1,23 @@
 /* ============================================================
-   CARNES HILDEBRANDT — Escena scroll-scrub (bajo el hero)
+   CARNES HILDEBRANDT — Escena cinemática bajo el hero
+   (video en cámara lenta, en bucle)
    ============================================================ */
 
 .scene {
   position: relative;
-  height: 340vh;               /* recorrido del scrub */
-  background: #0d0906;
-}
-.scene-sticky {
-  position: sticky;
-  top: 0;
   height: 100vh;
   height: 100svh;
+  min-height: 560px;
   overflow: hidden;
+  background: #0d0906;
 }
-.scene-canvas {
+.scene-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
-  background: #0d0906;
+  object-fit: cover;
+  object-position: 50% 45%;
 }
 .scene-shade {
   position: absolute;
@@ -30,22 +27,6 @@
     linear-gradient(180deg, rgba(13, 9, 6, .92) 0%, rgba(13, 9, 6, .18) 20%, rgba(13, 9, 6, .12) 58%, rgba(13, 9, 6, .94) 100%),
     radial-gradient(120% 100% at 50% 50%, rgba(13, 9, 6, 0) 55%, rgba(13, 9, 6, .5) 100%);
 }
-
-.scene-load {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  color: rgba(246, 240, 229, .45);
-  transition: opacity .6s ease;
-  pointer-events: none;
-}
-.scene-load.hidden { opacity: 0; }
 
 /* ---------- Frases por fases ---------- */
 .scene-text {
@@ -86,25 +67,7 @@
 }
 .scene-text .btn { margin-top: 26px; }
 
-/* ---------- Indicadores ---------- */
-.scene-hint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 46px;
-  text-align: center;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: .32em;
-  text-transform: uppercase;
-  color: rgba(246, 240, 229, .62);
-  pointer-events: none;
-  animation: hint-float 2.4s ease-in-out infinite;
-}
-@keyframes hint-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(6px); }
-}
+/* ---------- Progreso del bucle ---------- */
 .scene-progress {
   position: absolute;
   left: 50%;
@@ -125,8 +88,6 @@
 }
 
 /* ---------- Modo estático (movimiento reducido) ---------- */
-.scene--static { height: auto; }
-.scene--static .scene-sticky { position: relative; height: min(86vh, 720px); }
 .scene--static .scene-text { display: none; }
 .scene--static .scene-text.scene-static-show {
   display: grid;
@@ -135,7 +96,3 @@
   pointer-events: auto;
 }
 .scene--static .scene-progress { display: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .scene-hint { animation: none; }
-}

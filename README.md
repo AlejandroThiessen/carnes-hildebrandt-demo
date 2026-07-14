@@ -22,18 +22,17 @@ Just double-click `index.html` and it opens in your browser.
 | `main.js` | Small touches: sticky header, mobile menu, scroll animations |
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store section and the cart drawer |
-| `scene.js` / `scene.css` | The scroll-driven "cinema" section under the hero |
-| `frames/steak/` | 96 video frames used by the scroll animation (~4.5 MB) |
+| `scene.js` / `scene.css` | The cinematic slow-motion video section under the hero |
+| `assets/` | The video for that section (~2.8 MB) and its poster frame |
 
-## The scroll animation ("La experiencia Hildebrandt")
+## The cinematic section ("La experiencia Hildebrandt")
 
-Right under the hero there's a pinned full-screen scene: real slow-motion footage of a rib eye being seasoned plays **forward and backward as the visitor scrolls** (the scroll position controls the film, Apple-website style), while three phrases fade through: *el corte → la sazón → tu parrilla*, ending on a "Arma tu pedido" button.
+Right under the hero there's a full-screen scene: real slow-motion footage of a rib eye being salted and seasoned **plays by itself in a loop** (muted, slightly slowed further, with fade in/out so the loop feels intentional). Three phrases fade in and out **timed to the moment of the film** — *el corte → la sazón → tu parrilla* — ending on an "Arma tu pedido" button, plus a thin gold progress line.
 
-- Built with zero libraries: the video was converted to 96 JPEG frames drawn onto a `<canvas>`.
-- Frames lazy-load only when the visitor approaches the section, coarse-first so scrubbing works early.
-- With "reduced motion" enabled in the OS, it collapses to a single static frame (no pinning).
-- Footage: [Pexels video #3128759](https://www.pexels.com/video/sprinkles-of-salt-and-pepper-on-a-raw-rib-eye-steak-3128759/) — Pexels license, free for commercial use, no attribution required. Swap it later for footage shot in the actual shop by replacing the JPGs in `frames/steak/` (f001–f096).
-- Handy while tuning: in the browser console, `CHScene.seek(0.5)` jumps the scene to any point (0–1).
+- Plain `<video autoplay muted loop playsinline>` — no libraries; it only plays while on screen (pauses off-screen to save battery).
+- With "reduced motion" enabled in the OS it shows a still frame instead.
+- Footage: [Pexels video #3128759](https://www.pexels.com/video/sprinkles-of-salt-and-pepper-on-a-raw-rib-eye-steak-3128759/) — Pexels license, free for commercial use, no attribution required. To use the shop's own footage later, replace `assets/experiencia.mp4` (any mp4 works; adjust the `data-center` timings on the three `.scene-text` blocks in `index.html` if the story beats differ).
+- Handy while tuning: in the browser console, `CHScene.seek(0.5)` jumps to any point of the film (0–1), `CHScene.play()` resumes.
 
 ## The online store (no Shopify)
 
