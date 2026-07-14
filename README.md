@@ -22,17 +22,7 @@ Just double-click `index.html` and it opens in your browser.
 | `main.js` | Small touches: sticky header, mobile menu, scroll animations |
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store section and the cart drawer |
-| `scene.js` / `scene.css` | The cinematic slow-motion video section under the hero |
-| `assets/` | The video for that section (~2.8 MB) and its poster frame |
-
-## The cinematic section ("La experiencia Hildebrandt")
-
-Right under the hero there's a full-screen scene: real slow-motion footage of a rib eye being salted and seasoned **plays by itself in a loop** (muted, slightly slowed further, with fade in/out so the loop feels intentional). Three phrases fade in and out **timed to the moment of the film** — *el corte → la sazón → tu parrilla* — ending on an "Arma tu pedido" button, plus a thin gold progress line.
-
-- Plain `<video autoplay muted loop playsinline>` — no libraries; it only plays while on screen (pauses off-screen to save battery).
-- With "reduced motion" enabled in the OS it shows a still frame instead.
-- Footage: [Pexels video #3128759](https://www.pexels.com/video/sprinkles-of-salt-and-pepper-on-a-raw-rib-eye-steak-3128759/) — Pexels license, free for commercial use, no attribution required. To use the shop's own footage later, replace `assets/experiencia.mp4` (any mp4 works; adjust the `data-center` timings on the three `.scene-text` blocks in `index.html` if the story beats differ).
-- Handy while tuning: in the browser console, `CHScene.seek(0.5)` jumps to any point of the film (0–1), `CHScene.play()` resumes.
+> A cinematic slow-motion video section ("La experiencia Hildebrandt") was built and later parked — it lives in the git history (commit `789622f` and earlier) and can be restored anytime, ideally with footage filmed in the actual shop.
 
 ## The online store (no Shopify)
 
