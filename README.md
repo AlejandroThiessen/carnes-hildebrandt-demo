@@ -1,5 +1,10 @@
 # Carnes Hildebrandt — Demo Website
 
+> ## 🔗 [**OPEN THE LIVE SITE →**](https://alejandrothiessen.github.io/carnes-hildebrandt-demo/)
+>
+> **This is the link to show the client:** `https://alejandrothiessen.github.io/carnes-hildebrandt-demo/`
+> The `github.com` page you are reading now is only the source code.
+
 A single-page demo/proposal website for **Carnes Hildebrandt** (boutique de carnes, Cuauhtémoc, Chihuahua). Built as a static site — no frameworks, no build step, nothing to install.
 
 ## How to preview it
