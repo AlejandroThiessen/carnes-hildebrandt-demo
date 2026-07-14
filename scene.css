@@ -18,6 +18,9 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 45%;
+  /* Póster vía background: siempre respeta "cover", incluso en
+     navegadores donde el atributo poster se muestra con bandas. */
+  background: #0d0906 url("assets/experiencia-poster.jpg") center 45% / cover no-repeat;
 }
 .scene-shade {
   position: absolute;

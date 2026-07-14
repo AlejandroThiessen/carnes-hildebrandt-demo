@@ -53,10 +53,10 @@
   if (reduceMotion) {
     wrap.classList.add("scene--static");
     video.removeAttribute("autoplay");
+    video.preload = "none";
     video.pause();
-    var setStill = function () { try { video.currentTime = 12; } catch (e) {} };
-    if (video.readyState >= 1) setStill();
-    else video.addEventListener("loadedmetadata", setStill);
+    // Sin reproducción, el elemento muestra el póster de su
+    // background CSS: un fotograma fijo, sin descargar el video.
     var mid = phases[1] || phases[0];
     if (mid) mid.el.classList.add("scene-static-show");
     return;
