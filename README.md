@@ -22,6 +22,18 @@ Just double-click `index.html` and it opens in your browser.
 | `main.js` | Small touches: sticky header, mobile menu, scroll animations |
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store section and the cart drawer |
+| `scene.js` / `scene.css` | The scroll-driven "cinema" section under the hero |
+| `frames/steak/` | 96 video frames used by the scroll animation (~4.5 MB) |
+
+## The scroll animation ("La experiencia Hildebrandt")
+
+Right under the hero there's a pinned full-screen scene: real slow-motion footage of a rib eye being seasoned plays **forward and backward as the visitor scrolls** (the scroll position controls the film, Apple-website style), while three phrases fade through: *el corte → la sazón → tu parrilla*, ending on a "Arma tu pedido" button.
+
+- Built with zero libraries: the video was converted to 96 JPEG frames drawn onto a `<canvas>`.
+- Frames lazy-load only when the visitor approaches the section, coarse-first so scrubbing works early.
+- With "reduced motion" enabled in the OS, it collapses to a single static frame (no pinning).
+- Footage: [Pexels video #3128759](https://www.pexels.com/video/sprinkles-of-salt-and-pepper-on-a-raw-rib-eye-steak-3128759/) — Pexels license, free for commercial use, no attribution required. Swap it later for footage shot in the actual shop by replacing the JPGs in `frames/steak/` (f001–f096).
+- Handy while tuning: in the browser console, `CHScene.seek(0.5)` jumps the scene to any point (0–1).
 
 ## The online store (no Shopify)
 

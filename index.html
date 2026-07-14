@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="store.css">
+  <link rel="stylesheet" href="scene.css">
 </head>
 <body>
 
@@ -86,6 +87,37 @@
         </div>
       </div>
     </section>
+
+    <!-- ======= ESCENA SCROLL-SCRUB ======= -->
+    <section class="scene" id="experiencia" aria-label="La experiencia Hildebrandt — el video avanza al desplazarte">
+      <div class="scene-sticky">
+        <canvas class="scene-canvas" id="scene-canvas" aria-hidden="true"></canvas>
+        <div class="scene-shade" aria-hidden="true"></div>
+        <p class="scene-load" id="scene-load">Cargando</p>
+        <div class="scene-text" data-center="0.16">
+          <div>
+            <p class="scene-kicker">La experiencia Hildebrandt</p>
+            <h3>Todo empieza con <em>el corte</em></h3>
+            <p class="scene-cap">seleccionado pieza por pieza</p>
+          </div>
+        </div>
+        <div class="scene-text" data-center="0.5">
+          <div>
+            <h3>Sazón <em>en su punto</em></h3>
+            <p class="scene-cap">con las sales y los rubs de la casa</p>
+          </div>
+        </div>
+        <div class="scene-text" data-center="0.86">
+          <div>
+            <h3>Listo para <em>tu parrilla</em></h3>
+            <a class="btn btn-gold" href="#tienda">Arma tu pedido</a>
+          </div>
+        </div>
+        <div class="scene-hint" id="scene-hint">Desliza ↓</div>
+        <div class="scene-progress" aria-hidden="true"><span id="scene-bar"></span></div>
+      </div>
+    </section>
+    <noscript><style>.scene { display: none; }</style></noscript>
 
     <!-- ======= MARQUEE ======= -->
     <div class="marquee" aria-hidden="true">
@@ -392,5 +424,6 @@
 
   <script src="main.js"></script>
   <script src="store.js"></script>
+  <script src="scene.js"></script>
 </body>
 </html>
