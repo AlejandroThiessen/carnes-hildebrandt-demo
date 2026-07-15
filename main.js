@@ -5,13 +5,30 @@
 (function () {
   "use strict";
 
+  // --- Enlaces viejos: el sitio antes era una sola página -----
+  // Anclas guardadas (p. ej. /#tienda) llevan a su nueva página.
+  var LEGACY = {
+    nosotros: "nosotros.html",
+    cortes: "cortes.html",
+    wagyu: "cortes.html#wagyu",
+    tienda: "tienda.html",
+    pedidos: "envios.html",
+    visitanos: "contacto.html"
+  };
+  if (document.body.getAttribute("data-page") === "inicio" && location.hash) {
+    var legacyDest = LEGACY[location.hash.slice(1)];
+    if (legacyDest) location.replace(legacyDest);
+  }
+
   var header = document.querySelector(".site-header");
   var toggle = document.getElementById("nav-toggle");
   var nav = document.getElementById("site-nav");
 
   // --- Header: fondo sólido al hacer scroll -----------------
+  // (en la página 404 el header siempre lleva fondo sólido)
+  var alwaysSolid = document.body.hasAttribute("data-header-solid");
   function onScroll() {
-    header.classList.toggle("scrolled", window.scrollY > 24);
+    header.classList.toggle("scrolled", alwaysSolid || window.scrollY > 24);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();

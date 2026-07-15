@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos y envíos — Carnes Hildebrandt · Cuauhtémoc, Chihuahua</title>
+  <meta name="description" content="Pide por la tienda en línea o por WhatsApp y recibe tus cortes en la boutique de Cuauhtémoc o en tu domicilio — con envíos a toda la República Mexicana. Preguntas frecuentes incluidas.">
+  <meta property="og:title" content="Pedidos y envíos — Carnes Hildebrandt">
+  <meta property="og:description" content="Pide hoy, recíbelo en tu puerta: pedidos por WhatsApp, entrega en tienda o a domicilio y envíos a todo México.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=1200&q=80&auto=format&fit=crop">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23171210'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='%23c69a5e' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="store.css?v=5">
+</head>
+<body data-page="envios">
+
+  <!-- ======= HEADER ======= -->
+  <header class="site-header" id="inicio">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Carnes Hildebrandt — inicio">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 5h12v9H6a3 3 0 0 1-3-3V5z"/>
+          <circle cx="6.3" cy="7.3" r="1.05"/>
+          <rect x="15.6" y="6.1" width="6.4" height="2.7" rx="1.35"/>
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">Carnes Hildebrandt</span>
+          <span class="brand-sub">Boutique de carnes · Cuauhtémoc</span>
+        </span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Navegación principal">
+        <a href="nosotros.html">Nosotros</a>
+        <a href="cortes.html">Cortes</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="guia.html">Guía</a>
+        <a href="envios.html" aria-current="page">Envíos</a>
+        <a href="contacto.html">Visítanos</a>
+        <a class="nav-cta" href="https://wa.me/526251507388?text=Hola%20Carnes%20Hildebrandt%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 8.4c-.3.9-.1 2.1.9 3.4 1 1.3 2.2 2.2 3.6 2.6.6.2 1.3-.1 1.6-.7l.3-.6-1.9-1-.7.7c-.8-.4-1.5-1-2-1.8l.6-.8-1.2-1.8-.6.2c-.3.1-.5.4-.6.8z" fill="currentColor" stroke="none"/></svg>
+          Pedir por WhatsApp
+        </a>
+      </nav>
+
+      <div class="header-tools">
+        <button class="cart-btn" id="cart-btn" aria-label="Abrir carrito de compras">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.7" cy="20" r="1.5" fill="currentColor"/><circle cx="16.6" cy="20" r="1.5" fill="currentColor"/></svg>
+          <span class="cart-count" id="cart-count" hidden>0</span>
+        </button>
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======= ENCABEZADO DE PÁGINA ======= -->
+    <section class="page-hero" style="--ph-img: url('https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=1600&q=75&auto=format&fit=crop')">
+      <div class="container">
+        <p class="eyebrow reveal">Pedidos y envíos</p>
+        <h1 class="reveal delay-1">Pide hoy, <em>recíbelo en tu puerta</em></h1>
+        <p class="page-hero-sub reveal delay-2">
+          Atendemos en tienda, por teléfono y por WhatsApp — y enviamos
+          a toda la República Mexicana.
+        </p>
+      </div>
+    </section>
+
+    <!-- ======= PASOS ======= -->
+    <section class="section section-cream">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Así funciona</p>
+          <h2>Tres pasos <em>y a la parrilla</em></h2>
+        </div>
+        <ol class="steps">
+          <li class="reveal">
+            <span class="step-num">01</span>
+            <h3>Haz tu pedido</h3>
+            <p>Arma tu carrito en la <a href="tienda.html">tienda en línea</a>, o mándanos un WhatsApp y cuéntanos qué se te antoja.</p>
+          </li>
+          <li class="reveal delay-1">
+            <span class="step-num">02</span>
+            <h3>Te asesoramos</h3>
+            <p>Afinamos juntos cada detalle: grosor, maduración, cantidad y hasta el rub que le va a tu corte.</p>
+          </li>
+          <li class="reveal delay-2">
+            <span class="step-num">03</span>
+            <h3>Recíbelo</h3>
+            <p>Pasa a la boutique a recogerlo o recíbelo empacado y refrigerado en la puerta de tu casa.</p>
+          </li>
+        </ol>
+        <div class="perks reveal">
+          <div class="perk">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            Envío a toda la República
+          </div>
+          <div class="perk">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/></svg>
+            Pago en efectivo y con tarjeta
+          </div>
+          <div class="perk">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5.5 6.5l13 11M18.5 6.5l-13 11M12 3l-2 2m2-2l2 2M12 21l-2-2m2 2l2-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Empaque y cadena de frío cuidados
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= PREGUNTAS FRECUENTES ======= -->
+    <section class="section section-bone" id="faq">
+      <div class="container container-narrow">
+        <div class="section-head reveal">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Antes de <em>pedir</em></h2>
+          <p class="section-lead">Lo que más nos preguntan por WhatsApp, respondido de una vez. ¿Falta la tuya? Escríbenos.</p>
+        </div>
+        <div class="faq reveal">
+          <details class="faq-item">
+            <summary>¿Cómo hago un pedido?</summary>
+            <div class="faq-body">
+              <p>Como te quede más cómodo: arma tu carrito en la <a href="tienda.html">tienda en línea</a> y envíanoslo por WhatsApp con un clic, mándanos directamente un <a href="https://wa.me/526251507388" target="_blank" rel="noopener">mensaje de WhatsApp</a>, llámanos o pasa a la boutique.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Hacen envíos fuera de Cuauhtémoc?</summary>
+            <div class="faq-body">
+              <p>Sí — enviamos a toda la República Mexicana. Tu pedido viaja empacado y refrigerado para cuidar la cadena de frío. El costo y el tiempo de entrega dependen del destino y se confirman por WhatsApp al cerrar el pedido.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Si los cortes se venden por peso, ¿cómo sé cuánto voy a pagar?</summary>
+            <div class="faq-body">
+              <p>Los precios de los cortes son por kilogramo y cada pieza se pesa al momento de preparar tu pedido. Por eso el carrito muestra un subtotal estimado, y el total final se confirma contigo por WhatsApp antes de cobrar — sin sorpresas.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Qué formas de pago aceptan?</summary>
+            <div class="faq-body">
+              <p>En la boutique puedes pagar en efectivo o con tarjeta. Para pedidos con envío, la forma de pago se acuerda por WhatsApp al confirmar tu pedido.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Pueden conseguir un corte que no tienen en el mostrador?</summary>
+            <div class="faq-body">
+              <p>Ese es nuestro deporte favorito. Cuéntanos qué buscas — un corte, un grosor, una maduración o una marca en especial — y lo conseguimos por ti.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Siempre tienen Wagyu disponible?</summary>
+            <div class="faq-body">
+              <p>El Wagyu tiene disponibilidad limitada y rotación constante: las piezas cambian semana con semana. <a href="https://wa.me/526251507388?text=Hola%2C%20quiero%20saber%20qu%C3%A9%20cortes%20Wagyu%20tienen%20disponibles" target="_blank" rel="noopener">Pregúntanos por WhatsApp</a> qué hay en el refrigerador esta semana.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Atienden restaurantes, eventos o pedidos grandes?</summary>
+            <div class="faq-body">
+              <p>Cuéntanos qué necesitas — volumen, cortes y fechas — y lo platicamos por WhatsApp para armarte una propuesta a la medida.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= BANDA CTA ======= -->
+    <section class="cta-band">
+      <span class="cta-band-word" aria-hidden="true">ENVÍOS</span>
+      <div class="container cta-band-inner">
+        <div class="reveal">
+          <p class="eyebrow">¿Restaurante, evento o asado grande?</p>
+          <h2 class="on-dark">Armamos tu pedido <em>a la medida</em></h2>
+          <p class="on-dark-muted">Desde el asado familiar hasta el volumen de un restaurante: escríbenos y lo resolvemos juntos.</p>
+        </div>
+        <div class="cta-band-actions reveal delay-1">
+          <a class="btn btn-gold" href="https://wa.me/526251507388?text=Hola%2C%20quiero%20cotizar%20un%20pedido%20grande" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+          <a class="btn btn-ghost" href="tienda.html">Ir a la tienda</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-name">Carnes Hildebrandt</span>
+          <span class="footer-tagline">Si lo que buscas es carne de alta calidad, llegaste para quedarte.</span>
+          <div class="footer-social">
+            <a href="https://www.facebook.com/CarnesHildebrandt/" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-7.2h2.4l.4-2.8h-2.8V9.2c0-.8.3-1.4 1.5-1.4h1.4V5.3c-.6-.1-1.4-.2-2.2-.2-2.3 0-3.9 1.4-3.9 4v1.9H7.9V14h2.3v7z" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.instagram.com/carneshildebrandt/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="16.9" cy="7.1" r="1.15" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@carneshildebrandt" target="_blank" rel="noopener" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.9 5.9 0 0 0-.8-.05 5.75 5.75 0 1 0 5.75 5.75V9.9a7.3 7.3 0 0 0 4 1.2V8a4.3 4.3 0 0 1-2.95-2.2z" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+        <nav class="footer-col" aria-label="Mapa del sitio">
+          <h4>Explora</h4>
+          <div class="footer-links">
+            <a href="nosotros.html">Nosotros</a>
+            <a href="cortes.html">Cortes y productos</a>
+            <a href="tienda.html">Tienda en línea</a>
+            <a href="guia.html">Guía del parrillero</a>
+            <a href="envios.html">Pedidos y envíos</a>
+            <a href="contacto.html">Visítanos</a>
+          </div>
+        </nav>
+        <div class="footer-col">
+          <h4>La boutique</h4>
+          <p>Km 11 Corredor Comercial Menonita,<br>Cuauhtémoc, Chihuahua, México</p>
+          <p>Lunes a sábado · 9:00 – 19:00<br>Domingo · 11:00 – 16:00<sup>*</sup></p>
+          <p><a href="tel:+526251507388">625 150 7388</a> · <a href="https://wa.me/526251507388" target="_blank" rel="noopener">WhatsApp</a></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> Carnes Hildebrandt · Cuauhtémoc, Chihuahua</span>
+        <span class="footer-demo">Sitio de demostración — propuesta de diseño web · datos por confirmar</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======= CARRITO ======= -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+    <header class="cart-head">
+      <h3 id="cart-title">Tu pedido</h3>
+      <button class="cart-close" id="cart-close" aria-label="Cerrar carrito">×</button>
+    </header>
+    <div class="cart-body">
+      <div class="cart-empty" id="cart-empty">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.7" cy="20" r="1.5" fill="currentColor"/><circle cx="16.6" cy="20" r="1.5" fill="currentColor"/></svg>
+        <p>Tu carrito está vacío.</p>
+        <a href="tienda.html" id="cart-empty-link">Explorar la tienda</a>
+      </div>
+      <ul class="cart-items" id="cart-items"></ul>
+    </div>
+    <footer class="cart-foot" id="cart-foot">
+      <div class="cart-delivery" role="radiogroup" aria-label="Tipo de entrega">
+        <label><input type="radio" name="delivery" value="pickup" checked><span>Recoger en tienda</span></label>
+        <label><input type="radio" name="delivery" value="delivery"><span>Envío a domicilio</span></label>
+      </div>
+      <div class="cart-total"><span>Subtotal estimado</span><strong id="cart-subtotal">$0</strong></div>
+      <p class="cart-fine">El total final se confirma por WhatsApp al pesar tus cortes. Precios de demostración.</p>
+      <button class="btn btn-solid cart-submit" id="cart-submit" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 8.4c-.3.9-.1 2.1.9 3.4 1 1.3 2.2 2.2 3.6 2.6.6.2 1.3-.1 1.6-.7l.3-.6-1.9-1-.7.7c-.8-.4-1.5-1-2-1.8l.6-.8-1.2-1.8-.6.2c-.3.1-.5.4-.6.8z" fill="currentColor" stroke="none"/></svg>
+        Enviar pedido por WhatsApp
+      </button>
+    </footer>
+  </aside>
+
+  <!-- ======= FLOTANTES ======= -->
+  <a class="wa-float" href="https://wa.me/526251507388?text=Hola%20Carnes%20Hildebrandt%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" aria-label="Enviar mensaje por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 8.4c-.3.9-.1 2.1.9 3.4 1 1.3 2.2 2.2 3.6 2.6.6.2 1.3-.1 1.6-.7l.3-.6-1.9-1-.7.7c-.8-.4-1.5-1-2-1.8l.6-.8-1.2-1.8-.6.2c-.3.1-.5.4-.6.8z" fill="currentColor" stroke="none"/></svg>
+  </a>
+
+  <div class="demo-ribbon" id="demo-ribbon" role="note">
+    <span>Maqueta de demostración · datos por confirmar</span>
+    <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
+  </div>
+
+  <script src="main.js?v=5"></script>
+  <script src="store.js?v=5"></script>
+</body>
+</html>

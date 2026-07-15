@@ -35,6 +35,7 @@
   border-radius: 999px;
   border: 2px solid rgba(20, 15, 12, .9);
 }
+.cart-count[hidden] { display: none; }
 .cart-count.bump { animation: cart-bump .45s var(--ease-out); }
 @keyframes cart-bump {
   0% { transform: scale(1); }
@@ -76,6 +77,8 @@
   grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
   gap: 24px;
 }
+/* Destacados del inicio: pocas tarjetas que llenan el ancho */
+.store-grid.featured { grid-template-columns: repeat(auto-fit, minmax(min(245px, 100%), 1fr)); }
 .p-card {
   background: var(--paper);
   border: 1px solid rgba(36, 29, 23, .09);

@@ -118,8 +118,11 @@
   var subtotalEl = document.getElementById("cart-subtotal");
   var submitBtn = document.getElementById("cart-submit");
   var emptyLink = document.getElementById("cart-empty-link");
+  var featuredEl = document.getElementById("store-featured");
 
-  if (!grid || !drawer) return;
+  // El carrito vive en todas las páginas; la cuadrícula completa
+  // solo existe en la tienda y los destacados solo en el inicio.
+  if (!drawer || !cartBtn) return;
 
   // --- Tienda: filtros y productos ----------------------------
   function stepperHTML(p, q, small) {
@@ -144,30 +147,38 @@
     return key;
   }
 
+  function productCardHTML(p) {
+    var r = rules(p);
+    return (
+      '<article class="p-card" data-id="' + p.id + '">' +
+        '<div class="p-media"><img src="' + p.img + '" alt="' + p.alt + '" loading="lazy">' +
+          '<span class="p-tag">' + catName(p.cat) + "</span></div>" +
+        '<div class="p-body">' +
+          "<h3>" + p.name + "</h3>" +
+          '<p class="p-price">' + fmt.format(p.price) + " <span>" + priceLabel(p) + "</span></p>" +
+          '<div class="p-actions">' +
+            stepperHTML(p, r.start, false) +
+            '<button type="button" class="p-add" data-id="' + p.id + '">' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6M12 8v5M9.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+              "Agregar" +
+            "</button>" +
+          "</div>" +
+        "</div>" +
+      "</article>"
+    );
+  }
+
   function renderStore() {
     var list = PRODUCTS.filter(function (p) {
       return activeCat === "todos" || p.cat === activeCat;
     });
-    grid.innerHTML = list.map(function (p) {
-      var r = rules(p);
-      return (
-        '<article class="p-card" data-id="' + p.id + '">' +
-          '<div class="p-media"><img src="' + p.img + '" alt="' + p.alt + '" loading="lazy">' +
-            '<span class="p-tag">' + catName(p.cat) + "</span></div>" +
-          '<div class="p-body">' +
-            "<h3>" + p.name + "</h3>" +
-            '<p class="p-price">' + fmt.format(p.price) + " <span>" + priceLabel(p) + "</span></p>" +
-            '<div class="p-actions">' +
-              stepperHTML(p, r.start, false) +
-              '<button type="button" class="p-add" data-id="' + p.id + '">' +
-                '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6M12 8v5M9.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-                "Agregar" +
-              "</button>" +
-            "</div>" +
-          "</div>" +
-        "</article>"
-      );
-    }).join("");
+    grid.innerHTML = list.map(productCardHTML).join("");
+  }
+
+  // Destacados de la página de inicio
+  var FEATURED = ["ribeye-wagyu", "tomahawk", "ribeye-prime"];
+  function renderFeatured() {
+    featuredEl.innerHTML = FEATURED.map(byId).filter(Boolean).map(productCardHTML).join("");
   }
 
   function adjustStepper(stepEl, dir) {
@@ -179,15 +190,17 @@
     valEl.textContent = qtyLabel(p, q);
   }
 
-  filters.addEventListener("click", function (e) {
-    var btn = e.target.closest(".filter-btn");
-    if (!btn) return;
-    activeCat = btn.getAttribute("data-cat");
-    renderFilters();
-    renderStore();
-  });
+  if (filters) {
+    filters.addEventListener("click", function (e) {
+      var btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      activeCat = btn.getAttribute("data-cat");
+      renderFilters();
+      renderStore();
+    });
+  }
 
-  grid.addEventListener("click", function (e) {
+  function onGridClick(e) {
     var minus = e.target.closest(".qs-minus");
     var plus = e.target.closest(".qs-plus");
     var add = e.target.closest(".p-add");
@@ -202,7 +215,9 @@
       add.innerHTML = "✓ Agregado";
       setTimeout(function () { add.classList.remove("added"); add.innerHTML = label; }, 1300);
     }
-  });
+  }
+  if (grid) grid.addEventListener("click", onGridClick);
+  if (featuredEl) featuredEl.addEventListener("click", onGridClick);
 
   // --- Carrito -------------------------------------------------
   function addToCart(id, qty) {
@@ -320,8 +335,9 @@
 
   // --- Init ----------------------------------------------------
   load();
-  renderFilters();
-  renderStore();
+  if (filters) renderFilters();
+  if (grid) renderStore();
+  if (featuredEl) renderFeatured();
   renderCart();
   var radios = drawer.querySelectorAll('input[name="delivery"]');
   for (var i = 0; i < radios.length; i++) radios[i].checked = radios[i].value === delivery;
