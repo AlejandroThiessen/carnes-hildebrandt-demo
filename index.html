@@ -13,8 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
-  <link rel="stylesheet" href="store.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="store.css?v=7">
+  <link rel="stylesheet" href="fx.css?v=7">
 </head>
 <body data-page="inicio">
 
@@ -82,7 +83,13 @@
           <p class="hero-note reveal delay-3"><strong>Pagos en efectivo y con tarjeta</strong> · recoge en la boutique o recibe a domicilio</p>
         </div>
         <figure class="hero-media reveal delay-2">
-          <img src="https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=1000&q=80&auto=format&fit=crop" alt="Corte tomahawk sobre sartén de hierro" fetchpriority="high">
+          <!-- Las tres fotos se turnan solas (fx.js). Sin JavaScript
+               se ve la primera, que es la que carga con prioridad. -->
+          <div class="hero-stack" id="hero-stack">
+            <img class="is-on" src="https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=1000&q=80&auto=format&fit=crop" alt="Corte tomahawk sobre sartén de hierro" fetchpriority="high">
+            <img src="https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=1000&q=80&auto=format&fit=crop" alt="Rib eyes con marmoleo sobre madera" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=1000&q=80&auto=format&fit=crop" alt="Cortes Wagyu con marmoleo intenso" loading="lazy">
+          </div>
           <span class="hero-chip">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
             Envíos a toda la República
@@ -158,6 +165,28 @@
         </div>
         <div class="store-grid featured reveal" id="store-featured"></div>
         <div class="center-cta reveal"><a class="btn btn-solid" href="tienda.html">Ver toda la tienda</a></div>
+      </div>
+    </section>
+
+    <!-- ======= CALCULADORA DE PARRILLADA ======= -->
+    <section class="section section-dark" id="calculadora">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">La pregunta de siempre</p>
+          <h2>¿Cuánta carne <em>para tu asado</em>?</h2>
+          <p class="section-lead">
+            Dinos cuántos son y qué tan parrilleros vienen: calculamos los kilos y te
+            dejamos el carrito armado con lo que recomendamos en el mostrador.
+          </p>
+        </div>
+        <!-- fx.js arma la calculadora aquí dentro -->
+        <div id="grill-calc">
+          <p class="note-muted">
+            La calculadora necesita JavaScript. Si no te aparece,
+            <a href="https://wa.me/526251507388?text=Hola%2C%20%C2%BFcu%C3%A1nta%20carne%20pido%20para%20mi%20asado%3F" target="_blank" rel="noopener">pregúntanos por WhatsApp</a>
+            — es de las dudas que más nos llegan.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -242,6 +271,27 @@
           <img src="https://images.unsplash.com/photo-1551028150-64b9f398f678?w=900&q=75&auto=format&fit=crop" alt="Corte T-bone sobre hielo con cuchillo de carnicero" loading="lazy">
           <figcaption>Foto de muestra — se reemplazará con fotografías propias del local.</figcaption>
         </figure>
+      </div>
+      <!-- Cifras: todas salen de lo que ya cuenta el sitio -->
+      <div class="container">
+        <div class="numbers">
+          <div class="num-item">
+            <span class="num-value" data-count="2021">2021</span>
+            <span class="num-label">Desde la cochera de casa</span>
+          </div>
+          <div class="num-item">
+            <span class="num-value" data-count="32">32</span>
+            <span class="num-label">Estados a los que enviamos</span>
+          </div>
+          <div class="num-item">
+            <span class="num-value" data-count="6">6</span>
+            <span class="num-label">Familias de producto</span>
+          </div>
+          <div class="num-item">
+            <span class="num-value" data-count="2">2</span>
+            <span class="num-label">Orígenes de Wagyu</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -391,7 +441,8 @@
     <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
   </div>
 
-  <script src="main.js?v=6"></script>
-  <script src="store.js?v=6"></script>
+  <script src="main.js?v=7"></script>
+  <script src="store.js?v=7"></script>
+  <script src="fx.js?v=7"></script>
 </body>
 </html>

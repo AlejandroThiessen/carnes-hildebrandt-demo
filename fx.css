@@ -1,0 +1,826 @@
+/* ============================================================
+   CARNES HILDEBRANDT — Capa de efectos y movimiento
+   ------------------------------------------------------------
+   Todo lo "vistoso" vive aquí y en fx.js, separado del diseño
+   base (styles.css / store.css) para poder quitarlo de un tirón:
+   borra las dos líneas de fx.css y fx.js de las páginas y el
+   sitio sigue funcionando igual, solo que sin efectos.
+
+   Nada de esto es indispensable para comprar: si el JavaScript
+   falla o el visitante pide movimiento reducido, todo queda
+   visible y estático.
+   ============================================================ */
+
+:root {
+  --ember: #ff9a3c;             /* naranja brasa (chispas y destellos) */
+  --fx-ring: rgba(166, 52, 70, .55);
+}
+
+/* ============================================================
+   1 · TRANSICIÓN ENTRE PÁGINAS
+   ------------------------------------------------------------
+   El navegador funde una página con la siguiente en lugar del
+   parpadeo en blanco. El encabezado y el botón de WhatsApp se
+   quedan fijos mientras el contenido cambia.
+   ============================================================ */
+@view-transition { navigation: auto; }
+
+@keyframes fx-vt-out {
+  to { opacity: 0; transform: translateY(-14px) scale(.995); }
+}
+@keyframes fx-vt-in {
+  from { opacity: 0; transform: translateY(22px) scale(.995); }
+}
+::view-transition-old(root) {
+  animation: fx-vt-out .3s cubic-bezier(.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: fx-vt-in .48s cubic-bezier(.16, 1, .3, 1) both;
+}
+.site-header { view-transition-name: ch-header; }
+.wa-float { view-transition-name: ch-wa; }
+.cart-drawer, .cart-overlay { view-transition-name: ch-cart; }
+
+/* ============================================================
+   2 · CORTINA DE BIENVENIDA (solo la primera visita por sesión)
+   ------------------------------------------------------------
+   La crea fx.js, así que sin JavaScript nunca aparece y no hay
+   riesgo de dejar la página tapada.
+   ============================================================ */
+html.fx-loading, html.fx-loading body { overflow: hidden; }
+
+.fx-preload {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.fx-pl-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--cream);
+  transition: transform .85s cubic-bezier(.76, 0, .24, 1);
+}
+.fx-pl-top { top: 0; box-shadow: 0 1px 0 rgba(169, 127, 69, .25); }
+.fx-pl-bot { bottom: 0; }
+.fx-preload.done .fx-pl-top { transform: translateY(-101%); }
+.fx-preload.done .fx-pl-bot { transform: translateY(101%); }
+
+.fx-pl-mark {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: opacity .35s ease, transform .5s var(--ease-out);
+}
+.fx-preload.done .fx-pl-mark { opacity: 0; transform: translateY(-10px); }
+.fx-pl-mark svg { width: 54px; height: 54px; fill: var(--red); }
+.fx-pl-mark svg path,
+.fx-pl-mark svg circle,
+.fx-pl-mark svg rect { animation: fx-pl-beat 1.4s ease-in-out infinite; }
+@keyframes fx-pl-beat {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+.fx-pl-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  padding-left: .3em;
+}
+.fx-pl-bar {
+  width: 132px;
+  height: 2px;
+  background: rgba(36, 29, 23, .14);
+  overflow: hidden;
+}
+.fx-pl-bar i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .9s cubic-bezier(.3, 1, .4, 1);
+}
+.fx-preload.fill .fx-pl-bar i { transform: scaleX(1); }
+
+/* ============================================================
+   3 · BARRA DE PROGRESO DE LECTURA
+   ============================================================ */
+.fx-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 110;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--red) 0%, var(--red) 40%, var(--gold) 100%);
+  box-shadow: 0 0 12px rgba(198, 154, 94, .55);
+  pointer-events: none;
+}
+
+/* ============================================================
+   4 · ENCABEZADO QUE SE ENCOGE
+   ============================================================ */
+.site-header { transition: background .35s ease, box-shadow .35s ease, height .35s var(--ease-out); }
+.site-header.scrolled { height: 62px; }
+.site-header .brand-mark,
+.site-header .brand-name,
+.site-header .brand-sub { transition: all .35s var(--ease-out); }
+.site-header.scrolled .brand-mark { width: 25px; height: 25px; }
+.site-header.scrolled .brand-name { font-size: 15px; }
+.site-header.scrolled .brand-sub { opacity: 0; height: 0; overflow: hidden; }
+/* El menú móvil cuelga del borde real del encabezado, sea cual sea su altura */
+@media (max-width: 940px) {
+  .site-nav { top: 100% !important; }
+}
+/* "Pedir por WhatsApp" se partía en dos renglones: el contenedor
+   está topado en 1140 px, así que no cabía a ningún ancho. */
+.nav-cta { white-space: nowrap; }
+@media (min-width: 1181px) {
+  .site-nav { gap: 20px; }
+  .site-nav > a { font-size: 11.5px; letter-spacing: .1em; }
+  .nav-cta { padding: 10px 16px !important; }
+}
+
+/* Entre 941 y 1180 px el menú horizontal no cabía: empujaba el
+   botón del carrito fuera de la pantalla. En esa franja se usa el
+   mismo menú desplegable que en móvil (mismas reglas que
+   styles.css aplica por debajo de 941 px). */
+@media (min-width: 941px) and (max-width: 1180px) {
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 18px 4% 26px;
+    background: var(--paper);
+    border-bottom: 1px solid rgba(169, 127, 69, .35);
+    box-shadow: 0 24px 40px -28px rgba(36, 29, 23, .35);
+  }
+  .site-header.nav-open .site-nav { display: flex; }
+  .site-nav > a { padding: 13px 4px; border-bottom: 1px solid rgba(36, 29, 23, .1); }
+  .nav-cta { margin-top: 16px; justify-content: center; }
+  .nav-toggle { display: flex; }
+}
+
+/* ============================================================
+   5 · CURSOR (solo ratón; nunca en táctil)
+   ------------------------------------------------------------
+   Es un aro que sigue al puntero — el cursor del sistema sigue
+   visible, así que nada se siente "roto".
+   ============================================================ */
+.fx-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1.5px solid var(--fx-ring);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s, width .3s var(--ease-out), height .3s var(--ease-out),
+              margin .3s var(--ease-out), background .3s, border-color .3s;
+  will-change: transform;
+}
+.fx-cursor.on { opacity: 1; }
+.fx-cursor.hot {
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  background: rgba(166, 52, 70, .1);
+  border-color: rgba(166, 52, 70, .75);
+}
+.fx-cursor.press { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.fx-cursor-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--red);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.fx-cursor.hot .fx-cursor-label { opacity: 1; }
+
+/* ============================================================
+   6 · TÍTULOS QUE SUBEN PALABRA POR PALABRA
+   ============================================================ */
+.fx-split .fx-w {
+  display: inline-block;
+  overflow: hidden;
+  padding: .06em .08em .14em 0;
+  margin: -.06em -.08em -.14em 0;
+}
+.fx-split .fx-wi {
+  display: inline-block;
+  transform: translateY(112%) rotate(2.5deg);
+  opacity: 0;
+  transition: transform .95s var(--ease-out), opacity .5s ease;
+}
+.fx-split.fx-in .fx-wi { transform: none; opacity: 1; }
+
+/* ============================================================
+   7 · ENTRADAS ESCALONADAS Y CORTINILLAS DE IMAGEN
+   ============================================================ */
+.fx-stag {
+  opacity: 0;
+  transform: translateY(30px) scale(.985);
+  transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+}
+.fx-stag.fx-in { opacity: 1; transform: none; }
+
+/* La foto sube desde abajo, ampliada, y se asienta. El recorte lo hace
+   este envoltorio: recortar el propio .frame lo volvía invisible también
+   para IntersectionObserver y jamás llegaba a mostrarse. */
+.fx-clip { display: block; overflow: hidden; border-radius: 6px; }
+.fx-clip img {
+  transform: translateY(101%) scale(1.16);
+  transition: transform 1.25s var(--ease-out);
+}
+.fx-in .fx-clip img { transform: none; }
+
+/* Línea que se dibuja bajo el "eyebrow" de cada sección */
+.eyebrow::before { transition: width .8s var(--ease-out) .1s; }
+.fx-split-eyebrow::before { width: 0 !important; }
+.fx-split-eyebrow.fx-in::before { width: 30px !important; }
+
+/* ============================================================
+   8 · HERO — foto que se turna, brillo de brasa y paralaje
+   ============================================================ */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -18%;
+  right: -14%;
+  width: 62vw;
+  height: 62vw;
+  max-width: 900px;
+  max-height: 900px;
+  background: radial-gradient(circle, rgba(255, 154, 60, .2) 0%, rgba(198, 154, 94, .12) 38%, rgba(198, 154, 94, 0) 68%);
+  pointer-events: none;
+  animation: fx-glow 9s ease-in-out infinite;
+}
+@keyframes fx-glow {
+  0%, 100% { transform: scale(1); opacity: .85; }
+  50% { transform: scale(1.13); opacity: 1; }
+}
+
+.hero-stack {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #d8cdbb;
+  box-shadow: 0 30px 60px -34px rgba(36, 29, 23, .45);
+  will-change: transform;
+}
+.hero-stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 0;
+  transform: scale(1.1);
+  transition: opacity 1.4s ease, transform 7s linear;
+}
+.hero-stack img.is-on { opacity: 1; transform: scale(1); }
+/* Destello que barre la foto cada tantos segundos */
+.hero-stack::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -70%;
+  width: 45%;
+  height: 220%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .32), rgba(255, 255, 255, 0));
+  transform: rotate(18deg);
+  animation: fx-sheen 7.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes fx-sheen {
+  0%, 62% { left: -70%; }
+  92%, 100% { left: 130%; }
+}
+.hero-media { perspective: 1000px; }
+@media (max-width: 940px) {
+  .hero-stack { aspect-ratio: 16 / 10; }
+}
+.hero-chip { z-index: 2; animation: fx-float 5s ease-in-out infinite; }
+@keyframes fx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* Encabezado de páginas interiores: la foto de fondo se queda
+   quieta mientras el texto pasa por encima (solo en escritorio,
+   donde los fondos fijos no dan problemas). */
+@media (min-width: 941px) and (hover: hover) {
+  .page-hero { background-attachment: scroll, fixed, scroll; }
+}
+
+/* Puntos de las credenciales: laten uno tras otro */
+.badge-dot { animation: fx-dot 3.4s ease-in-out infinite; }
+.badge-item:nth-child(2) .badge-dot { animation-delay: .4s; }
+.badge-item:nth-child(3) .badge-dot { animation-delay: .8s; }
+.badge-item:nth-child(4) .badge-dot { animation-delay: 1.2s; }
+@keyframes fx-dot {
+  0%, 100% { transform: rotate(45deg) scale(1); background: var(--red); }
+  50% { transform: rotate(45deg) scale(1.5); background: var(--gold); }
+}
+
+/* ============================================================
+   9 · BOTONES — barrido de luz y efecto imán
+   ============================================================ */
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  will-change: transform;
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 55%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent);
+  transform: skewX(-20deg);
+  transition: left .75s var(--ease-out);
+}
+.btn:hover::before { left: 160%; }
+.btn-ghost::before { background: linear-gradient(100deg, transparent, rgba(166, 52, 70, .16), transparent); }
+
+/* Regreso suave a su sitio cuando el puntero se va */
+.p-add, .nav-cta {
+  transition: transform .3s var(--ease-out), background .25s, border-color .25s, color .25s !important;
+  will-change: transform;
+}
+.fx-mag { transition-duration: .12s !important; }
+
+/* El botón de WhatsApp del carrito no debe recortar su icono */
+.cart-submit { overflow: hidden; }
+
+/* ============================================================
+   10 · TARJETAS — inclinación 3D y destello que sigue al ratón
+   ============================================================ */
+.p-card, .cat-tile, .card, .brand-card, .social-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.p-card { position: relative; }
+.p-media::after, .cat-tile::before, .card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%),
+              rgba(255, 246, 230, .5), rgba(255, 246, 230, 0) 62%);
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+}
+.p-card:hover .p-media::after,
+.cat-tile:hover::before,
+.card:hover .card-media::after { opacity: 1; }
+.cat-tile::before { z-index: 1; }
+.cat-tile::after { z-index: 0; }
+.p-tag { z-index: 2; }
+.card-media { position: relative; }
+
+/* La flecha de las categorías empuja hacia adelante */
+.cat-tile .arrow { transition: background .25s, border-color .25s, transform .35s var(--ease-out); }
+.cat-tile:hover .arrow { transform: translateX(4px); }
+
+/* Marco dorado que se dibuja al pasar sobre un producto */
+.p-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: border-color .3s ease;
+  pointer-events: none;
+}
+.p-card:hover::before { border-color: rgba(198, 154, 94, .8); }
+
+/* ============================================================
+   11 · BANDA ROJA — brasas y palabra gigante con paralaje
+   ============================================================ */
+.cta-band { isolation: isolate; }
+.fx-embers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.cta-band-word {
+  z-index: 0;
+  will-change: transform;
+  animation: fx-word-breathe 11s ease-in-out infinite;
+}
+@keyframes fx-word-breathe {
+  0%, 100% { -webkit-text-stroke-color: rgba(246, 240, 229, .16); }
+  50% { -webkit-text-stroke-color: rgba(255, 214, 160, .34); }
+}
+.cta-band-inner { z-index: 2; }
+.wagyu-word { will-change: transform; }
+
+/* Botón dorado de la banda: latido suave para que se note */
+.cta-band .btn-gold { box-shadow: 0 0 0 0 rgba(198, 154, 94, .55); animation: fx-gold-pulse 3.2s ease-out infinite; }
+@keyframes fx-gold-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 226, 178, .5); }
+  70% { box-shadow: 0 0 0 18px rgba(255, 226, 178, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 226, 178, 0); }
+}
+
+/* ============================================================
+   12 · CIFRAS DE LA CASA (contadores)
+   ============================================================ */
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: clamp(46px, 7vw, 72px);
+  padding: clamp(38px, 5vw, 54px) 0 0;
+  border-top: 1px solid rgba(169, 127, 69, .32);
+}
+.num-item { text-align: center; position: relative; }
+.num-item + .num-item::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: rgba(169, 127, 69, .35);
+}
+.num-value {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+.num-value sup { font-size: .45em; color: var(--bronze); top: -.7em; }
+.num-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-mut);
+}
+@media (max-width: 780px) {
+  .numbers { grid-template-columns: 1fr 1fr; gap: 30px 16px; }
+  .num-item:nth-child(3)::before { display: none; }
+}
+
+/* ============================================================
+   13 · CALCULADORA DE PARRILLADA
+   ------------------------------------------------------------
+   La arma fx.js dentro de <div id="grill-calc">. Sin JS, ese
+   div simplemente queda vacío y la sección no estorba.
+   ============================================================ */
+.calc {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(24px, 4vw, 44px);
+  background: var(--paper);
+  border: 1px solid rgba(169, 127, 69, .45);
+  border-radius: 14px;
+  padding: clamp(24px, 3.4vw, 40px);
+  box-shadow: 0 30px 60px -40px rgba(36, 29, 23, .45);
+}
+.calc-field + .calc-field { margin-top: 26px; }
+.calc-field > label,
+.calc-legend {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+.calc-people {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--text-dark);
+}
+.calc-people span { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--text-mut); }
+
+.calc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 30px;
+  margin-top: 8px;
+  background: none;
+  cursor: pointer;
+}
+.calc-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--red) 0 var(--fill, 30%), rgba(36, 29, 23, .16) var(--fill, 30%) 100%);
+}
+.calc-range::-moz-range-track { height: 4px; border-radius: 999px; background: rgba(36, 29, 23, .16); }
+.calc-range::-moz-range-progress { height: 4px; border-radius: 999px; background: var(--red); }
+.calc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 3px solid var(--paper);
+  box-shadow: 0 3px 10px -2px rgba(166, 52, 70, .6);
+  transition: transform .2s var(--ease-out);
+}
+.calc-range::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.calc-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 3px solid var(--paper);
+  box-shadow: 0 3px 10px -2px rgba(166, 52, 70, .6);
+}
+.calc-range:focus-visible { outline: 2px solid var(--red); outline-offset: 6px; border-radius: 999px; }
+
+.calc-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.calc-chip {
+  padding: 9px 17px;
+  background: none;
+  border: 1px solid rgba(36, 29, 23, .22);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: var(--text-mut);
+  cursor: pointer;
+  transition: all .25s var(--ease-out);
+}
+.calc-chip:hover { border-color: var(--red); color: var(--red); transform: translateY(-1px); }
+.calc-chip.on { background: var(--red); border-color: var(--red); color: var(--cream); }
+
+.calc-out {
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border: 1px solid rgba(169, 127, 69, .3);
+  border-radius: 10px;
+  padding: 26px 24px 24px;
+}
+.calc-kg {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(36, 29, 23, .12);
+}
+.calc-kg strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 5vw, 3.4rem);
+  line-height: 1;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+.calc-kg span { font-size: 13px; color: var(--text-mut); }
+.calc-list { margin: 16px 0 0; flex: 1; }
+.calc-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(36, 29, 23, .14);
+  font-size: 14px;
+  color: var(--text-dark);
+  animation: fx-line-in .45s var(--ease-out) both;
+}
+@keyframes fx-line-in {
+  from { opacity: 0; transform: translateX(-8px); }
+}
+.calc-list li b { font-weight: 600; }
+.calc-list li em { font-style: normal; font-size: 12px; color: var(--text-mut); }
+.calc-list li i { font-style: normal; font-weight: 600; color: var(--red-deep); white-space: nowrap; }
+.calc-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 18px;
+  font-size: 13.5px;
+  color: var(--text-mut);
+}
+.calc-total b { font-family: var(--font-display); font-size: 24px; color: var(--text-dark); }
+.calc-out .btn { width: 100%; justify-content: center; margin-top: 16px; }
+.calc-fine { margin-top: 12px; font-size: 11.5px; font-style: italic; line-height: 1.6; color: var(--text-mut); }
+.calc-tip {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: rgba(198, 154, 94, .14);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-mut);
+}
+.calc-tip strong { color: var(--text-dark); }
+@media (max-width: 860px) {
+  .calc { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   14 · AGREGAR AL CARRITO — la foto vuela y avisa
+   ============================================================ */
+.fx-fly {
+  position: fixed;
+  z-index: 140;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 18px 40px -14px rgba(36, 29, 23, .6);
+  pointer-events: none;
+}
+.cart-btn.jolt { animation: fx-jolt .5s var(--ease-out); }
+@keyframes fx-jolt {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.22) rotate(-7deg); }
+  70% { transform: scale(.95) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+
+.fx-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(400px, 90vw);
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(169, 127, 69, .5);
+  border-radius: 999px;
+  box-shadow: 0 18px 44px -18px rgba(36, 29, 23, .55);
+  font-size: 13.5px;
+  color: var(--text-dark);
+  transform: translate(-50%, 130%);
+  opacity: 0;
+  transition: transform .5s var(--ease-out), opacity .35s ease;
+}
+.fx-toast.on { transform: translate(-50%, 0); opacity: 1; }
+.fx-toast .tk {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  background: #3f7d4e;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+}
+.fx-toast b { font-weight: 600; }
+.fx-toast button {
+  margin-left: 4px;
+  padding: 0 2px;
+  background: none;
+  border: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--red);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.fx-toast button:hover { color: var(--red-deep); }
+@media (max-width: 640px) {
+  .fx-toast { bottom: 84px; font-size: 12.5px; }
+}
+
+/* ============================================================
+   15 · LISTÓN DE CORTES QUE REACCIONA AL SCROLL
+   ============================================================ */
+.marquee.fx-js .marquee-track { animation: none; will-change: transform; }
+.marquee { position: relative; }
+.marquee::before, .marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  z-index: 1;
+  pointer-events: none;
+}
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--red-deep), rgba(142, 43, 60, 0)); }
+.marquee::after { right: 0; background: linear-gradient(270deg, var(--red-deep), rgba(142, 43, 60, 0)); }
+
+/* ============================================================
+   16 · DETALLES SUELTOS
+   ============================================================ */
+/* Los enlaces del pie subrayan de izquierda a derecha */
+.footer-links a { position: relative; border-bottom: 0 !important; }
+.footer-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -2px;
+  height: 1px;
+  background: var(--red);
+  transition: right .35s var(--ease-out);
+}
+.footer-links a:hover::after { right: 0; }
+
+/* Filas de la tabla de términos: se tiñen al pasar por encima */
+.temp-table tbody tr { transition: background .25s ease; }
+.temp-table tbody tr:hover { background: rgba(166, 52, 70, .06); }
+.temp-table .dot { box-shadow: 0 0 0 0 rgba(0, 0, 0, .18); transition: transform .25s var(--ease-out); }
+.temp-table tbody tr:hover .dot { transform: scale(1.35); }
+
+/* Preguntas frecuentes: la respuesta se despliega en lugar de saltar */
+.faq-item[open] .faq-body { animation: fx-faq .45s var(--ease-out); }
+@keyframes fx-faq {
+  from { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Números de los pasos: se rellenan al entrar en pantalla */
+.steps li { position: relative; overflow: hidden; }
+.steps li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 100%;
+  height: 2px;
+  background: var(--red);
+  transition: right 1s var(--ease-out) .2s;
+}
+.steps li.fx-in::before { right: 0; }
+
+/* ============================================================
+   17 · MOVIMIENTO REDUCIDO — todo quieto, nada escondido
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .fx-split .fx-wi,
+  .fx-stag { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .fx-clip img { transform: none !important; transition: none !important; }
+  .hero::before,
+  .hero-stack::after,
+  .badge-dot,
+  .hero-chip,
+  .cta-band-word,
+  .cta-band .btn-gold,
+  .fx-pl-mark svg path,
+  .fx-pl-mark svg circle,
+  .fx-pl-mark svg rect { animation: none !important; }
+  .hero-stack img { transition: opacity .3s ease; transform: none !important; }
+  .btn::before { display: none; }
+  .fx-cursor { display: none; }
+  .calc-list li { animation: none; }
+  .steps li::before { display: none; }
+}

@@ -403,6 +403,14 @@
   var radios = drawer.querySelectorAll('input[name="delivery"]');
   for (var i = 0; i < radios.length; i++) radios[i].checked = radios[i].value === delivery;
 
-  // Pequeña API para pruebas / demostraciones
-  window.CHStore = { add: addToCart, open: openCart, close: closeCart };
+  // Pequeña API para pruebas / demostraciones y para la
+  // calculadora de parrillada de fx.js, que arma un carrito
+  // sugerido a partir de este mismo catálogo.
+  window.CHStore = {
+    add: addToCart,
+    open: openCart,
+    close: closeCart,
+    products: PRODUCTS,
+    byId: byId
+  };
 })();

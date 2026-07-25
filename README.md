@@ -19,11 +19,11 @@ The site follows the structure real butcher-shop sites use (home, products, stor
 
 | Page | What's on it |
 |---|---|
-| `index.html` | Storefront home: light hero with "Comprar en línea", shop-by-category tiles, four featured products, how-ordering-works steps, story teaser, sample reviews, map |
+| `index.html` | Storefront home: light hero with "Comprar en línea", shop-by-category tiles, four featured products, the grill calculator, how-ordering-works steps, story teaser + "en números", sample reviews, map |
 | `nosotros.html` | The story (garage → boutique), timeline, values, brands/sourcing |
 | `cortes.html` | The full counter: 6 product categories + the Wagyu showcase (`#wagyu`) |
 | `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=wagyu` etc.), name search, full catalog, WhatsApp checkout |
-| `guia.html` | "Guía del parrillero": which cut for what, doneness temperatures, butcher tips — the blog/SEO role |
+| `guia.html` | "Guía del parrillero": which cut for what, the grill calculator, doneness temperatures, butcher tips — the blog/SEO role |
 | `envios.html` | How ordering works, shipping perks, FAQ (`#faq`), wholesale/event CTA |
 | `contacto.html` | Address, phone/WhatsApp, hours, map, social cards |
 | `404.html` | Custom "not found" page (GitHub Pages serves it automatically) |
@@ -38,10 +38,37 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 | `main.js` | Sticky header, mobile menu, scroll animations, legacy-anchor redirects |
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store grids and the cart drawer |
+| `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
 
 > A cinematic slow-motion video section ("La experiencia Hildebrandt") was built and later parked — it lives in the git history (commit `789622f` and earlier) and can be restored anytime, ideally with footage filmed in the actual shop.
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=7">` in the `<head>` and `<script src="fx.js?v=7"></script>` before `</body>`.
+
+## The motion & effects layer (`fx.css` + `fx.js`)
+
+Everything showy lives in these two files, deliberately kept apart from the base design. **To remove all of it, delete those two lines from the eight HTML pages** — the site keeps working exactly as before, just without the movement. Nothing needed to browse or buy depends on it.
+
+What it adds:
+
+| | |
+|---|---|
+| **Page transitions** | Pages cross-fade into each other instead of flashing white; the header and WhatsApp button stay put. (Chrome/Edge/Safari; Firefox just navigates normally.) |
+| **Welcome curtain** | A brand splash that splits open — once per visit, not on every page |
+| **Headlines** | Every `h1`/`h2` rises into place word by word |
+| **Grids** | Category tiles, product cards, steps, reviews and perks come in one after another instead of as a block |
+| **Photos** | Framed photos rise behind a curtain; the home hero cycles through three shots with a slow zoom and a light sweep |
+| **Product cards** | Tilt in 3D under the cursor with a moving highlight, and a gold frame draws itself on hover |
+| **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears |
+| **Wagyu / closing bands** | Live embers drift up over the red band, and the giant outlined word drifts with the scroll |
+| **Small stuff** | Reading-progress bar, header that shrinks as you scroll, cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the cuts ribbon speeding up with your scroll, counters that count up |
+
+Accessibility and safety nets are built in: with **“reduce motion”** turned on in the operating system, everything is shown immediately and nothing animates; the curtain and the calculator are drawn by JavaScript, so with JS off they simply never appear rather than leaving anything blank; and content is force-revealed if you land mid-page via an anchor or a reload.
+
+## The grill calculator
+
+`index.html` and `guia.html` both carry a **“¿Cuánta carne para tu asado?”** tool (the `<div id="grill-calc">` container; `fx.js` builds it). Pick how many people, how big their appetite, and the style of the cookout, and it works out the kilos, suggests a basket from the real `PRODUCTS` catalog with prices, and fills the cart in one click.
+
+The per-person amounts are the usual butcher rules of thumb — **280 g / 380 g / 550 g** of meat per person for the three appetite levels — plus one bag of charcoal per eight guests. They live in the `HUNGER` and `STYLES` arrays near the bottom of `fx.js`; **have the owners adjust them to what they actually recommend at the counter.**
 
 ## The online store (no Shopify)
 
@@ -67,6 +94,8 @@ Info was gathered from their public Facebook/Instagram/TikTok presence and a pub
 | Products / brands | USDA Prime/Choice, Certified Angus Beef, Wagyu (Japanese & Australian, Stone Axe), Ganadería Revuelta beef, Norson pork, rubs, knives, shipping nationwide, cash & card | ⚠️ From a public review (2024) — confirm current lineup (shown in `nosotros.html`) |
 | "Started in the family garage in 2021" story + timeline | `nosotros.html` and home teaser | ⚠️ From a public review — confirm wording with the family |
 | **Customer reviews** on the home page | Three quotes under "Lo que se dice del mostrador" | 🔴 **Written as placeholders** (labeled as such on the page) — replace with real Facebook/Google reviews before launch |
+| "En números" strip on the home page | 2021 · 32 estados · 6 familias de producto · 2 orígenes de Wagyu | ⚠️ Each figure only restates something the site already claims (founding year, nationwide shipping = Mexico's 32 states, the six store categories, Japanese + Australian Wagyu) — confirm the framing reads right to them |
+| Grill-calculator amounts | 280/380/550 g of meat per person, 1 bag of charcoal per 8 guests | ⚠️ Standard butcher rules of thumb, not theirs — adjust in `HUNGER`/`STYLES` in `fx.js` |
 | Wholesale/"restaurantes y eventos" invitation | `envios.html` FAQ + closing band | ⚠️ Phrased as an invitation to chat, but confirm they want B2B orders |
 | FAQ answers | `envios.html` | ⚠️ Written from what the site already claims — have the owners read them |
 | Social links | facebook.com/CarnesHildebrandt, instagram/tiktok @carneshildebrandt | ✅ Verified handles |
