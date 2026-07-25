@@ -43,7 +43,13 @@
     { id: "chuleta-cerdo", name: "Chuleta de cerdo", cat: "cerdo", price: 160, unit: "kg",
       img: img("photo-1432139555190-58524dae6a55"), alt: "Chuleta de cerdo preparada" },
     { id: "paquete-parrillero", name: "Paquete Parrillero (6 pers.)", cat: "paquetes", price: 1499, unit: "pieza", approx: "surtido de cortes",
-      img: img("photo-1607623814075-e51df1bdc82f"), alt: "Tabla surtida de cortes y embutidos" }
+      img: img("photo-1607623814075-e51df1bdc82f"), alt: "Tabla surtida de cortes y embutidos" },
+    { id: "rub-casa", name: "Rub de la casa", cat: "parrilla", price: 180, unit: "pieza", approx: "frasco 250 g",
+      img: img("photo-1596040033229-a9821ebd058d"), alt: "Especias y chiles para sazonar" },
+    { id: "carbon-encino", name: "Carbón de encino", cat: "parrilla", price: 150, unit: "pieza", approx: "bolsa 3 kg",
+      img: img("photo-1475738972911-5b44ce984c42"), alt: "Fuego de carbón y leña encendido" },
+    { id: "tabla-madera", name: "Tabla de madera para servir", cat: "parrilla", price: 850, unit: "pieza",
+      img: img("photo-1466637574441-749b8f19452f"), alt: "Tabla de madera con cuchillo de cocina" }
   ];
 
   var CATS = [
@@ -52,8 +58,14 @@
     ["wagyu", "Wagyu"],
     ["cerdo", "Cerdo"],
     ["ahumar", "Para ahumar"],
+    ["parrilla", "Para la parrilla"],
     ["paquetes", "Paquetes"]
   ];
+
+  function validCat(key) {
+    for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === key) return true;
+    return false;
+  }
 
   var KG = { step: 0.5, min: 0.5, max: 12, start: 1 };
   var PZ = { step: 1, min: 1, max: 6, start: 1 };
@@ -63,6 +75,7 @@
   var cart = {};              // { productId: qty }
   var delivery = "pickup";    // "pickup" | "delivery"
   var activeCat = "todos";
+  var query = "";             // búsqueda por nombre (solo en la tienda)
 
   var fmt = new Intl.NumberFormat("es-MX", {
     style: "currency", currency: "MXN", maximumFractionDigits: 0
@@ -119,6 +132,10 @@
   var submitBtn = document.getElementById("cart-submit");
   var emptyLink = document.getElementById("cart-empty-link");
   var featuredEl = document.getElementById("store-featured");
+  var searchEl = document.getElementById("store-search");
+  var countEl = document.getElementById("store-count");
+  var noResultsEl = document.getElementById("store-empty");
+  var resetEl = document.getElementById("store-reset");
 
   // El carrito vive en todas las páginas; la cuadrícula completa
   // solo existe en la tienda y los destacados solo en el inicio.
@@ -168,15 +185,34 @@
     );
   }
 
+  // Búsqueda sin acentos: "picana" encuentra "Picaña"
+  function norm(s) {
+    s = String(s).toLowerCase();
+    return s.normalize ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : s;
+  }
+
   function renderStore() {
+    var q = norm(query.trim());
     var list = PRODUCTS.filter(function (p) {
-      return activeCat === "todos" || p.cat === activeCat;
+      var okCat = activeCat === "todos" || p.cat === activeCat;
+      return okCat && (!q || norm(p.name).indexOf(q) !== -1);
     });
     grid.innerHTML = list.map(productCardHTML).join("");
+    if (countEl) {
+      countEl.textContent = list.length === 1 ? "1 producto" : list.length + " productos";
+    }
+    if (noResultsEl) noResultsEl.hidden = list.length > 0;
+  }
+
+  // Mantiene ?cat= en la URL para poder compartir/enlazar categorías
+  function syncCatUrl() {
+    if (!window.history || !history.replaceState) return;
+    var url = location.pathname + (activeCat === "todos" ? "" : "?cat=" + activeCat) + location.hash;
+    history.replaceState(null, "", url);
   }
 
   // Destacados de la página de inicio
-  var FEATURED = ["ribeye-wagyu", "tomahawk", "ribeye-prime"];
+  var FEATURED = ["ribeye-wagyu", "tomahawk", "ribeye-prime", "paquete-parrillero"];
   function renderFeatured() {
     featuredEl.innerHTML = FEATURED.map(byId).filter(Boolean).map(productCardHTML).join("");
   }
@@ -195,6 +231,24 @@
       var btn = e.target.closest(".filter-btn");
       if (!btn) return;
       activeCat = btn.getAttribute("data-cat");
+      syncCatUrl();
+      renderFilters();
+      renderStore();
+    });
+  }
+
+  if (searchEl) {
+    searchEl.addEventListener("input", function () {
+      query = searchEl.value;
+      renderStore();
+    });
+  }
+  if (resetEl) {
+    resetEl.addEventListener("click", function () {
+      query = "";
+      if (searchEl) searchEl.value = "";
+      activeCat = "todos";
+      syncCatUrl();
       renderFilters();
       renderStore();
     });
@@ -335,6 +389,13 @@
 
   // --- Init ----------------------------------------------------
   load();
+  // Enlaces profundos a una categoría: tienda.html?cat=wagyu
+  if (grid) {
+    var catParam = location.search.match(/[?&]cat=([^&]+)/);
+    if (catParam && validCat(decodeURIComponent(catParam[1]))) {
+      activeCat = decodeURIComponent(catParam[1]);
+    }
+  }
   if (filters) renderFilters();
   if (grid) renderStore();
   if (featuredEl) renderFeatured();

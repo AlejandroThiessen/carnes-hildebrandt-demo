@@ -19,10 +19,10 @@ The site follows the structure real butcher-shop sites use (home, products, stor
 
 | Page | What's on it |
 |---|---|
-| `index.html` | Landing page: hero, teasers into every other page, featured store products, sample reviews, map |
+| `index.html` | Storefront home: light hero with "Comprar en línea", shop-by-category tiles, four featured products, how-ordering-works steps, story teaser, sample reviews, map |
 | `nosotros.html` | The story (garage → boutique), timeline, values, brands/sourcing |
 | `cortes.html` | The full counter: 6 product categories + the Wagyu showcase (`#wagyu`) |
-| `tienda.html` | The online store: filters, full catalog, WhatsApp checkout |
+| `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=wagyu` etc.), name search, full catalog, WhatsApp checkout |
 | `guia.html` | "Guía del parrillero": which cut for what, doneness temperatures, butcher tips — the blog/SEO role |
 | `envios.html` | How ordering works, shipping perks, FAQ (`#faq`), wholesale/event CTA |
 | `contacto.html` | Address, phone/WhatsApp, hours, map, social cards |
@@ -47,7 +47,8 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 
 The cart button in the header works on **every** page; the full catalog lives in `tienda.html` and three featured products render on the home page. Checkout goes **through WhatsApp**: the customer picks cuts, adjusts weight (0.5 kg steps) or pieces, and "Enviar pedido por WhatsApp" opens a chat with the shop's number containing the itemized order, estimated subtotal, and pickup/delivery choice. No platform, no fees, no backend.
 
-- **Products & prices** live in the `PRODUCTS` array at the top of `store.js` — names, categories, price per kg/piece, and photos are all edited there. The `FEATURED` array (same file) picks the three home-page products. **All prices in the demo are made up** and marked as such on the page.
+- **Products & prices** live in the `PRODUCTS` array at the top of `store.js` — names, categories, price per kg/piece, and photos are all edited there. The `FEATURED` array (same file) picks the four home-page products. **All prices in the demo are made up** and marked as such on the page — including the "Para la parrilla" items (rub de la casa, carbón, tabla) added to make the store feel complete.
+- Categories are deep-linkable: `tienda.html?cat=res|wagyu|cerdo|ahumar|parrilla|paquetes` opens the store pre-filtered (the home tiles and the cortes-page "Pedir en línea" links use this), and the search box filters by name, accents optional.
 - The cart persists in the visitor's browser (localStorage) across pages and visits.
 - If they later want **online card payments** without Shopify: Mercado Pago (most common in Mexico) or Stripe checkout links can be wired to the same cart — that step needs a business account and a small serverless function, so it's a phase 2.
 
@@ -83,6 +84,8 @@ All images are free-to-use Unsplash stock photos, hot-linked. For the real site,
 ## Changing the look
 
 Open `styles.css` — the first block (`:root`) holds every color and font. Swap those variables and the whole site follows.
+
+The site uses a **light theme** (July 2026 redesign, at the owners' request): cream/warm-white backgrounds, dark text, the oxblood red as the action color and gold as decoration. Heads-up for editors: a few class names survive from the original dark design (`.section-dark`, `.on-dark`, `h2.on-dark`) — they now render as the white accent panel / dark-on-light text, so don't let the names fool you.
 
 ## Suggested next steps to go live
 
