@@ -60,6 +60,8 @@ What it adds:
 | **Product cards** | Tilt in 3D under the cursor with a moving highlight, and a gold frame draws itself on hover |
 | **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears |
 | **Wagyu / closing bands** | Live embers drift up over the red band, and the giant outlined word drifts with the scroll |
+| **Category tiles** | Editorial layout — "Res" and "Paquetes" run double width — and each photo drifts inside its tile as you scroll |
+| **Store page** | The filter/search bar sticks under the header, and cards animate back in each time you filter or search |
 | **Small stuff** | Reading-progress bar, header that shrinks as you scroll, cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the cuts ribbon speeding up with your scroll, counters that count up |
 
 Accessibility and safety nets are built in: with **“reduce motion”** turned on in the operating system, everything is shown immediately and nothing animates; the curtain and the calculator are drawn by JavaScript, so with JS off they simply never appear rather than leaving anything blank; and content is force-revealed if you land mid-page via an anchor or a reload.
@@ -73,6 +75,22 @@ The per-person amounts are the usual butcher rules of thumb — **280 g / 380 g 
 ## The online store (no Shopify)
 
 The cart button in the header works on **every** page; the full catalog lives in `tienda.html` and three featured products render on the home page. Checkout goes **through WhatsApp**: the customer picks cuts, adjusts weight (0.5 kg steps) or pieces, and "Enviar pedido por WhatsApp" opens a chat with the shop's number containing the itemized order, estimated subtotal, and pickup/delivery choice. No platform, no fees, no backend.
+
+### The product sheet (quick view)
+
+Clicking a product photo, its title, or the **“Ver detalle”** button opens a panel with a large photo, what the cut actually is, how to cook it, and a weight stepper that adds straight to the cart. It's built once by `store.js` and reused, so there's no extra markup in the HTML pages.
+
+**When the shop's photo gallery arrives, this is where it goes.** Every product accepts an optional `imgs` array in `store.js`:
+
+```js
+{ id: "ribeye-prime", name: "Rib eye USDA Prime", …,
+  img:  "fotos/ribeye-1.jpg",                       // la de la tarjeta
+  imgs: ["fotos/ribeye-1.jpg",                      // la ficha muestra
+         "fotos/ribeye-2.jpg",                      // miniaturas sola
+         "fotos/ribeye-3.jpg"] },
+```
+
+Add `imgs` and the sheet grows a thumbnail strip by itself; leave it out and it just shows the single `img`. Nothing else needs changing.
 
 - **Products & prices** live in the `PRODUCTS` array at the top of `store.js` — names, categories, price per kg/piece, and photos are all edited there. The `FEATURED` array (same file) picks the four home-page products. **All prices in the demo are made up** and marked as such on the page — including the "Para la parrilla" items (rub de la casa, carbón, tabla) added to make the store feel complete.
 - Categories are deep-linkable: `tienda.html?cat=res|wagyu|cerdo|ahumar|parrilla|paquetes` opens the store pre-filtered (the home tiles and the cortes-page "Pedir en línea" links use this), and the search box filters by name, accents optional.
@@ -96,6 +114,7 @@ Info was gathered from their public Facebook/Instagram/TikTok presence and a pub
 | **Customer reviews** on the home page | Three quotes under "Lo que se dice del mostrador" | 🔴 **Written as placeholders** (labeled as such on the page) — replace with real Facebook/Google reviews before launch |
 | "En números" strip on the home page | 2021 · 32 estados · 6 familias de producto · 2 orígenes de Wagyu | ⚠️ Each figure only restates something the site already claims (founding year, nationwide shipping = Mexico's 32 states, the six store categories, Japanese + Australian Wagyu) — confirm the framing reads right to them |
 | Grill-calculator amounts | 280/380/550 g of meat per person, 1 bag of charcoal per 8 guests | ⚠️ Standard butcher rules of thumb, not theirs — adjust in `HUNGER`/`STYLES` in `fx.js` |
+| Product sheet copy (`desc` / `cook` in `store.js`) | What each cut is and how to cook it | ⚠️ General butchery/cooking knowledge, written by us. A few make claims about *their* products specifically (the house rub's blend, what's inside the Paquete Parrillero) — have them read those two |
 | Wholesale/"restaurantes y eventos" invitation | `envios.html` FAQ + closing band | ⚠️ Phrased as an invitation to chat, but confirm they want B2B orders |
 | FAQ answers | `envios.html` | ⚠️ Written from what the site already claims — have the owners read them |
 | Social links | facebook.com/CarnesHildebrandt, instagram/tiktok @carneshildebrandt | ✅ Verified handles |

@@ -208,16 +208,19 @@
   // ==========================================================
   // 5 · PARALAJE
   // ==========================================================
-  var parY = [], parX = [];
+  var parY = [], parX = [], parVar = [];
   function par(sel, factor, axis) {
     $$(sel).forEach(function (el) {
-      (axis === "x" ? parX : parY).push({ el: el, f: factor });
+      (axis === "x" ? parX : axis === "var" ? parVar : parY).push({ el: el, f: factor });
     });
   }
   if (!CALM) {
     par(".hero-stack", .07);
     par(".cta-band-word", .22, "x");
     par(".wagyu-word", -.18, "x");
+    // Las fotos de las categorías se mueven dentro de su mosaico. Va por
+    // variable CSS y no por transform para no pisar el zoom del hover.
+    par(".cat-tile img", .07, "var");
   }
 
   // ==========================================================
@@ -500,6 +503,13 @@
       p.el.style.transform = "translate(calc(-50% + " + off.toFixed(1) + "px), " +
         (p.el.classList.contains("cta-band-word") ? "-50%" : "0") + ")";
     }
+    for (i = 0; i < parVar.length; i++) {
+      p = parVar[i];
+      r = p.el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) continue;
+      off = clamp((r.top + r.height / 2 - vh / 2) * p.f, -14, 14);
+      p.el.style.setProperty("--py", off.toFixed(1) + "px");
+    }
 
     // Listón: velocidad base + empujón del scroll
     if (marquee && marquee.half) {
@@ -576,18 +586,33 @@
     };
   }
 
-  // El botón "Agregar" de cualquier tarjeta de producto
+  // El botón "Agregar", venga de una tarjeta o de la ficha de producto.
+  // En captura (tercer argumento) porque store.js cierra la ficha al
+  // agregar: si esperáramos al burbujeo, la foto que debe volar ya no
+  // estaría en pantalla.
   doc.addEventListener("click", function (e) {
     var add = e.target.closest ? e.target.closest(".p-add") : null;
     if (!add) return;
     var card = add.closest(".p-card");
-    if (!card) return;
-    var name = $("h3", card);
-    var qty = $(".qs-value", card);
-    flyToCart($("img", card));
+    var sheet = add.closest(".pv");
+    var src = card ? $("img", card) : (sheet ? $("#pv-img") : null);
+    var name = card ? $("h3", card) : (sheet ? $("#pv-title") : null);
+    var qty = card ? $(".qs-value", card) : (sheet ? $(".qs-value", sheet) : null);
+    if (!card && !sheet) return;
+    flyToCart(src);
     say("<b>" + (name ? name.textContent : "Producto") + "</b>" +
         (qty ? " · " + qty.textContent : "") + " en tu pedido", "Ver carrito");
-  });
+  }, true);
+
+  // --- Barra de la tienda pegada bajo el encabezado ------------
+  (function stickyToolbar() {
+    var bar = $(".store-toolbar");
+    if (!bar) return;
+    bar.classList.add("is-sticky");
+    window.addEventListener("scroll", function () {
+      bar.classList.toggle("stuck", bar.getBoundingClientRect().top <= 63);
+    }, { passive: true });
+  })();
 
   // ==========================================================
   // 16 · CALCULADORA DE PARRILLADA
