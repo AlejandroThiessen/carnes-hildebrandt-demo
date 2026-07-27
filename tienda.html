@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tienda en línea — Carnes Hildebrandt · Cuauhtémoc, Chihuahua</title>
-  <meta name="description" content="Arma tu pedido desde casa: cortes finos por kg o por pieza, carrito en línea y pedido por WhatsApp. Recoge en la boutique de Cuauhtémoc o recibe a domicilio.">
+  <meta name="description" content="Arma tu pedido desde casa: sazonadores de la casa, yerba mate y tereré, cuchillería, tablas y todo para la parrilla. Carrito en línea y pedido por WhatsApp, con envíos a toda la República.">
   <meta property="og:title" content="Tienda en línea — Carnes Hildebrandt">
-  <meta property="og:description" content="Elige tus cortes, ajusta el peso y envíanos el pedido por WhatsApp — sin comisiones ni plataformas de por medio.">
+  <meta property="og:description" content="Sazonadores, yerba y tereré, cuchillería, tablas y parrilla. Arma el carrito y envíanos el pedido por WhatsApp — sin comisiones ni plataformas de por medio.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1592686092916-672fa9e86866?w=1200&q=80&auto=format&fit=crop">
+  <meta property="og:image" content="fotos/local-yerba-w.jpg">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f6f0e5'/%3E%3Crect x='2' y='2' width='60' height='60' rx='12' fill='none' stroke='%23c69a5e' stroke-width='3'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='%23a63446' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7">
-  <link rel="stylesheet" href="store.css?v=7">
-  <link rel="stylesheet" href="fx.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="store.css?v=8">
+  <link rel="stylesheet" href="fx.css?v=8">
 </head>
 <body data-page="tienda">
 
@@ -61,13 +61,14 @@
 
   <main>
     <!-- ======= ENCABEZADO DE PÁGINA ======= -->
-    <section class="page-hero" style="--ph-img: url('https://images.unsplash.com/photo-1592686092916-672fa9e86866?w=1600&q=75&auto=format&fit=crop')">
+    <section class="page-hero" style="--ph-img: url('fotos/local-sazon-w.jpg')">
       <div class="container">
         <p class="eyebrow reveal">Tienda en línea</p>
         <h1 class="reveal delay-1">Arma tu pedido <em>desde casa</em></h1>
         <p class="page-hero-sub reveal delay-2">
-          Elige tus cortes por peso o por pieza, arma el carrito y envíanos el pedido por WhatsApp —
-          sin comisiones ni plataformas de por medio. <strong>Precios de demostración.</strong>
+          Sazonadores de la casa, yerba y tereré, cuchillería, tablas y todo para la parrilla:
+          arma el carrito y envíanos el pedido por WhatsApp, sin comisiones ni plataformas de
+          por medio. <strong>Precios de demostración.</strong>
         </p>
       </div>
     </section>
@@ -79,17 +80,24 @@
           <div class="store-filters" id="store-filters" role="group" aria-label="Filtrar productos por categoría"></div>
           <label class="store-search">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <input type="search" id="store-search" placeholder="Buscar un corte…" aria-label="Buscar producto por nombre" autocomplete="off">
+            <input type="search" id="store-search" placeholder="Buscar un producto…" aria-label="Buscar producto por nombre" autocomplete="off">
           </label>
         </div>
         <p class="store-count" id="store-count" aria-live="polite"></p>
         <div class="store-grid" id="store-grid"></div>
         <div class="store-empty" id="store-empty" hidden>
           <p><strong>No encontramos ese producto en la tienda en línea.</strong></p>
-          <p>Pero el mostrador siempre da más de sí — <a href="https://wa.me/526251507388?text=Hola%2C%20busco%20un%20corte%20especial" target="_blank" rel="noopener">pregúntanos por WhatsApp y lo conseguimos por ti</a>.</p>
+          <p>Pero el mostrador siempre da más de sí — <a href="https://wa.me/526251507388?text=Hola%2C%20busco%20un%20producto%20en%20especial" target="_blank" rel="noopener">pregúntanos por WhatsApp y lo conseguimos por ti</a>.</p>
           <p><a href="#tienda" id="store-reset">Ver todos los productos</a></p>
         </div>
-        <p class="store-fine reveal">Los cortes se pesan al preparar tu pedido, por lo que el total final se confirma por WhatsApp antes de cobrar.</p>
+        <div class="store-soon" id="store-soon" hidden>
+          <p><strong>Los cortes todavía no se pueden pedir en línea.</strong> Rib eye, tomahawk, picaña,
+          brisket, cerdo y el refrigerador de Wagyu siguen en la boutique todos los días — pero la carne
+          pide empaque y cadena de frío aparte, así que la estamos dejando para la segunda etapa de la
+          tienda. Mientras tanto,
+          <a href="https://wa.me/526251507388?text=Hola%20Carnes%20Hildebrandt%2C%20quiero%20apartar%20unos%20cortes" target="_blank" rel="noopener">escríbenos por WhatsApp y te los apartamos</a>.</p>
+        </div>
+        <p class="store-fine reveal">Los precios de esta maqueta son de demostración: el total final se confirma por WhatsApp antes de cobrar.</p>
       </div>
     </section>
 
@@ -202,8 +210,8 @@
     <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
   </div>
 
-  <script src="main.js?v=7"></script>
-  <script src="store.js?v=7"></script>
-  <script src="fx.js?v=7"></script>
+  <script src="main.js?v=8"></script>
+  <script src="store.js?v=8"></script>
+  <script src="fx.js?v=8"></script>
 </body>
 </html>

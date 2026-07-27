@@ -330,7 +330,8 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
 }
 .hero-media { perspective: 1000px; }
 @media (max-width: 940px) {
-  .hero-stack { aspect-ratio: 16 / 10; }
+  /* Las fotos del local son verticales; en 16/10 se perdía media toma */
+  .hero-stack { aspect-ratio: 4 / 3; }
 }
 .hero-chip { z-index: 2; animation: fx-float 5s ease-in-out infinite; }
 @keyframes fx-float {
@@ -626,7 +627,36 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
   font-variant-numeric: tabular-nums;
 }
 .calc-kg span { font-size: 13px; color: var(--text-mut); }
-.calc-list { margin: 16px 0 0; flex: 1; }
+/* La calculadora reparte el resultado en dos listas: los cortes, que
+   hoy se apartan en el mostrador, y lo que sí entra al carrito. */
+.calc-sub {
+  margin-top: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+.calc-cuts { flex: 0 0 auto; }
+.calc-cuts li i { color: var(--text-mut); font-size: 11.5px; font-style: italic; font-weight: 500; }
+.calc-wa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 11px 16px;
+  border: 1px solid var(--wa-ink);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--wa-ink);
+  text-decoration: none;
+  transition: all .25s var(--ease-out);
+}
+.calc-wa svg { width: 17px; height: 17px; }
+.calc-wa:hover { background: var(--wa-ink); color: #fff; }
+.calc-list { margin: 10px 0 0; flex: 1; }
 .calc-list li {
   display: flex;
   justify-content: space-between;

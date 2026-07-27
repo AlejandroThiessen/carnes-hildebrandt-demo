@@ -5,86 +5,237 @@
 // el pedido llega itemizado al WhatsApp del negocio, sin
 // plataformas ni comisiones de por medio.
 //
-// PRODUCTOS y PRECIOS son de demostración: edita la lista
-// PRODUCTS de aquí abajo para cambiar el catálogo.
+// La tienda arranca con lo que se empaca y se envía fácil —
+// sazonadores de la casa, yerba y tereré, cuchillería, tablas
+// y todo lo de parrilla. La carne lleva `soon: true`: aparece
+// con su ficha y su foto, pero manda a WhatsApp en vez de al
+// carrito, hasta que estén resueltos empaque y envío en frío.
+//
+// PRECIOS de demostración: edita la lista PRODUCTS de abajo.
 // ============================================================
 
 (function () {
   "use strict";
 
-  var WA_NUMBER = "526251507388"; // ⚠ confirmar con el negocio
+  var WA_NUMBER = "526251507388"; // confirmado: viene impreso en el frasco
 
-  function img(id) {
-    return "https://images.unsplash.com/" + id + "?w=700&q=75&auto=format&fit=crop";
-  }
+  function f(name) { return "fotos/" + name + ".jpg"; }
 
-  // --- Catálogo (demo) ---------------------------------------
+  // --- Catálogo ----------------------------------------------
   // unit: "kg" se vende por peso (pasos de 0.5 kg)
   //       "pieza" se vende por unidad
   //
   // Campos de la ficha (la ventana de detalle):
-  //   desc  — qué es el corte
-  //   cook  — cómo llevarlo a la mesa
-  //   imgs  — OPCIONAL: varias fotos. Cuando lleguen las fotos del
-  //           local, se ponen aquí (["url1","url2",…]) y la ficha
-  //           muestra miniaturas sola. Sin este campo usa `img`.
+  //   desc  — qué es el producto
+  //   cook  — cómo se usa (la etiqueta cambia según la categoría, ver TIPS)
+  //   imgs  — OPCIONAL: varias fotos; la ficha saca sola la tira de
+  //           miniaturas. Sin este campo usa `img`.
+  //   from  — OPCIONAL: el precio es "desde" (varía por modelo/tamaño)
+  //   soon  — OPCIONAL: todavía no se vende en línea. La tarjeta sale
+  //           marcada "Próximamente" y manda a WhatsApp en vez de al
+  //           carrito. Es lo que hoy pasa con la carne: se despacha en
+  //           el mostrador mientras resolvemos empaque y envío en frío.
   var PRODUCTS = [
-    { id: "ribeye-prime", name: "Rib eye USDA Prime", cat: "res", price: 780, unit: "kg",
-      img: img("photo-1603048297172-c92544798d5a"), alt: "Rib eye USDA Prime con marmoleo",
-      desc: "El corte del lomo alto, con el marmoleo más generoso de la vitrina. La grasa infiltrada se derrite durante la cocción y es la que le da jugosidad y sabor sin necesidad de nada más.",
-      cook: "Sartén de hierro o parrilla a fuego alto. Grosor de 3–4 cm, sal de grano al sellar y término medio rojo." },
-    { id: "tomahawk", name: "Tomahawk", cat: "res", price: 1290, unit: "pieza", approx: "aprox. 1.4 kg",
-      img: img("photo-1615937657715-bc7b4b7962c1"), alt: "Corte tomahawk",
-      desc: "Un rib eye al que se le deja el hueso de la costilla largo y limpio. Mismo corte, misma calidad — pero es el que hace voltear a todos cuando sale a la mesa.",
-      cook: "Dos zonas de fuego: sella por fuera y termina en calor indirecto con termómetro. Reposa 8 minutos antes de rebanar." },
-    { id: "newyork-choice", name: "New York USDA Choice", cat: "res", price: 520, unit: "kg",
-      img: img("photo-1592686092916-672fa9e86866"), alt: "Cortes New York con cuchillo de carnicero",
-      desc: "Del lomo bajo, de fibra más apretada que el rib eye y con una capa de grasa en el borde. Más carnoso y menos untuoso: el favorito de quien prefiere morder el corte.",
-      cook: "Fuego alto y directo. Pon el borde de grasa contra la parrilla unos segundos para que dore antes de acostarlo." },
-    { id: "tbone", name: "T-bone", cat: "res", price: 450, unit: "kg",
-      img: img("photo-1551028150-64b9f398f678"), alt: "Corte T-bone sobre hielo",
-      desc: "Dos cortes en una sola pieza: lomo bajo de un lado del hueso y filete del otro. Un corte para compartir, o para quien quiere probar las dos texturas de una vez.",
-      cook: "Calor medio-alto y paciencia: el filete se cocina más rápido, así que ponlo del lado menos caliente de la parrilla." },
-    { id: "picanha", name: "Picaña", cat: "res", price: 420, unit: "kg",
-      img: img("photo-1529692236671-f1f6cf9683ba"), alt: "Picaña asada rebanada",
-      desc: "La tapa del cuadril con su capa de grasa intacta — el corte insignia de la parrilla brasileña. Esa grasa se va derritiendo sobre la carne mientras se asa.",
-      cook: "Grasa hacia abajo primero, a fuego medio, hasta que dore. Rebana siempre contra la fibra." },
-    { id: "arrachera", name: "Arrachera marinada", cat: "res", price: 330, unit: "kg",
-      img: img("photo-1558030006-450675393462"), alt: "Arrachera asada rebanada en tabla",
-      desc: "El clásico del asado norteño: fibra larga y suelta que atrapa la marinada como ningún otro corte. Va lista para poner al fuego.",
-      cook: "Fuego alto y poco tiempo — se cocina en minutos. Rebana en tiras delgadas contra la fibra." },
-    { id: "ribeye-wagyu", name: "Rib eye Wagyu australiano", cat: "wagyu", price: 1980, unit: "kg",
-      img: img("photo-1602470520998-f4a52199a3d6"), alt: "Rib eye Wagyu con marmoleo intenso",
-      desc: "Marmoleo en otra escala: la grasa del Wagyu se derrite a menor temperatura, y por eso se deshace en el paladar. Disponibilidad limitada y rotación constante.",
-      cook: "Menos es más. Fuego medio, sal al final, término inglés a medio y rebanadas delgadas para compartir." },
-    { id: "brisket", name: "Brisket", cat: "ahumar", price: 320, unit: "kg",
-      img: img("photo-1588168333986-5078d3ae3976"), alt: "Brisket con costra sellada",
-      desc: "El pecho de la res: una pieza dura y llena de colágeno que, tras horas de humo bajo, se transforma en la carne más tierna del asador.",
-      cook: "Ahumador a 110 °C, alrededor de una hora por cada 500 g. No te asustes con la meseta de temperatura: es normal." },
-    { id: "costillar-cerdo", name: "Costillar de cerdo", cat: "cerdo", price: 180, unit: "kg",
-      img: img("photo-1544025162-d76694265947"), alt: "Costillar de cerdo BBQ",
-      desc: "Costillar completo, con la carne entre hueso y hueso que es la que todos buscan. Funciona igual de bien con humo que en el horno.",
-      cook: "Calor indirecto de 2 a 3 horas y barniza con salsa en los últimos 20 minutos, para que no se queme el azúcar." },
-    { id: "chuleta-cerdo", name: "Chuleta de cerdo", cat: "cerdo", price: 160, unit: "kg",
-      img: img("photo-1432139555190-58524dae6a55"), alt: "Chuleta de cerdo preparada",
-      desc: "Corte de lomo con hueso, de sabor suave y cocción rápida. El comodín de la parrilla cuando hay niños en la mesa.",
-      cook: "Fuego medio y retírala a 63 °C internos: pasada de término se seca. Un reposo corto y a la mesa." },
-    { id: "paquete-parrillero", name: "Paquete Parrillero (6 pers.)", cat: "paquetes", price: 1499, unit: "pieza", approx: "surtido de cortes",
-      img: img("photo-1607623814075-e51df1bdc82f"), alt: "Tabla surtida de cortes y embutidos",
-      desc: "Un surtido armado por nosotros para que no tengas que decidir: cortes de res, algo de cerdo y acompañamientos, calculado para seis personas.",
-      cook: "Empieza por lo que más tarda y cierra con los cortes de res. Escríbenos si quieres cambiar alguna pieza del paquete." },
-    { id: "rub-casa", name: "Rub de la casa", cat: "parrilla", price: 180, unit: "pieza", approx: "frasco 250 g",
-      img: img("photo-1596040033229-a9821ebd058d"), alt: "Especias y chiles para sazonar",
-      desc: "Nuestra mezcla de sal, especias y chiles secos para sazonar antes del fuego. Pensada para carnes rojas, pero se lleva bien con el cerdo.",
-      cook: "Espolvorea generoso 20 minutos antes de asar, para que la sal alcance a trabajar la superficie." },
-    { id: "carbon-encino", name: "Carbón de encino", cat: "parrilla", price: 150, unit: "pieza", approx: "bolsa 3 kg",
-      img: img("photo-1475738972911-5b44ce984c42"), alt: "Fuego de carbón y leña encendido",
-      desc: "Carbón de encino, que enciende parejo, dura y da una brasa estable — la diferencia entre pelear con el fuego y disfrutar el asado.",
-      cook: "Calcula una bolsa por cada ocho comensales y enciéndelo 30 minutos antes de poner la primera pieza." },
-    { id: "tabla-madera", name: "Tabla de madera para servir", cat: "parrilla", price: 850, unit: "pieza",
-      img: img("photo-1466637574441-749b8f19452f"), alt: "Tabla de madera con cuchillo de cocina",
-      desc: "Tabla de madera maciza para rebanar y llevar el corte directo a la mesa, sin perder los jugos por el camino.",
-      cook: "Lávala a mano y sécala de inmediato. Un poco de aceite mineral cada tanto y te dura años." }
+    // ================= SAZONADORES DE LA CASA =================
+    { id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon", price: 195, unit: "pieza", approx: "frasco 450 g",
+      img: f("sal-parrillera"), imgs: [f("sal-parrillera"), f("sal-parrillera-2"), f("sal-parrillera-bolsa")],
+      alt: "Frasco de Sal Parrillera de Carnes Hildebrandt",
+      desc: "El primer sazonador de la casa. Isaac y Abram empezaron a buscarlo a mediados de 2020: querían una sal pensada para carne de res y salieron meses después con esta mezcla de sal Himalaya, pimienta molida, chile cascabel, ajo y especias. Se elabora artesanalmente aquí, en los campos menonitas de Cuauhtémoc.",
+      cook: "Espolvorea parejo unos 20 minutos antes del fuego, para que la sal alcance a trabajar la superficie del corte. También la tenemos en bolsa de recarga de 1.5 kg." },
+
+    { id: "sal-parrillera-bolsa", name: "Sal Parrillera — recarga 1.5 kg", cat: "sazon", price: 690, unit: "pieza", approx: "bolsa 1.5 kg",
+      img: f("sal-parrillera-bolsa"), imgs: [f("sal-parrillera-bolsa"), f("sal-parrillera")],
+      alt: "Bolsa de recarga de 1.5 kg de Sal Parrillera",
+      desc: "La misma Sal Parrillera del frasco, en bolsa de 1.5 kg. Para quien ya no quiere quedarse a media parrillada — o para quien cocina para mucha gente.",
+      cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor de la estufa." },
+
+    { id: "sweet-bbq-rub", name: "Sweet BBQ Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 450 g",
+      img: f("sweet-bbq-rub"), imgs: [f("sweet-bbq-rub"), f("sweet-bbq-rub-2"), f("sweet-bbq-rub-bolsa")],
+      alt: "Frasco de Sweet BBQ Rub de Carnes Hildebrandt",
+      desc: "Después de unos años con la Sal Parrillera, David quiso un rub enfocado en cerdo: el sabor de unas sweet baby back ribs o de unas alitas. Salió el pork rub que hoy se llama Sweet BBQ Rub — dulce, adictivo y con poca sal, así que es difícil pasarse de sazón.",
+      cook: "Cubre la pieza sin miedo y déjala tomar color en calor indirecto. Como lleva azúcar, barniza y sella al final para que no se queme." },
+
+    { id: "sweet-bbq-rub-bolsa", name: "Sweet BBQ Rub — recarga 1.5 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.5 kg",
+      img: f("sweet-bbq-rub-bolsa"), imgs: [f("sweet-bbq-rub-bolsa"), f("sweet-bbq-rub")],
+      alt: "Bolsa de recarga de 1.5 kg de Sweet BBQ Rub",
+      desc: "El Sweet BBQ Rub en bolsa de 1.5 kg, para ahumadas largas y para quien ya lo adoptó como sazonador de diario.",
+      cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor." },
+
+    { id: "brisket-rub", name: "Brisket Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 450 g",
+      img: f("brisket-rub"), imgs: [f("brisket-rub"), f("brisket-rub-bolsa")],
+      alt: "Frasco de Brisket Rub de Carnes Hildebrandt",
+      desc: "El tercero de la familia, hecho para las piezas que pasan horas en el ahumador. Grano grueso, mucha pimienta y el perfil clásico de Texas — sal y pimienta bien puestas, sin tapar el sabor de la carne.",
+      cook: "Cubre el brisket la noche anterior y déjalo en frío. Al día siguiente, ahumador a 110 °C y paciencia con la meseta de temperatura." },
+
+    { id: "brisket-rub-bolsa", name: "Brisket Rub — recarga 1.5 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.5 kg",
+      img: f("brisket-rub-bolsa"), imgs: [f("brisket-rub-bolsa"), f("brisket-rub")],
+      alt: "Bolsa de recarga de 1.5 kg de Brisket Rub",
+      desc: "Brisket Rub en 1.5 kg. Un brisket entero se lleva buena parte de un frasco, así que esta es la presentación de quien ahúma en serio.",
+      cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor." },
+
+    { id: "sal-ahumada", name: "Sal Ahumada", cat: "sazon", price: 185, unit: "pieza", approx: "frasco 450 g",
+      img: f("sal-ahumada"), imgs: [f("sal-ahumada"), f("sal-ahumada-2")],
+      alt: "Frasco de Sal Ahumada — smoked salt",
+      desc: "Sal ahumada de grano, para dar humo sin prender el ahumador. Es el atajo cuando se antoja ese sabor y la parrillada es entre semana.",
+      cook: "Úsala al final, ya fuera del fuego: el humo se nota más cuando no se cocina encima. También levanta verduras asadas y papas al horno." },
+
+    { id: "salt-pepper", name: "Salt & Pepper", cat: "sazon", price: 175, unit: "pieza", approx: "frasco 450 g",
+      img: f("salt-pepper"), alt: "Frasco de Salt & Pepper — sal de mar y pimienta fresca",
+      desc: "Sal de mar y pimienta molida fresca, en la proporción que usamos en el mostrador. El sazonador de todos los días — el que no falla con nada.",
+      cook: "Para un corte grueso, sazona por los dos lados y por el canto de grasa. Y si vas a rebanar, un poco más al servir." },
+
+    // ================= TERERÉ Y YERBA MATE ====================
+    { id: "yerba-verdeflor", name: "Yerba Verdeflor 500 g", cat: "terere", price: 165, unit: "pieza", approx: "5 sabores",
+      img: f("yerba-verdeflor"),
+      imgs: [f("yerba-verdeflor"), f("yerba-verdeflor-2"), f("yerba-verdeflor-3"), f("yerba-verdeflor-4"), f("yerba-verdeflor-5")],
+      alt: "Paquetes de yerba mate Verdeflor en varios sabores",
+      desc: "Yerba argentina elaborada con palo, compuesta con hierbas. La tenemos en Menta, Manzanilla, Naranja, Hierbas Serranas y Menta con Jengibre — suave y aromática, la puerta de entrada para quien apenas empieza con el mate.",
+      cook: "Dinos el sabor al confirmar el pedido por WhatsApp. Para tereré, agua bien fría y hielo; para mate, agua a 70–80 °C, nunca hirviendo." },
+
+    { id: "yerba-campesino", name: "Yerba Campesino", cat: "terere", price: 185, unit: "pieza", approx: "500 g y 1 kg",
+      img: f("yerba-campesino"),
+      imgs: [f("yerba-campesino"), f("yerba-campesino-2"), f("yerba-campesino-3"), f("yerba-campesino-4"), f("yerba-campesino-5")],
+      alt: "Paquetes de yerba mate Campesino de Paraguay",
+      desc: "Yerba paraguaya, la de sabor más franco del estante. La Clásica viene en 1 kg; las compuestas en 500 g — Burrito y Té Verde, Menta Limón y Cedrón, Refrescante con extra menta, y la Mezcla Maestra con burrito y moringa.",
+      cook: "La Clásica pide tereré bien helado. Dinos cuál quieres al confirmar por WhatsApp y te decimos qué hay en el mostrador ese día." },
+
+    { id: "yerba-cbse", name: "Yerba CBSé 500 g", cat: "terere", price: 195, unit: "pieza", approx: "4 sabores",
+      img: f("yerba-cbse"),
+      imgs: [f("yerba-cbse"), f("yerba-cbse-2"), f("yerba-cbse-3"), f("yerba-cbse-4")],
+      alt: "Paquetes de yerba mate CBSé saborizada",
+      desc: "La saborizada argentina de siempre. Frutos del Bosque y Pomelo para los que van por lo dulce, Guaraná para las tardes que se hacen largas, y Hierbas del Litoral con cedrón, menta y cilantro.",
+      cook: "Va muy bien en tereré con jugo de limón o naranja. Dinos el sabor al confirmar el pedido." },
+
+    { id: "yerba-amanda", name: "Yerba Amanda 500 g", cat: "terere", price: 190, unit: "pieza", approx: "2 sabores",
+      img: f("yerba-amanda"), imgs: [f("yerba-amanda"), f("yerba-amanda-2")],
+      alt: "Paquetes de yerba mate Amanda",
+      desc: "Argentina, de Misiones, envasada en origen. La tenemos en Hierbas Serranas — poleo, peperina y menta — y en Limón, más ligera y cítrica.",
+      cook: "El paquete trae impresos los cuatro pasos para cebar un mate, por si es tu primera vez. Dinos el sabor al confirmar." },
+
+    { id: "yerba-kurupi", name: "Yerba Kurupí 500 g", cat: "terere", price: 175, unit: "pieza", approx: "2 sabores",
+      img: f("yerba-kurupi"), imgs: [f("yerba-kurupi"), f("yerba-kurupi-2")],
+      alt: "Paquetes de yerba mate Kurupí compuesta con hierbas",
+      desc: "Paraguaya, compuesta con hierbas y de las más buscadas para tereré. En Menta y Limón, o en Menta y Boldo si la quieres más herbal.",
+      cook: "Tereré: llena la guampa, hielo hasta arriba y el agua bien fría desde el principio. Dinos el sabor al confirmar." },
+
+    { id: "yerba-playadito", name: "Yerba Playadito 500 g", cat: "terere", price: 185, unit: "pieza",
+      img: f("yerba-playadito"), alt: "Paquete de yerba mate Playadito elaborada con palo",
+      desc: "De Colonia Liebig, Corrientes, cultivada y envasada en origen desde 1926. Con palo y bajo contenido de polvo — suave, pareja, y de las que no amargan aunque te distraigas.",
+      cook: "La favorita para mate de la mañana: agua a 75 °C y no la muevas de más para que aguante muchas cebadas." },
+
+    { id: "mate-guampa", name: "Mate con virola labrada", cat: "terere", price: 890, unit: "pieza", from: true,
+      img: f("mate-guampa"), imgs: [f("mate-guampa"), f("mate-guampa-2"), f("mate-guampa-3")],
+      alt: "Mates con textura de cuero y virola metálica labrada",
+      desc: "Interior de acero, exterior texturizado y una virola metálica labrada en la boca. Los tenemos en negro, gris y terracota — el mate para presumir en la mesa.",
+      cook: "Lávalo a mano, sin detergentes fuertes, y sécalo boca abajo. Si guardas la yerba dentro, se pone rancia: mejor vacío." },
+
+    { id: "mate-termico", name: "Mate térmico con bombilla", cat: "terere", price: 490, unit: "pieza",
+      img: f("mate-termico"),
+      imgs: [f("mate-termico"), f("mate-termico-2"), f("mate-termico-3"), f("mate-termico-4"), f("mate-termico-5")],
+      alt: "Mates térmicos de acero en varios colores con bombilla",
+      desc: "Doble pared de acero, así que el tereré sigue helado y el mate caliente. Viene con bombilla y cepillo de limpieza. Hay en negro, blanco, verde, terracota y acabado madera.",
+      cook: "Enjuaga la bombilla apenas termines — es lo único que de verdad se tapa. Dinos el color al confirmar tu pedido." },
+
+    // ================= CUCHILLERÍA ============================
+    { id: "cuchillo-bulledge", name: "Cuchillos Bull-Edge", cat: "cuchillos", price: 850, unit: "pieza", from: true,
+      img: f("cuchillo-bulledge"),
+      imgs: [f("cuchillo-bulledge"), f("cuchillo-bulledge-2"), f("cuchillo-bulledge-3"),
+             f("cuchillo-bulledge-4"), f("cuchillo-bulledge-5"), f("cuchillo-bulledge-6")],
+      alt: "Cuchillos Bull-Edge de acero damasco y martillado en su exhibidor",
+      desc: "La pared de cuchillos de la boutique: hojas de acero damasco y acero martillado, con mango de madera, hueso o resina. Cada pieza es distinta — hay santoku, chef, deshuesador y carnicero.",
+      cook: "Nunca al lavavajillas y nunca sobre vidrio o mármol: madera o plástico. Un asentador cada tanto y no vuelves a afilar en años." },
+
+    { id: "cuchillos-tramontina", name: "Cuchillería Tramontina profesional", cat: "cuchillos", price: 320, unit: "pieza", from: true,
+      img: f("cuchillos-tramontina"), imgs: [f("cuchillos-tramontina"), f("local-cuchillos-w")],
+      alt: "Cuchillos Tramontina de mango blanco para carnicería",
+      desc: "Los de trabajo: mango blanco antideslizante, hoja flexible y grado profesional. Son los que usamos detrás del mostrador, y hay deshuesador, fileteador y cuchillo de carnicero.",
+      cook: "Aguantan uso diario y afilado frecuente. Lávalos y sécalos de inmediato para que el filo no se pique." },
+
+    { id: "set-churrasco", name: "Juego de cuchillos y trinches para carne", cat: "cuchillos", price: 1290, unit: "pieza", approx: "estuche de madera",
+      img: f("set-churrasco"), imgs: [f("set-churrasco"), f("set-churrasco-3")],
+      alt: "Estuche de madera con cuchillos y trinches para carne",
+      desc: "Estuche de madera con cuchillos y trinches para la mesa, mango de madera. El regalo que siempre cae bien en una casa donde se asa.",
+      cook: "Lávalos a mano y sécalos antes de guardarlos en el estuche, para que la madera no tome humedad." },
+
+    // ================= TABLAS Y MANDILES ======================
+    { id: "tabla-holz", name: "Tabla HOLZ grabada", cat: "tablas", price: 790, unit: "pieza", from: true,
+      img: f("tabla-holz"), imgs: [f("tabla-holz"), f("tabla-holz-2"), f("tabla-holz-3")],
+      alt: "Tablas de madera HOLZ grabadas con Carnes Hildebrandt",
+      desc: "Tablas de madera maciza HOLZ, con vetas contrastadas y el grabado de Carnes Hildebrandt al frente. Hay de varios tamaños, desde la de trabajo hasta la que sale a la mesa con el corte encima.",
+      cook: "Lávala a mano y sécala de inmediato — nunca en remojo. Un poco de aceite mineral cada tanto y te dura años." },
+
+    { id: "mandil-piel", name: "Mandil de piel", cat: "tablas", price: 2200, unit: "pieza",
+      img: f("mandil-piel"), imgs: [f("mandil-piel"), f("mandil-piel-2"), f("mandil-piel-3"), f("mandil-piel-4")],
+      alt: "Mandiles de piel con bolsas y portacuchillos",
+      desc: "Mandil de piel con bolsas al frente, portacuchillos y argolla para el trapo. Correas ajustables. En vino, negro, azul y natural — la piel se va marcando con el uso y cada uno acaba siendo distinto.",
+      cook: "Límpialo con un trapo húmedo y déjalo secar al aire, lejos del calor directo. Una crema para piel de vez en cuando y listo." },
+
+    { id: "molcajete", name: "Molcajete de piedra volcánica", cat: "tablas", price: 890, unit: "pieza", from: true,
+      img: f("molcajete"), imgs: [f("molcajete"), f("molcajete-2")],
+      alt: "Molcajetes de piedra volcánica, redondo y cuadrado",
+      desc: "Piedra volcánica labrada, en redondo y en cuadrado. Para la salsa que acompaña el asado — y porque una salsa molcajeteada sabe distinto, no hay vuelta.",
+      cook: "Cúralo antes de estrenarlo: muele arroz crudo hasta que salga blanco, dos o tres tandas. Después, solo agua y cepillo — nada de jabón." },
+
+    // ================= PARA LA PARRILLA =======================
+    { id: "carbon", name: "Carbón para asar", cat: "parrilla", price: 190, unit: "pieza", approx: "bolsa",
+      img: f("carbon"), imgs: [f("carbon"), f("local-carbon-w")],
+      alt: "Bolsas de carbón natural en el estante de la tienda",
+      desc: "Carbón natural, del que enciende parejo y deja brasa estable — la diferencia entre pelear con el fuego y disfrutar el asado.",
+      cook: "Calcula una bolsa por cada ocho comensales y enciéndelo unos 30 minutos antes de poner la primera pieza." },
+
+    { id: "chips-ahumado", name: "Leña para ahumar", cat: "parrilla", price: 215, unit: "pieza", approx: "bolsa",
+      img: f("chips-ahumado"), alt: "Bolsas de leña en trozo para ahumar",
+      desc: "Madera en trozo para dar humo: manzano para el cerdo y las aves, nogal y mezquite cuando la pieza aguanta un humo más fuerte.",
+      cook: "Remójala 30 minutos y échala sobre la brasa ya hecha. Poca: el humo debe ser azul y ligero, no blanco y espeso." },
+
+    { id: "turbo-fan", name: "Encendedor turbo para brasas", cat: "parrilla", price: 690, unit: "pieza",
+      img: f("turbo-fan"), imgs: [f("turbo-fan"), f("turbo-fan-2")],
+      alt: "Ventilador turbo portátil para encender carbón",
+      desc: "Ventilador de mano recargable: apuntas al carbón y en un par de minutos tienes brasa. Se acabó el cartón, el periódico y el soplar hasta marearse.",
+      cook: "Ráfagas cortas y a distancia — si lo dejas fijo, levanta ceniza. Cárgalo antes de salir al rancho." },
+
+    { id: "sarten-lodge", name: "Sartén de hierro Lodge", cat: "parrilla", price: 890, unit: "pieza", from: true,
+      img: f("sarten-lodge"), imgs: [f("sarten-lodge"), f("sarten-lodge-2")],
+      alt: "Sartenes de hierro fundido Lodge en su empaque",
+      desc: "Hierro fundido curado de fábrica, hecho en Estados Unidos. Aguanta el fuego directo de la parrilla y es lo que da esa costra que un sartén ligero no consigue. Hay de 11 y 12 pulgadas.",
+      cook: "Precaliéntalo bien antes de poner la carne. Después, agua caliente y cepillo, secar al fuego y una capa fina de aceite." },
+
+    { id: "plancha-lodge", name: "Plancha reversible Lodge", cat: "parrilla", price: 1290, unit: "pieza",
+      img: f("plancha-lodge"), imgs: [f("plancha-lodge"), f("plancha-lodge-2")],
+      alt: "Plancha reversible de hierro fundido Lodge",
+      desc: "Dos superficies en una pieza de hierro fundido: lisa de un lado para verduras y huevo, con estrías del otro para marcar el corte. Con canal para la grasa. Sirve sobre la parrilla y sobre la estufa.",
+      cook: "Voltéala según lo que estés haciendo y déjala calentar completa antes de usarla — el hierro tarda, pero luego no se enfría." },
+
+    { id: "kit-parrillero", name: "Kit de asador con estuche", cat: "parrilla", price: 1190, unit: "pieza", approx: "estuche",
+      img: f("kit-parrillero"), imgs: [f("kit-parrillero"), f("set-churrasco-2")],
+      alt: "Estuche con juego de utensilios para asador",
+      desc: "Pinzas, espátula, trinche, brocha y cuchillo con mango de madera, todo en un estuche que se cierra y se lleva. El regalo seguro para el que siempre acaba en el asador.",
+      cook: "Lávalos a mano y sécalos antes de guardarlos: el estuche cerrado con humedad es el enemigo de la madera." },
+
+    // ================= CORTES (PRÓXIMAMENTE) ==================
+    { id: "cortes-res", name: "Cortes de res", cat: "carnes", soon: true,
+      img: f("local-corte"), imgs: [f("local-corte"), f("local-mostrador"), f("local-poster")],
+      alt: "Corte de carne preparado detrás del mostrador",
+      desc: "Rib eye, New York, tomahawk, T-bone, picaña, arrachera — USDA Prime y Choice, Certified Angus Beef y res nacional. Todo eso sigue en el mostrador, todos los días.",
+      cook: "Todavía no en línea: la carne pide empaque y cadena de frío distintos a lo demás, y preferimos abrirlo bien a abrirlo rápido. Mientras tanto, apártala por WhatsApp y la dejamos lista." },
+
+    { id: "cortes-wagyu", name: "Wagyu japonés y australiano", cat: "carnes", soon: true,
+      img: f("local-vitrinas"), imgs: [f("local-vitrinas"), f("local-rebanadora")],
+      alt: "Vitrinas refrigeradas de la boutique",
+      desc: "Un refrigerador dedicado a Wagyu, con disponibilidad limitada y rotación constante. Es la vitrina frente a la que todo mundo se detiene.",
+      cook: "Todavía no en línea. Escríbenos por WhatsApp y te decimos qué piezas hay esta semana antes de que se vayan." },
+
+    { id: "cortes-cerdo", name: "Cerdo y piezas para ahumar", cat: "carnes", soon: true,
+      img: f("local-rebanadora"), imgs: [f("local-rebanadora"), f("local-mostrador"), f("local-corte")],
+      alt: "Rebanadora y área de preparación junto a las vitrinas",
+      desc: "Costillar, chuleta, baby back ribs y las piezas grandes para ahumador: brisket, pecho y costilla. Lo que se cocina despacio y sale a la mesa el domingo.",
+      cook: "Todavía no en línea. Pídelo por WhatsApp con un día de anticipación y lo dejamos preparado y porcionado." },
+
+    { id: "paquetes-parrilleros", name: "Paquetes parrilleros", cat: "carnes", soon: true,
+      img: f("local-angus"), imgs: [f("local-angus"), f("local-poster")],
+      alt: "Cartel de Certified Angus Beef dentro de la boutique",
+      desc: "Surtidos armados por nosotros para que no tengas que decidir: cortes de res, algo de cerdo y acompañamientos, calculados por número de personas.",
+      cook: "Todavía no en línea. Dinos cuántos son por WhatsApp y te armamos el paquete — la calculadora de aquí abajo te da el punto de partida." }
   ];
 
   // Fotos de la ficha: varias si el producto trae `imgs`, si no la suya
@@ -94,13 +245,35 @@
 
   var CATS = [
     ["todos", "Todos"],
-    ["res", "Res"],
-    ["wagyu", "Wagyu"],
-    ["cerdo", "Cerdo"],
-    ["ahumar", "Para ahumar"],
+    ["sazon", "Sazonadores"],
+    ["terere", "Tereré y yerba"],
+    ["cuchillos", "Cuchillería"],
+    ["tablas", "Tablas y mandiles"],
     ["parrilla", "Para la parrilla"],
-    ["paquetes", "Paquetes"]
+    ["carnes", "Cortes"]
   ];
+
+  // El encabezado del consejo en la ficha: "En la parrilla" solo tiene
+  // sentido para la carne y el carbón, no para una yerba o una tabla.
+  var TIPS = {
+    sazon: "Cómo usarlo",
+    terere: "Cómo prepararlo",
+    cuchillos: "Cuidados",
+    tablas: "Cuidados",
+    parrilla: "En la parrilla",
+    carnes: "Mientras tanto"
+  };
+
+  function tipLabel(p) { return TIPS[p.cat] || "Cómo usarlo"; }
+
+  // Mensaje de WhatsApp para lo que todavía no se vende en línea
+  function waLink(text) {
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
+  }
+  function soonLink(p) {
+    return waLink("Hola Carnes Hildebrandt 👋 Vi \"" + p.name +
+      "\" en el sitio y dice que todavía no está en línea. ¿Me apartan?");
+  }
 
   function validCat(key) {
     for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === key) return true;
@@ -132,6 +305,9 @@
   }
   function priceLabel(p) {
     return p.unit === "kg" ? "/ kg" : "/ pieza" + (p.approx ? " · " + p.approx : "");
+  }
+  function priceHTML(p) {
+    return (p.from ? "desde " : "") + fmt.format(p.price) + " <span>" + priceLabel(p) + "</span>";
   }
   function clampQty(p, q) {
     var r = rules(p);
@@ -176,6 +352,7 @@
   var countEl = document.getElementById("store-count");
   var noResultsEl = document.getElementById("store-empty");
   var resetEl = document.getElementById("store-reset");
+  var soonEl = document.getElementById("store-soon");
 
   // El carrito vive en todas las páginas; la cuadrícula completa
   // solo existe en la tienda y los destacados solo en el inicio.
@@ -204,19 +381,33 @@
     return key;
   }
 
+  var WA_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 8.4c-.3.9-.1 2.1.9 3.4 1 1.3 2.2 2.2 3.6 2.6.6.2 1.3-.1 1.6-.7l.3-.6-1.9-1-.7.7c-.8-.4-1.5-1-2-1.8l.6-.8-1.2-1.8-.6.2c-.3.1-.5.4-.6.8z" fill="currentColor" stroke="none"/></svg>';
+
   function productCardHTML(p) {
     var r = rules(p);
-    return (
-      '<article class="p-card" data-id="' + p.id + '">' +
-        '<div class="p-media"><img src="' + p.img + '" alt="' + p.alt + '" loading="lazy">' +
-          '<span class="p-tag">' + catName(p.cat) + "</span>" +
-          '<button type="button" class="p-view" data-id="' + p.id + '" aria-label="Ver detalle de ' + p.name + '">' +
-            '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.5 15.5L21 21M10.5 7.6v5.8M7.6 10.5h5.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>' +
-            "<span>Ver detalle</span>" +
-          "</button></div>" +
-        '<div class="p-body">' +
+    var media =
+      '<div class="p-media"><img src="' + p.img + '" alt="' + p.alt + '" loading="lazy">' +
+        '<span class="p-tag">' + catName(p.cat) + "</span>" +
+        (p.soon ? '<span class="p-soon">Próximamente en línea</span>' : "") +
+        '<button type="button" class="p-view" data-id="' + p.id + '" aria-label="Ver detalle de ' + p.name + '">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.5 15.5L21 21M10.5 7.6v5.8M7.6 10.5h5.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>' +
+          "<span>Ver detalle</span>" +
+        "</button></div>";
+
+    // Lo que aún no se vende en línea no lleva precio ni carrito:
+    // la tarjeta lleva directo a WhatsApp para apartarlo.
+    var body = p.soon
+      ? '<div class="p-body">' +
           "<h3>" + p.name + "</h3>" +
-          '<p class="p-price">' + fmt.format(p.price) + " <span>" + priceLabel(p) + "</span></p>" +
+          '<p class="p-price p-price-soon">En el mostrador <span>· por WhatsApp</span></p>' +
+          '<div class="p-actions">' +
+            '<a class="p-ask" href="' + soonLink(p) + '" target="_blank" rel="noopener">' +
+              WA_ICON + "Apartar por WhatsApp</a>" +
+          "</div>" +
+        "</div>"
+      : '<div class="p-body">' +
+          "<h3>" + p.name + "</h3>" +
+          '<p class="p-price">' + priceHTML(p) + "</p>" +
           '<div class="p-actions">' +
             stepperHTML(p, r.start, false) +
             '<button type="button" class="p-add" data-id="' + p.id + '">' +
@@ -224,9 +415,10 @@
               "Agregar" +
             "</button>" +
           "</div>" +
-        "</div>" +
-      "</article>"
-    );
+        "</div>";
+
+    return '<article class="p-card' + (p.soon ? " p-card-soon" : "") + '" data-id="' + p.id + '">' +
+      media + body + "</article>";
   }
 
   // Búsqueda sin acentos: "picana" encuentra "Picaña"
@@ -245,7 +437,10 @@
       var okCat = activeCat === "todos" || p.cat === activeCat;
       return okCat && (!q || norm(p.name).indexOf(q) !== -1);
     });
+    // Lo que sí se puede pedir hoy va primero; los cortes cierran la lista
+    list.sort(function (a, b) { return (a.soon ? 1 : 0) - (b.soon ? 1 : 0); });
     grid.innerHTML = list.map(productCardHTML).join("");
+    if (soonEl) soonEl.hidden = !list.some(function (p) { return p.soon; });
     if (animate) {
       var cards = grid.querySelectorAll(".p-card");
       for (var i = 0; i < cards.length; i++) {
@@ -267,7 +462,7 @@
   }
 
   // Destacados de la página de inicio
-  var FEATURED = ["ribeye-wagyu", "tomahawk", "ribeye-prime", "paquete-parrillero"];
+  var FEATURED = ["sal-parrillera", "sweet-bbq-rub", "yerba-campesino", "tabla-holz"];
   function renderFeatured() {
     featuredEl.innerHTML = FEATURED.map(byId).filter(Boolean).map(productCardHTML).join("");
   }
@@ -332,10 +527,9 @@
           '<h3 id="pv-title"></h3>' +
           '<p class="pv-price" id="pv-price"></p>' +
           '<p class="pv-desc" id="pv-desc"></p>' +
-          '<div class="pv-cook"><strong>En la parrilla</strong><span id="pv-cook"></span></div>' +
+          '<div class="pv-cook"><strong id="pv-cook-l">Cómo usarlo</strong><span id="pv-cook"></span></div>' +
           '<div class="pv-actions" id="pv-actions"></div>' +
-          '<p class="pv-fine">Los cortes se pesan al preparar tu pedido: el total final se confirma ' +
-            "por WhatsApp. Precios de demostración.</p>" +
+          '<p class="pv-fine" id="pv-fine"></p>' +
         "</div>" +
       "</aside>";
     while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
@@ -351,6 +545,8 @@
       price: document.getElementById("pv-price"),
       desc: document.getElementById("pv-desc"),
       cook: document.getElementById("pv-cook"),
+      cookL: document.getElementById("pv-cook-l"),
+      fine: document.getElementById("pv-fine"),
       actions: document.getElementById("pv-actions")
     };
 
@@ -400,13 +596,25 @@
 
     pv.tag.textContent = catName(p.cat);
     pv.title.textContent = p.name;
-    pv.price.innerHTML = fmt.format(p.price) + " <span>" + priceLabel(p) + "</span>";
     pv.desc.textContent = p.desc || "";
     pv.cook.textContent = p.cook || "";
-    pv.actions.innerHTML = stepperHTML(p, rules(p).start, false) +
-      '<button type="button" class="p-add" data-id="' + p.id + '">' +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6M12 8v5M9.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-        "Agregar al pedido</button>";
+    pv.cookL.textContent = tipLabel(p);
+
+    if (p.soon) {
+      pv.price.innerHTML = 'En el mostrador <span>· todavía no en línea</span>';
+      pv.price.classList.add("p-price-soon");
+      pv.actions.innerHTML = '<a class="p-ask" href="' + soonLink(p) + '" target="_blank" rel="noopener">' +
+        WA_ICON + "Apartar por WhatsApp</a>";
+      pv.fine.textContent = "Cuando la tienda en línea abra los cortes, este producto se podrá pedir aquí mismo.";
+    } else {
+      pv.price.innerHTML = priceHTML(p);
+      pv.price.classList.remove("p-price-soon");
+      pv.actions.innerHTML = stepperHTML(p, rules(p).start, false) +
+        '<button type="button" class="p-add" data-id="' + p.id + '">' +
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6M12 8v5M9.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          "Agregar al pedido</button>";
+      pv.fine.textContent = "El total final se confirma por WhatsApp antes de cobrar. Precios de demostración.";
+    }
 
     pv.panel.classList.add("open");
     pv.overlay.classList.add("open");
@@ -452,7 +660,7 @@
   // --- Carrito -------------------------------------------------
   function addToCart(id, qty) {
     var p = byId(id);
-    if (!p) return;
+    if (!p || p.soon) return;   // lo que no está en línea no entra al carrito
     cart[id] = clampQty(p, (cart[id] || 0) + qty);
     save();
     renderCart();
@@ -568,7 +776,7 @@
 
   // --- Init ----------------------------------------------------
   load();
-  // Enlaces profundos a una categoría: tienda.html?cat=wagyu
+  // Enlaces profundos a una categoría: tienda.html?cat=terere
   if (grid) {
     var catParam = location.search.match(/[?&]cat=([^&]+)/);
     if (catParam && validCat(decodeURIComponent(catParam[1]))) {
@@ -591,6 +799,7 @@
     close: closeCart,
     products: PRODUCTS,
     byId: byId,
-    view: openQuickView
+    view: openQuickView,
+    wa: waLink
   };
 })();

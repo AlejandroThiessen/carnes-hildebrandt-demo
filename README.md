@@ -11,20 +11,31 @@ A multi-page demo/proposal website for **Carnes Hildebrandt** (boutique de carne
 
 Just double-click `index.html` and it opens in your browser.
 
-> The photos, fonts, and the map are loaded from the internet, so preview it while online. Everything else works offline.
+> The fonts and the map are loaded from the internet, so preview it while online. The photos are now local files, so those work offline.
+
+## The big idea: the store opens with everything *around* the meat
+
+The online store starts with what ships easily — **the family's own seasonings, yerba mate & tereré, knives, boards & aprons, and grill gear**. The **meat is marked "Próximamente en línea"**: it still shows up in the catalog with its own photo and product sheet, but instead of a cart button it sends the customer to WhatsApp to reserve it. That way the counter keeps selling meat while the cold-chain/packaging side gets sorted out, and nobody lands on the site thinking they can't buy anything.
+
+Where that shows up:
+
+- **Store** (`tienda.html`) — a `Cortes` filter whose cards read "En el mostrador · por WhatsApp", plus an explanatory note under the grid
+- **Home** — the red band now reads "La carne, muy pronto en línea", and the last category tile links to the coming-soon cuts
+- **`cortes.html`** — split into *"Lo que viaja bien"* (online) and *"Los cortes, muy pronto en línea"* (counter only)
+- **Grill calculator** — still tells you the kilos, but now splits the answer: a **list of cuts to reserve by WhatsApp** and a **cart with the seasoning + charcoal** that actually can be bought
+
+To flip a product back on later, delete its `soon: true` in `store.js` and give it a `price` and `unit` — nothing else changes.
 
 ## The pages
 
-The site follows the structure real butcher-shop sites use (home, products, story, store, guides/blog, shipping+FAQ, contact):
-
 | Page | What's on it |
 |---|---|
-| `index.html` | Storefront home: light hero with "Comprar en línea", shop-by-category tiles, four featured products, the grill calculator, how-ordering-works steps, story teaser + "en números", sample reviews, map |
-| `nosotros.html` | The story (garage → boutique), timeline, values, brands/sourcing |
-| `cortes.html` | The full counter: 6 product categories + the Wagyu showcase (`#wagyu`) |
-| `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=wagyu` etc.), name search, full catalog, WhatsApp checkout |
-| `guia.html` | "Guía del parrillero": which cut for what, the grill calculator, doneness temperatures, butcher tips — the blog/SEO role |
-| `envios.html` | How ordering works, shipping perks, FAQ (`#faq`), wholesale/event CTA |
+| `index.html` | Storefront home: hero with the shop's own photos, shop-by-category tiles, four featured products, **"Date una vuelta por los pasillos"** photo strip, the meat coming-soon band, the grill calculator, how-ordering-works, story teaser + "en números", sample reviews, map |
+| `nosotros.html` | The story, timeline, **the seasonings' real origin story**, **their real misión/visión/valores**, brands/sourcing |
+| `cortes.html` | The full counter, split into what's online and what's counter-only + the Wagyu section (`#wagyu`) |
+| `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=terere` etc.), name search, full catalog, WhatsApp checkout |
+| `guia.html` | "Guía del parrillero": which cut for what, the grill calculator, doneness temperatures, butcher tips |
+| `envios.html` | How ordering works, shipping perks, FAQ (`#faq`) — including **"¿Puedo pedir carne desde la tienda en línea?"** |
 | `contacto.html` | Address, phone/WhatsApp, hours, map, social cards |
 | `404.html` | Custom "not found" page (GitHub Pages serves it automatically) |
 
@@ -34,15 +45,33 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 
 | File | What it is |
 |---|---|
+| `fotos/` | **All the site's photos** — web-sized exports of the shop's own pictures (see below) |
+| `Photos/` | The original camera files. Not used by the site, and **git-ignored** (~340 MB) — keep them in Drive or a backup, not in the repo |
 | `styles.css` | All the design — colors/fonts are variables at the top of the file |
 | `main.js` | Sticky header, mobile menu, scroll animations, legacy-anchor redirects |
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store grids and the cart drawer |
 | `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
 
-> A cinematic slow-motion video section ("La experiencia Hildebrandt") was built and later parked — it lives in the git history (commit `789622f` and earlier) and can be restored anytime, ideally with footage filmed in the actual shop.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=8">` in the `<head>` and `<script src="fx.js?v=8"></script>` before `</body>`.
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=7">` in the `<head>` and `<script src="fx.js?v=7"></script>` before `</body>`.
+## The photos
+
+Everything on the site now uses **the shop's own photos**. The raw phone pictures live in `Photos/` (`Store/`, `Products/`, `Display/`); `fotos/` holds the web versions — rotated, cropped to a consistent ratio, resized and compressed. **Nothing was retouched**: these are the unedited originals, so when the edited set arrives, re-export over the same filenames and the whole site updates at once.
+
+| Shape | Used for | Naming |
+|---|---|---|
+| Square, 860 px | Product cards and the product sheet | `sal-parrillera.jpg`, `yerba-cbse-2.jpg`, … |
+| Portrait 3:4, 760 px | The home photo strip and the hero | `local-entrada.jpg`, `local-yerba.jpg`, … |
+| Landscape 3:2, 1400 px | Category tiles, page headers, split sections | `local-sazon-w.jpg`, `local-tablas-w.jpg`, … (`-w` = wide) |
+| Landscape 16:9, 1900 px | The storefront shot used as `og:image` | `local-fachada.jpg` |
+
+- **Product photos** are wired in `store.js` (`img:` for the card, `imgs: […]` for the sheet's thumbnail strip)
+- **Page headers** are the `--ph-img` inline style on each page's `.page-hero`
+- **The home photo strip** is the `.walk-track` block in `index.html` — add or remove `<figure class="walk-shot">` items freely
+- **Everything else** is a plain `<img src="fotos/…">` in the HTML
+
+The home page carries a line saying the photos are unedited, so nobody mistakes them for the final ones. Delete that sentence when the good photos land.
 
 ## The motion & effects layer (`fx.css` + `fx.js`)
 
@@ -55,79 +84,82 @@ What it adds:
 | **Page transitions** | Pages cross-fade into each other instead of flashing white; the header and WhatsApp button stay put. (Chrome/Edge/Safari; Firefox just navigates normally.) |
 | **Welcome curtain** | A brand splash that splits open — once per visit, not on every page |
 | **Headlines** | Every `h1`/`h2` rises into place word by word |
-| **Grids** | Category tiles, product cards, steps, reviews and perks come in one after another instead of as a block |
-| **Photos** | Framed photos rise behind a curtain; the home hero cycles through three shots with a slow zoom and a light sweep |
+| **Grids** | Category tiles, product cards, steps, reviews, perks and the photo strip come in one after another instead of as a block |
+| **Photos** | Framed photos rise behind a curtain; the home hero cycles through three shots of the shop with a slow zoom and a light sweep |
 | **Product cards** | Tilt in 3D under the cursor with a moving highlight, and a gold frame draws itself on hover |
 | **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears |
-| **Wagyu / closing bands** | Live embers drift up over the red band, and the giant outlined word drifts with the scroll |
-| **Category tiles** | Editorial layout — "Res" and "Paquetes" run double width — and each photo drifts inside its tile as you scroll |
+| **Closing bands** | Live embers drift up over the red band, and the giant outlined word drifts with the scroll |
+| **Category tiles** | Editorial layout — "Sazonadores" and "Tereré y yerba" run double width — and each photo drifts inside its tile as you scroll |
 | **Store page** | The filter/search bar sticks under the header, and cards animate back in each time you filter or search |
-| **Small stuff** | Reading-progress bar, header that shrinks as you scroll, cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the cuts ribbon speeding up with your scroll, counters that count up |
+| **Small stuff** | Reading-progress bar, header that shrinks as you scroll, cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the ribbon speeding up with your scroll, counters that count up |
 
-Accessibility and safety nets are built in: with **“reduce motion”** turned on in the operating system, everything is shown immediately and nothing animates; the curtain and the calculator are drawn by JavaScript, so with JS off they simply never appear rather than leaving anything blank; and content is force-revealed if you land mid-page via an anchor or a reload.
+Accessibility and safety nets are built in: with **"reduce motion"** turned on in the operating system, everything is shown immediately and nothing animates; the curtain and the calculator are drawn by JavaScript, so with JS off they simply never appear rather than leaving anything blank; and content is force-revealed if you land mid-page via an anchor or a reload.
 
 ## The grill calculator
 
-`index.html` and `guia.html` both carry a **“¿Cuánta carne para tu asado?”** tool (the `<div id="grill-calc">` container; `fx.js` builds it). Pick how many people, how big their appetite, and the style of the cookout, and it works out the kilos, suggests a basket from the real `PRODUCTS` catalog with prices, and fills the cart in one click.
+`index.html` and `guia.html` both carry a **"¿Cuánta carne para tu asado?"** tool (the `<div id="grill-calc">` container; `fx.js` builds it). Pick how many people, how big their appetite, and the style of the cookout, and it works out the kilos — then splits the result in two:
+
+1. **"La lista para el mostrador"** — the cuts and their weights, with a WhatsApp button that sends the whole list pre-written, ready to reserve
+2. **"Y esto sí lo pides en línea"** — the seasoning, charcoal and smoking wood that match that style, priced and addable to the cart in one click
 
 The per-person amounts are the usual butcher rules of thumb — **280 g / 380 g / 550 g** of meat per person for the three appetite levels — plus one bag of charcoal per eight guests. They live in the `HUNGER` and `STYLES` arrays near the bottom of `fx.js`; **have the owners adjust them to what they actually recommend at the counter.**
 
 ## The online store (no Shopify)
 
-The cart button in the header works on **every** page; the full catalog lives in `tienda.html` and three featured products render on the home page. Checkout goes **through WhatsApp**: the customer picks cuts, adjusts weight (0.5 kg steps) or pieces, and "Enviar pedido por WhatsApp" opens a chat with the shop's number containing the itemized order, estimated subtotal, and pickup/delivery choice. No platform, no fees, no backend.
+The cart button in the header works on **every** page; the full catalog lives in `tienda.html` and four featured products render on the home page. Checkout goes **through WhatsApp**: the customer picks products, adjusts the quantity, and "Enviar pedido por WhatsApp" opens a chat with the shop's number containing the itemized order, estimated subtotal, and pickup/delivery choice. No platform, no fees, no backend.
 
-### The product sheet (quick view)
+**Categories** (`CATS` in `store.js`), all deep-linkable as `tienda.html?cat=…`:
 
-Clicking a product photo, its title, or the **“Ver detalle”** button opens a panel with a large photo, what the cut actually is, how to cook it, and a weight stepper that adds straight to the cart. It's built once by `store.js` and reused, so there's no extra markup in the HTML pages.
+`sazon` · `terere` · `cuchillos` · `tablas` · `parrilla` · `carnes` (coming soon)
 
-**When the shop's photo gallery arrives, this is where it goes.** Every product accepts an optional `imgs` array in `store.js`:
+**Product fields** (`PRODUCTS` in `store.js`):
 
 ```js
-{ id: "ribeye-prime", name: "Rib eye USDA Prime", …,
-  img:  "fotos/ribeye-1.jpg",                       // la de la tarjeta
-  imgs: ["fotos/ribeye-1.jpg",                      // la ficha muestra
-         "fotos/ribeye-2.jpg",                      // miniaturas sola
-         "fotos/ribeye-3.jpg"] },
+{ id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon",
+  price: 195, unit: "pieza", approx: "frasco 450 g",
+  from: true,          // opcional → el precio se muestra como "desde $X"
+  soon: true,          // opcional → sin precio ni carrito, botón de WhatsApp
+  img:  "fotos/sal-parrillera.jpg",          // la de la tarjeta
+  imgs: ["fotos/sal-parrillera.jpg",         // la ficha muestra
+         "fotos/sal-parrillera-2.jpg",       // miniaturas sola
+         "fotos/sal-parrillera-bolsa.jpg"],
+  desc: "…", cook: "…" }                     // qué es · cómo se usa
 ```
 
-Add `imgs` and the sheet grows a thumbnail strip by itself; leave it out and it just shows the single `img`. Nothing else needs changing.
+The `cook` field's heading changes with the category (`TIPS` in `store.js`): *Cómo usarlo*, *Cómo prepararlo*, *Cuidados*, *En la parrilla*.
 
-- **Products & prices** live in the `PRODUCTS` array at the top of `store.js` — names, categories, price per kg/piece, and photos are all edited there. The `FEATURED` array (same file) picks the four home-page products. **All prices in the demo are made up** and marked as such on the page — including the "Para la parrilla" items (rub de la casa, carbón, tabla) added to make the store feel complete.
-- Categories are deep-linkable: `tienda.html?cat=res|wagyu|cerdo|ahumar|parrilla|paquetes` opens the store pre-filtered (the home tiles and the cortes-page "Pedir en línea" links use this), and the search box filters by name, accents optional.
+- **Yerbas are one card per brand**, not one per flavour — the flavours are listed in the description and shown as thumbnails, and the sheet tells the customer to name the one they want when confirming on WhatsApp. Same idea for the mate colours. That mirrors how the shelf actually works and keeps the grid readable.
 - The cart persists in the visitor's browser (localStorage) across pages and visits.
 - If they later want **online card payments** without Shopify: Mercado Pago (most common in Mexico) or Stripe checkout links can be wired to the same cart — that step needs a business account and a small serverless function, so it's a phase 2.
 
 ## What's real vs. what needs confirming
 
-Info was gathered from their public Facebook/Instagram/TikTok presence and a public review of the shop. **Nothing here came from the owners directly yet**, so confirm everything before launch:
+Info was gathered from their public Facebook/Instagram/TikTok presence, a public review of the shop, and — new in this round — **the photos of the shop itself**, which confirmed several things that were guesses before.
 
 | Item | Value used in the demo | Status |
 |---|---|---|
 | Name | Carnes Hildebrandt | ✅ From their Facebook page |
 | Tagline | "Si lo que buscas es carne de alta calidad, llegaste para quedarte." | ✅ Their own FB tagline |
 | City | Cuauhtémoc, Chihuahua | ✅ From their Facebook page |
+| **Phone / WhatsApp** | **625 150 7388** | ✅ **Confirmed** — printed on the Sal Parrillera jar and on the store's logo |
+| **Misión, visión y valores** | On `nosotros.html` | ✅ **Transcribed from the board mounted in the shop** |
+| **Seasonings' story** | 2020, "sal Himalaya y 6 especias", Isaac & Abram (Sal Parrillera) and David (Sweet BBQ Rub), made in the Mennonite fields of Cuauhtémoc | ✅ **Transcribed from the jar labels** |
+| **Sal Parrillera ingredients** | Sal himalaya, pimienta molida, chile cascabel, ajo molido y especias · frasco 450 g / bolsa 1.5 kg | ✅ From the label |
+| **Product lineup** | Sazonadores de la casa, yerbas (Verdeflor, Campesino, CBSé, Amanda, Kurupí, Playadito), mates, Bull-Edge & Tramontina, tablas HOLZ, mandiles de piel, molcajetes, Lodge, carbón y leña | ✅ From the shop photos |
 | Address | Km 11 Corredor Comercial Menonita | ⚠️ From a public review (2024) — confirm |
-| Phone / WhatsApp | 625 150 7388 | ⚠️ From a public review (2024) — confirm |
 | Hours | Mon–Sat 9:00–19:00, Sun 11:00–16:00 | ⚠️ From a public review (2024) — confirm |
-| Products / brands | USDA Prime/Choice, Certified Angus Beef, Wagyu (Japanese & Australian, Stone Axe), Ganadería Revuelta beef, Norson pork, rubs, knives, shipping nationwide, cash & card | ⚠️ From a public review (2024) — confirm current lineup (shown in `nosotros.html`) |
-| "Started in the family garage in 2021" story + timeline | `nosotros.html` and home teaser | ⚠️ From a public review — confirm wording with the family |
+| Beef brands | USDA Prime/Choice, Certified Angus Beef, Wagyu (Japanese & Australian, Stone Axe), Ganadería Revuelta, Norson pork | ⚠️ Partly visible in the photos (CAB banners, Revuelta boxes) — confirm the current lineup |
+| "Started in the family garage in 2021" | `nosotros.html` and home teaser | ⚠️ From a public review. **Note the tension:** the Sal Parrillera label says the seasoning work started mid-2020, so the business may be older than 2021 — the timeline flags this |
+| **All prices** | Throughout the store | 🔴 **Made up and labeled as such**, except the leather apron ($2,200) and the Lodge skillet (~$850), which are the price tags visible in the photos. Have the owners set the real ones in `PRODUCTS` |
 | **Customer reviews** on the home page | Three quotes under "Lo que se dice del mostrador" | 🔴 **Written as placeholders** (labeled as such on the page) — replace with real Facebook/Google reviews before launch |
-| "En números" strip on the home page | 2021 · 32 estados · 6 familias de producto · 2 orígenes de Wagyu | ⚠️ Each figure only restates something the site already claims (founding year, nationwide shipping = Mexico's 32 states, the six store categories, Japanese + Australian Wagyu) — confirm the framing reads right to them |
-| Grill-calculator amounts | 280/380/550 g of meat per person, 1 bag of charcoal per 8 guests | ⚠️ Standard butcher rules of thumb, not theirs — adjust in `HUNGER`/`STYLES` in `fx.js` |
-| Product sheet copy (`desc` / `cook` in `store.js`) | What each cut is and how to cook it | ⚠️ General butchery/cooking knowledge, written by us. A few make claims about *their* products specifically (the house rub's blend, what's inside the Paquete Parrillero) — have them read those two |
+| "En números" strip | 2021 · 32 estados · 4 sazonadores · 6 marcas de yerba | ⚠️ The last two are counted from the photos; the first two restate claims the site already makes — confirm the framing reads right |
+| Grill-calculator amounts | 280/380/550 g per person, 1 bag of charcoal per 8 guests | ⚠️ Standard butcher rules of thumb, not theirs — adjust in `HUNGER`/`STYLES` in `fx.js` |
+| Product sheet copy (`desc` / `cook`) | What each product is and how to use it | ⚠️ The seasonings' copy comes from their labels; the rest is general knowledge written by us — worth a read-through |
+| **"The meat isn't online yet" wording** | Home band, `tienda.html`, `cortes.html`, FAQ | ⚠️ We explain it as "packaging and cold chain, second phase" — **confirm that's the reason they want stated**, and whether they want to promise a date |
 | Wholesale/"restaurantes y eventos" invitation | `envios.html` FAQ + closing band | ⚠️ Phrased as an invitation to chat, but confirm they want B2B orders |
-| FAQ answers | `envios.html` | ⚠️ Written from what the site already claims — have the owners read them |
 | Social links | facebook.com/CarnesHildebrandt, instagram/tiktok @carneshildebrandt | ✅ Verified handles |
 
 A small **"Maqueta de demostración"** badge floats at the bottom-left of every page as a reminder; delete that block from each HTML file (and its CSS) for the final version.
-
-## Photos are placeholders
-
-All images are free-to-use Unsplash stock photos, hot-linked. For the real site, replace them with the shop's own photos (their Facebook/Instagram have plenty of great ones — ask the owners for the originals):
-
-- Home hero background: edit the `url(...)` inside `.hero-bg` in `styles.css`
-- Sub-page headers: edit the `--ph-img` inline style on each page's `.page-hero`
-- All other images: edit the `<img src="...">` tags in each HTML file
 
 ## Changing the look
 
@@ -137,8 +169,10 @@ The site uses a **light theme** (July 2026 redesign, at the owners' request): cr
 
 ## Suggested next steps to go live
 
-1. Confirm the ⚠️/🔴 items above with the owners and drop in their real photos/logo.
-2. Buy a domain (e.g. `carneshildebrandt.com` / `.mx`).
-3. Host it free on Netlify, Vercel, GitHub Pages, or Cloudflare Pages (drag-and-drop the folder).
-4. Verify the WhatsApp number works with `wa.me` (it must have WhatsApp active).
-5. Set up / claim their **Google Business Profile** so the map pin is exact — it's also where real reviews will come from.
+1. Confirm the ⚠️/🔴 items above with the owners — **prices first**, then the reviews.
+2. Swap in the edited photos (same filenames in `fotos/`, nothing else to change).
+3. Buy a domain (e.g. `carneshildebrandt.com` / `.mx`).
+4. Host it free on Netlify, Vercel, GitHub Pages, or Cloudflare Pages (drag-and-drop the folder).
+5. Verify the WhatsApp number works with `wa.me` (it must have WhatsApp active).
+6. Set up / claim their **Google Business Profile** so the map pin is exact — it's also where real reviews will come from.
+7. When the cold chain is ready, drop `soon: true` from the meat products and give them prices.

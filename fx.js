@@ -166,7 +166,7 @@
   // tras otra. Se le quita el .reveal al contenedor para que no
   // haya dos animaciones peleando.
   // ==========================================================
-  var GRIDS = ".cat-tiles, .store-grid, .cards-grid, .quote-grid, .steps, .perks, " +
+  var GRIDS = ".cat-tiles, .store-grid, .cards-grid, .quote-grid, .steps, .perks, .walk-track, " +
               ".brands-grid, .social-grid, .badges-grid, .timeline, .feature-list, .footer-links";
 
   $$(GRIDS).forEach(function (grid) {
@@ -636,19 +636,25 @@
       ["bestia", "Nivel concurso", .55]
     ];
 
-    // Mezclas de cortes por estilo de asado (comparten el peso total)
+    // Cada estilo reparte el peso total entre cortes (que hoy se piden
+    // en el mostrador, por eso son texto y no productos) y sugiere los
+    // sazonadores y el carbón que sí se pueden pedir en línea.
     var STYLES = [
       ["norteno", "Clásico norteño",
-        [["arrachera", .4], ["ribeye-prime", .3], ["costillar-cerdo", .3]],
+        { cortes: [["Arrachera", .4], ["Rib eye", .3], ["Costilla de cerdo", .3]],
+          items: ["sal-parrillera", "carbon"] },
         "Fuego de dos zonas y sal de grano. La arrachera al final, cuando ya todos están alrededor del asador."],
       ["premium", "Noche premium",
-        [["ribeye-prime", .45], ["newyork-choice", .35], ["ribeye-wagyu", .2]],
+        { cortes: [["Rib eye", .45], ["New York", .35], ["Wagyu", .2]],
+          items: ["sal-parrillera", "carbon", "tabla-holz"] },
         "Cortes gruesos (3–4 cm), término medio rojo y 6 minutos de reposo. El Wagyu, rebanado delgado para compartir al final."],
       ["ahumado", "Low &amp; slow",
-        [["brisket", .6], ["costillar-cerdo", .4]],
+        { cortes: [["Brisket", .6], ["Costillar de cerdo", .4]],
+          items: ["brisket-rub", "sweet-bbq-rub", "carbon", "chips-ahumado"] },
         "Calcula 1 hora de ahumado por cada 500 g de brisket a 110 °C. Empieza temprano — y ten paciencia con la meseta."],
       ["mixto", "De todo un poco",
-        [["ribeye-prime", .3], ["arrachera", .25], ["costillar-cerdo", .25], ["chuleta-cerdo", .2]],
+        { cortes: [["Rib eye", .3], ["Arrachera", .25], ["Costilla de cerdo", .25], ["Chuleta de cerdo", .2]],
+          items: ["sal-parrillera", "sweet-bbq-rub", "carbon"] },
         "La apuesta segura cuando hay niños, abuelos y cuñados con opiniones. Empieza por el cerdo y cierra con la res."]
     ];
 
@@ -684,48 +690,76 @@
         "</div>" +
         '<div class="calc-out">' +
           '<div class="calc-kg"><strong id="calc-kg">0</strong> <span>kg de carne, aproximadamente</span></div>' +
+          '<p class="calc-sub">La lista para el mostrador</p>' +
+          '<ul class="calc-list calc-cuts" id="calc-cuts"></ul>' +
+          '<a class="calc-wa" id="calc-wa" href="#" target="_blank" rel="noopener">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 8.4c-.3.9-.1 2.1.9 3.4 1 1.3 2.2 2.2 3.6 2.6.6.2 1.3-.1 1.6-.7l.3-.6-1.9-1-.7.7c-.8-.4-1.5-1-2-1.8l.6-.8-1.2-1.8-.6.2c-.3.1-.5.4-.6.8z" fill="currentColor" stroke="none"/></svg>' +
+            "Apartar los cortes por WhatsApp</a>" +
+          '<p class="calc-sub">Y esto sí lo pides en línea</p>' +
           '<ul class="calc-list" id="calc-list"></ul>' +
           '<div class="calc-total"><span>Tu carrito quedaría en</span><b id="calc-total">$0</b></div>' +
           '<button type="button" class="btn btn-solid" id="calc-add">Agregar todo al carrito</button>' +
           '<p class="calc-fine">Cálculo orientativo con precios de demostración: sobre 380 g de carne por persona ' +
-          'para un diente normal. Nosotros pesamos y confirmamos el total por WhatsApp.</p>' +
+          'para un diente normal. La carne todavía se despacha en el mostrador — nosotros la pesamos y ' +
+          'confirmamos el total por WhatsApp.</p>' +
         "</div>" +
       "</div>";
 
     var elPeople = $("#calc-people", host);
     var elPeopleN = $("#calc-people-n", host);
     var elKg = $("#calc-kg", host);
+    var elCuts = $("#calc-cuts", host);
+    var elWa = $("#calc-wa", host);
     var elList = $("#calc-list", host);
     var elTotal = $("#calc-total", host);
     var elTip = $("#calc-tip", host);
 
-    // Convierte la mezcla del estilo elegido en cantidades reales
+    function kgText(q) { return (q % 1 === 0 ? q : q.toFixed(1)) + " kg"; }
+
+    // Convierte la mezcla del estilo elegido en cantidades reales.
+    // `cuts` son los cortes (se apartan por WhatsApp) y `rows` lo que
+    // sí entra al carrito hoy: sazonadores, carbón y leña.
     function basket() {
       var kg = people * HUNGER[hunger][2];
+      var mix = STYLES[style][2];
+
+      var cuts = mix.cortes.map(function (m) {
+        return { name: m[0], qty: clamp(Math.round(kg * m[1] * 2) / 2, .5, 40) };
+      });
+
       var rows = [];
-      STYLES[style][2].forEach(function (m) {
-        var p = byId(m[0]);
-        if (!p) return;
-        var q = clamp(Math.round(kg * m[1] * 2) / 2, .5, 12);
+      mix.items.forEach(function (id) {
+        var p = byId(id);
+        if (!p || p.soon) return;
+        // Del carbón sale una bolsa por cada ocho comensales; de lo demás, una
+        var q = id === "carbon" ? clamp(Math.ceil(people / 8), 1, 4) : 1;
         rows.push({ p: p, qty: q, total: p.price * q });
       });
-      // Una bolsa de carbón por cada ocho comensales
-      var coal = byId("carbon-encino");
-      if (coal) {
-        var bags = clamp(Math.ceil(people / 8), 1, 4);
-        rows.push({ p: coal, qty: bags, total: coal.price * bags });
-      }
-      return { kg: kg, rows: rows };
+
+      return { kg: kg, cuts: cuts, rows: rows };
     }
 
     function qtyText(row) {
-      if (row.p.unit === "kg") return (row.qty % 1 === 0 ? row.qty : row.qty.toFixed(1)) + " kg";
+      if (row.p.unit === "kg") return kgText(row.qty);
       return row.qty === 1 ? "1 pieza" : row.qty + " piezas";
     }
 
     function render(animate) {
       var b = basket();
       var total = 0;
+
+      elCuts.innerHTML = b.cuts.map(function (c, i) {
+        return '<li style="animation-delay:' + (i * 55) + 'ms"><span><b>' + c.name +
+          "</b> <em>" + kgText(c.qty) + "</em></span><i>mostrador</i></li>";
+      }).join("");
+
+      var msg = "Hola Carnes Hildebrandt 👋\nSomos " + people + " personas para un asado " +
+        STYLES[style][1].replace("&amp;", "&").toLowerCase() + ". La calculadora del sitio me sugiere:\n\n" +
+        b.cuts.map(function (c) { return "• " + c.name + " — " + kgText(c.qty); }).join("\n") +
+        "\n\n¿Me lo apartan?";
+      elWa.href = window.CHStore.wa ? window.CHStore.wa(msg) :
+        "https://wa.me/526251507388?text=" + encodeURIComponent(msg);
+
       elList.innerHTML = b.rows.map(function (r, i) {
         total += r.total;
         return '<li style="animation-delay:' + (i * 55) + 'ms"><span><b>' + r.p.name +
@@ -778,6 +812,9 @@
       say("<b>" + b.rows.length + " productos</b> para " + people + " personas en tu pedido", "Ver carrito");
       window.CHStore.open();
     });
+
+    // El botón de WhatsApp es un enlace normal: solo se le pone el
+    // mensaje al vuelo en cada render.
 
     fill();
     render(false);

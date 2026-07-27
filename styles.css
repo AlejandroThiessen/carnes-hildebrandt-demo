@@ -781,6 +781,55 @@ a.card { display: block; color: inherit; text-decoration: none; }
 /* ============================================================
    RESEÑAS (maqueta — se reemplazan por reseñas reales)
    ============================================================ */
+/* ============================================================
+   TIRA "DATE UNA VUELTA" — fotos del local
+   Se sale del contenedor a propósito: la última foto queda
+   cortada por el borde para que se note que hay más.
+   ============================================================ */
+.walk {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(169, 127, 69, .55) transparent;
+  padding-bottom: 14px;
+}
+.walk::-webkit-scrollbar { height: 6px; }
+.walk::-webkit-scrollbar-track { background: rgba(36, 29, 23, .07); border-radius: 99px; }
+.walk::-webkit-scrollbar-thumb { background: rgba(169, 127, 69, .55); border-radius: 99px; }
+.walk-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  padding-inline: max(4%, calc((100% - var(--container)) / 2));
+}
+.walk-shot {
+  position: relative;
+  flex: 0 0 clamp(190px, 22vw, 258px);
+  scroll-snap-align: center;
+}
+.walk-shot img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #d8cdbb;
+  box-shadow: 0 16px 34px -22px rgba(36, 29, 23, .55);
+}
+.walk-shot figcaption {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 13px;
+  background: rgba(255, 253, 248, .93);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text-dark);
+}
+
 .quote-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
@@ -1162,7 +1211,7 @@ a.card { display: block; color: inherit; text-decoration: none; }
 
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
   .hero-media::after { display: none; }
-  .hero-media img { aspect-ratio: 16 / 10; }
+  .hero-media img { aspect-ratio: 4 / 3; }   /* las fotos del local son verticales */
 }
 
 @media (max-width: 640px) {

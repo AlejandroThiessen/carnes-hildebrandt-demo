@@ -1,0 +1,7 @@
+# Fotos originales de la cámara (~340 MB). No las necesita el sitio:
+# de ahí salen las de fotos/, que sí van al repo. Súbelas a Drive o
+# guárdalas aparte — si entran aquí, clonar el repo se vuelve pesadísimo.
+Photos/
+
+.DS_Store
+Thumbs.db
