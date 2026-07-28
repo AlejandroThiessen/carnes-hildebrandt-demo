@@ -166,7 +166,13 @@
   // tras otra. Se le quita el .reveal al contenedor para que no
   // haya dos animaciones peleando.
   // ==========================================================
-  var GRIDS = ".cat-tiles, .store-grid, .cards-grid, .quote-grid, .steps, .perks, .walk-track, " +
+  // OJO: `.walk-track` NO va aquí. Es una tira que se desliza de lado,
+  // y animar cada foto por separado le hacía dos daños: el
+  // `translateY` de entrada le agregaba juego vertical al contenedor,
+  // y al deslizar rápido en el celular se veía un hueco en blanco
+  // mientras cada foto terminaba de aparecer. La tira entra completa,
+  // con el `.reveal` de siempre.
+  var GRIDS = ".cat-tiles, .store-grid, .cards-grid, .quote-grid, .steps, .perks, " +
               ".brands-grid, .social-grid, .badges-grid, .timeline, .feature-list, .footer-links";
 
   $$(GRIDS).forEach(function (grid) {

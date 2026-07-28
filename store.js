@@ -419,13 +419,118 @@
       syncCatUrl();
       renderFilters();
       renderStore(true);
+      toolbar.pick();          // en celular: baja a la rejilla y se pliega
     });
   }
+
+  // ==========================================================
+  // BARRA PLEGABLE (CELULAR)
+  // ----------------------------------------------------------
+  // Con seis categorías y la búsqueda, la barra se comía media
+  // pantalla del celular. Ahora se recoge sola al bajar y deja un
+  // renglón con la categoría activa; se toca y vuelve a abrirse.
+  // Vive aquí y no en fx.js porque es parte de la tienda: si se
+  // borra la capa de efectos, esto tiene que seguir funcionando.
+  // ==========================================================
+  var toolbar = (function () {
+    var bar = document.getElementById("store-toolbar");
+    var btn = document.getElementById("store-toolbar-toggle");
+    var label = document.getElementById("store-toolbar-label");
+    var body = document.getElementById("store-toolbar-body");
+    var noop = { pick: function () {}, sync: function () {} };
+    if (!bar || !btn || !label || !body) return noop;
+
+    var MOBILE = "(max-width: 780px)";
+    function isMobile() { return window.matchMedia(MOBILE).matches; }
+
+    // La barra tiene que ir pegada para que plegarla sirva de algo.
+    // fx.js también pone esta clase; ponerla dos veces no hace daño y
+    // así el plegado sigue vivo aunque se borre la capa de efectos.
+    bar.classList.add("is-sticky");
+
+    function setOpen(open) {
+      bar.classList.toggle("collapsed", !open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    // El renglón resume en qué está parada la tienda
+    function sync() {
+      var txt = activeCat === "todos" ? "Todos los productos" : catName(activeCat);
+      if (query) txt += ' · "' + query + '"';
+      label.textContent = txt;
+    }
+
+    btn.addEventListener("click", function () {
+      setOpen(bar.classList.contains("collapsed"));
+    });
+
+    // Dónde empieza la barra en el documento, ignorando lo que el
+    // `position: sticky` la haya corrido.
+    //
+    // No se le puede preguntar a la barra: estando pegada, tanto
+    // `getBoundingClientRect` como `offsetTop` devuelven la posición
+    // ya corrida, y el destino saldría siendo justo donde ya estamos.
+    // El contenedor que la envuelve no es sticky y no se mueve.
+    function layoutTop() {
+      var host = bar.parentElement;
+      return host ? host.getBoundingClientRect().top + window.pageYOffset : 0;
+    }
+
+    // Al elegir categoría: bajar a los resultados y quedarse plegada.
+    // El destino deja la barra justo en su punto de pegado (62 px), y
+    // de paso eso evita que el observador de scroll la vuelva a abrir.
+    // Mientras corre el desplazamiento suave que dispara `pick`, el
+    // observador de abajo no debe reabrir la barra: el destino la deja
+    // justo en el borde de pegado y cualquier cuadro intermedio puede
+    // leerse como "ya no está pegada".
+    var lockUntil = 0;
+
+    function pick() {
+      sync();
+      if (!isMobile()) return;
+      setOpen(false);
+      lockUntil = Date.now() + 900;
+      var target = Math.max(layoutTop() - 62, 0);
+      if (Math.abs(window.pageYOffset - target) > 4) {
+        window.scrollTo({ top: target, behavior: "smooth" });
+      }
+    }
+
+    // Se pliega sola en cuanto la barra se pega al encabezado, y se
+    // vuelve a abrir al regresar arriba. `passive` para no frenar el
+    // desplazamiento.
+    var ticking = false;
+    window.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        if (!isMobile() || Date.now() < lockUntil) return;
+        // Dos umbrales a propósito: si se plegara y se abriera en el
+        // mismo píxel, la barra parpadearía al quedar justo en el borde.
+        var top = bar.getBoundingClientRect().top;
+        if (top <= 66 && !bar.classList.contains("collapsed")) {
+          if (!body.contains(document.activeElement)) setOpen(false);
+        } else if (top > 96 && bar.classList.contains("collapsed")) {
+          setOpen(true);
+        }
+      });
+    }, { passive: true });
+
+    // Al pasar a escritorio la barra siempre queda abierta
+    window.matchMedia(MOBILE).addEventListener("change", function (e) {
+      if (!e.matches) setOpen(true);
+    });
+
+    sync();
+    return { pick: pick, sync: sync };
+  })();
 
   if (searchEl) {
     searchEl.addEventListener("input", function () {
       query = searchEl.value;
       renderStore(true);
+      toolbar.sync();
     });
   }
   if (resetEl) {
@@ -436,6 +541,7 @@
       syncCatUrl();
       renderFilters();
       renderStore(true);
+      toolbar.sync();
     });
   }
 
@@ -457,14 +563,21 @@
           '<img id="pv-img" src="" alt="">' +
           '<div class="pv-thumbs" id="pv-thumbs"></div>' +
         "</div>" +
+        // El texto va en su propio bloque con scroll y los botones se
+        // quedan abajo, fijos: con una descripción larga el "Agregar"
+        // se salía de la ficha y quedaba fuera de alcance.
         '<div class="pv-info">' +
-          '<span class="pv-tag" id="pv-tag"></span>' +
-          '<h3 id="pv-title"></h3>' +
-          '<p class="pv-price" id="pv-price"></p>' +
-          '<p class="pv-desc" id="pv-desc"></p>' +
-          '<div class="pv-cook"><strong id="pv-cook-l">Cómo usarlo</strong><span id="pv-cook"></span></div>' +
-          '<div class="pv-actions" id="pv-actions"></div>' +
-          '<p class="pv-fine" id="pv-fine"></p>' +
+          '<div class="pv-scroll" id="pv-scroll">' +
+            '<span class="pv-tag" id="pv-tag"></span>' +
+            '<h3 id="pv-title"></h3>' +
+            '<p class="pv-price" id="pv-price"></p>' +
+            '<p class="pv-desc" id="pv-desc"></p>' +
+            '<div class="pv-cook"><strong id="pv-cook-l">Cómo usarlo</strong><span id="pv-cook"></span></div>' +
+          "</div>" +
+          '<div class="pv-foot">' +
+            '<div class="pv-actions" id="pv-actions"></div>' +
+            '<p class="pv-fine" id="pv-fine"></p>' +
+          "</div>" +
         "</div>" +
       "</aside>";
     while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
@@ -474,6 +587,7 @@
       overlay: document.getElementById("pv-overlay"),
       close: document.getElementById("pv-close"),
       img: document.getElementById("pv-img"),
+      scroll: document.getElementById("pv-scroll"),
       thumbs: document.getElementById("pv-thumbs"),
       tag: document.getElementById("pv-tag"),
       title: document.getElementById("pv-title"),
@@ -529,6 +643,7 @@
     }).join("") : "";
     pv.thumbs.hidden = shots.length < 2;
 
+    pv.scroll.scrollTop = 0;   // cada producto abre desde arriba
     pv.tag.textContent = catName(p.cat);
     pv.title.textContent = p.name;
     pv.desc.textContent = p.desc || "";
@@ -719,6 +834,7 @@
     }
   }
   if (filters) renderFilters();
+  toolbar.sync();   // después de resolver ?cat=, para que el renglón cuadre
   if (grid) renderStore();
   if (featuredEl) renderFeatured();
   renderCart();

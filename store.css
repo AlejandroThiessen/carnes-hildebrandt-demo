@@ -43,15 +43,25 @@
   100% { transform: scale(1); }
 }
 
-/* ---------- Barra de la tienda: filtros + búsqueda ---------- */
+/* ---------- Barra de la tienda: filtros + búsqueda ----------
+   Dos filas: el botón que la pliega (solo en celular) y el cuerpo
+   con los filtros y la búsqueda. La rejilla `1fr → 0fr` es lo que
+   deja animar el plegado sin inventarle un alto fijo. */
 .store-toolbar {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  margin-bottom: 14px;
+  transition: grid-template-rows .38s var(--ease-out);
+}
+.store-toolbar-body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px 24px;
-  margin-bottom: 14px;
+  min-height: 0;
 }
+.store-toolbar-toggle { display: none; }
 .store-filters {
   display: flex;
   flex-wrap: wrap;
@@ -433,6 +443,65 @@
   box-shadow: 0 14px 26px -22px rgba(36, 29, 23, .55);
 }
 
+/* ---------- Barra plegable (celular) ----------
+   Los filtros ocupaban media pantalla. Al bajar se recogen solos y
+   queda un renglón con la categoría activa; se toca y vuelven. */
+@media (max-width: 780px) {
+  .store-toolbar-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .25s ease, background .25s ease;
+  }
+  .store-toolbar-toggle .stt-icon { flex: 0 0 auto; width: 18px; height: 18px; color: var(--bronze); }
+  .store-toolbar-toggle .stt-label {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .store-toolbar-toggle .stt-caret {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    color: var(--text-mut);
+    transition: transform .38s var(--ease-out);
+  }
+  .store-toolbar-body {
+    overflow: hidden;
+    padding-top: 12px;
+    opacity: 1;
+    transition: opacity .28s ease, padding-top .38s var(--ease-out);
+  }
+  .store-toolbar.collapsed { grid-template-rows: auto 0fr; }
+  .store-toolbar.collapsed .store-toolbar-body {
+    opacity: 0;
+    padding-top: 0;
+    pointer-events: none;
+  }
+  .store-toolbar.collapsed .stt-caret { transform: rotate(-90deg); }
+  .store-toolbar.collapsed .store-toolbar-toggle {
+    border-color: rgba(169, 127, 69, .5);
+    background: var(--bone);
+  }
+  /* Los filtros ya no compiten con la búsqueda por el ancho */
+  .store-toolbar-body .store-search { max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store-toolbar, .store-toolbar-body, .stt-caret { transition: none; }
+}
+
 /* ============================================================
    FICHA DEL PRODUCTO
    ============================================================ */
@@ -517,11 +586,26 @@
 .pv-thumb:hover { transform: translateY(-2px); }
 .pv-thumb.on { border-color: var(--gold); }
 
+/* La columna de texto: el contenido se desplaza y el pie con los
+   botones se queda anclado. `min-height: 0` es lo que permite que
+   encoja dentro de la rejilla — sin eso desborda en vez de rodar. */
 .pv-info {
   display: flex;
   flex-direction: column;
-  padding: 34px 32px 30px;
+  min-height: 0;
+}
+.pv-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 34px 32px 6px;
+}
+.pv-foot {
+  flex: 0 0 auto;
+  padding: 14px 32px 22px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
 }
 .pv-tag {
   align-self: flex-start;
@@ -561,14 +645,21 @@
   color: var(--bronze);
 }
 .pv-cook span { font-size: 13.5px; line-height: 1.65; color: var(--text-mut); }
-.pv-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: auto; }
+.pv-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .pv-actions .p-add { flex: 1; min-width: 160px; padding: 13px 18px; }
-.pv-fine { margin-top: 14px; font-size: 11.5px; font-style: italic; color: var(--text-mut); }
+.pv-fine { margin: 10px 0 0; font-size: 11.5px; font-style: italic; color: var(--text-mut); }
 
 @media (max-width: 780px) {
-  .pv { grid-template-columns: 1fr; max-height: 88vh; }
+  /* La foto arriba con alto fijo y el texto ocupando lo que sobra:
+     `minmax(0, 1fr)` deja que la fila encoja y aparezca el scroll. */
+  .pv { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); max-height: 88vh; }
   .pv-media { height: 210px; }
-  .pv-info { padding: 24px 22px 26px; }
+  .pv-scroll { padding: 22px 22px 6px; }
+  .pv-foot { padding: 12px 22px 18px; }
+}
+@media (max-width: 430px) {
+  /* "Agregar al pedido" partía en dos renglones junto al contador */
+  .pv-actions .p-add { min-width: 0; padding: 12px 10px; letter-spacing: .05em; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pv, .pv-overlay, .p-view { transition: none; }

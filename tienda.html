@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=8">
-  <link rel="stylesheet" href="store.css?v=8">
-  <link rel="stylesheet" href="fx.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="store.css?v=9">
+  <link rel="stylesheet" href="fx.css?v=9">
 </head>
 <body data-page="tienda">
 
@@ -76,12 +76,23 @@
     <!-- ======= TIENDA ======= -->
     <section class="section section-cream" id="tienda">
       <div class="container">
-        <div class="store-toolbar reveal">
-          <div class="store-filters" id="store-filters" role="group" aria-label="Filtrar productos por categoría"></div>
-          <label class="store-search">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <input type="search" id="store-search" placeholder="Buscar un producto…" aria-label="Buscar producto por nombre" autocomplete="off">
-          </label>
+        <!-- En celular la barra se pliega sola al bajar y el botón de
+             arriba la vuelve a abrir; en escritorio el botón no se ve
+             y la barra se comporta como siempre. Lo maneja store.js. -->
+        <div class="store-toolbar reveal" id="store-toolbar">
+          <button type="button" class="store-toolbar-toggle" id="store-toolbar-toggle"
+                  aria-expanded="true" aria-controls="store-toolbar-body">
+            <svg class="icon stt-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span class="stt-label" id="store-toolbar-label">Todos los productos</span>
+            <svg class="icon stt-caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="store-toolbar-body" id="store-toolbar-body">
+            <div class="store-filters" id="store-filters" role="group" aria-label="Filtrar productos por categoría"></div>
+            <label class="store-search">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input type="search" id="store-search" placeholder="Buscar un producto…" aria-label="Buscar producto por nombre" autocomplete="off">
+            </label>
+          </div>
         </div>
         <p class="store-count" id="store-count" aria-live="polite"></p>
         <div class="store-grid" id="store-grid"></div>
@@ -231,8 +242,8 @@
     <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
   </div>
 
-  <script src="main.js?v=8"></script>
-  <script src="store.js?v=8"></script>
-  <script src="fx.js?v=8"></script>
+  <script src="main.js?v=9"></script>
+  <script src="store.js?v=9"></script>
+  <script src="fx.js?v=9"></script>
 </body>
 </html>

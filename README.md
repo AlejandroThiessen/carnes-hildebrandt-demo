@@ -54,7 +54,7 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 | `store.css` | Styles for the store grids and the cart drawer |
 | `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=8">` in the `<head>` and `<script src="fx.js?v=8"></script>` before `</body>`.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=9">` in the `<head>` and `<script src="fx.js?v=9"></script>` before `</body>`.
 
 ## The photos
 
@@ -123,7 +123,9 @@ The cart button in the header works on **every** page; the full catalog lives in
 
 **Categories** (`CATS` in `store.js`), all deep-linkable as `tienda.html?cat=…`:
 
-`sazon` · `terere` · `cuchillos` · `tablas` · `parrilla` · `carnes` (coming soon)
+`sazon` · `terere` · `cuchillos` · `asado` · `carnes` (coming soon)
+
+**The filter bar folds up on phones.** Six chips plus the search box ate about a third of a phone screen, so on `≤780px` the bar collapses to one line showing the active category as soon as it sticks under the header; tapping it reopens it, and picking a category drops you at the top of the results with the bar folded again. It lives in `store.js` (the `toolbar` block) and `store.css`, **not** in `fx.js` — it's store navigation, so it has to survive deleting the effects layer. On desktop the toggle is hidden and the bar behaves exactly as before.
 
 **Product fields** (`PRODUCTS` in `store.js`):
 
