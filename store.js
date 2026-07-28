@@ -460,8 +460,15 @@
       label.textContent = txt;
     }
 
+    // Si la abrió el usuario, se queda abierta: sin esto el primer
+    // scroll —hasta el mínimo que hace el navegador al enfocar el
+    // botón— volvía a plegarla en la cara de quien acababa de abrirla.
+    var userOpened = false;
+
     btn.addEventListener("click", function () {
-      setOpen(bar.classList.contains("collapsed"));
+      var open = bar.classList.contains("collapsed");
+      setOpen(open);
+      userOpened = open;
     });
 
     // Dónde empieza la barra en el documento, ignorando lo que el
@@ -489,6 +496,7 @@
       sync();
       if (!isMobile()) return;
       setOpen(false);
+      userOpened = false;
       lockUntil = Date.now() + 900;
       var target = Math.max(layoutTop() - 62, 0);
       if (Math.abs(window.pageYOffset - target) > 4) {
@@ -509,10 +517,12 @@
         // Dos umbrales a propósito: si se plegara y se abriera en el
         // mismo píxel, la barra parpadearía al quedar justo en el borde.
         var top = bar.getBoundingClientRect().top;
-        if (top <= 66 && !bar.classList.contains("collapsed")) {
-          if (!body.contains(document.activeElement)) setOpen(false);
-        } else if (top > 96 && bar.classList.contains("collapsed")) {
-          setOpen(true);
+        if (top > 96) {
+          // De vuelta arriba: la barra se muestra entera otra vez
+          userOpened = false;
+          if (bar.classList.contains("collapsed")) setOpen(true);
+        } else if (top <= 66 && !bar.classList.contains("collapsed")) {
+          if (!userOpened && !body.contains(document.activeElement)) setOpen(false);
         }
       });
     }, { passive: true });
