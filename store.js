@@ -6,10 +6,16 @@
 // plataformas ni comisiones de por medio.
 //
 // La tienda arranca con lo que se empaca y se envía fácil —
-// sazonadores de la casa, yerba y tereré, cuchillería, tablas
-// y todo lo de parrilla. La carne lleva `soon: true`: aparece
-// con su ficha y su foto, pero manda a WhatsApp en vez de al
-// carrito, hasta que estén resueltos empaque y envío en frío.
+// sazonadores de la casa, yerba y tereré, cuchillería, mandiles
+// y mesa. La carne lleva `soon: true`: aparece con su ficha y su
+// foto, pero manda a WhatsApp en vez de al carrito, hasta que
+// estén resueltos empaque y envío en frío.
+//
+// AQUÍ SOLO ENTRA LO QUE TIENE FOTO DE ESTUDIO. Lo demás (yerbas
+// CBSé/Amanda/Kurupí/Playadito, Tramontina, tablas HOLZ, carbón,
+// Lodge, kits) se vende en el mostrador y está listado a mano en
+// "También en el mostrador", al final de tienda.html. Cuando se
+// fotografíe algo, súbelo aquí y bórralo de esa lista.
 //
 // PRECIOS de demostración: edita la lista PRODUCTS de abajo.
 // ============================================================
@@ -37,8 +43,8 @@
   //           el mostrador mientras resolvemos empaque y envío en frío.
   var PRODUCTS = [
     // ================= SAZONADORES DE LA CASA =================
-    { id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon", price: 195, unit: "pieza", approx: "frasco 450 g",
-      img: f("sal-parrillera"), imgs: [f("sal-parrillera"), f("sal-parrillera-2"), f("sal-parrillera-bolsa")],
+    { id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon", price: 195, unit: "pieza", approx: "frasco 420 g",
+      img: f("sal-parrillera"), imgs: [f("sal-parrillera"), f("sal-parrillera-bolsa")],
       alt: "Frasco de Sal Parrillera de Carnes Hildebrandt",
       desc: "El primer sazonador de la casa. Isaac y Abram empezaron a buscarlo a mediados de 2020: querían una sal pensada para carne de res y salieron meses después con esta mezcla de sal Himalaya, pimienta molida, chile cascabel, ajo y especias. Se elabora artesanalmente aquí, en los campos menonitas de Cuauhtémoc.",
       cook: "Espolvorea parejo unos 20 minutos antes del fuego, para que la sal alcance a trabajar la superficie del corte. También la tenemos en bolsa de recarga de 1.5 kg." },
@@ -49,168 +55,99 @@
       desc: "La misma Sal Parrillera del frasco, en bolsa de 1.5 kg. Para quien ya no quiere quedarse a media parrillada — o para quien cocina para mucha gente.",
       cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor de la estufa." },
 
-    { id: "sweet-bbq-rub", name: "Sweet BBQ Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 450 g",
-      img: f("sweet-bbq-rub"), imgs: [f("sweet-bbq-rub"), f("sweet-bbq-rub-2"), f("sweet-bbq-rub-bolsa")],
+    { id: "sweet-bbq-rub", name: "Sweet BBQ Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 370 g",
+      img: f("sweet-bbq-rub"), imgs: [f("sweet-bbq-rub"), f("sweet-bbq-rub-bolsa")],
       alt: "Frasco de Sweet BBQ Rub de Carnes Hildebrandt",
       desc: "Después de unos años con la Sal Parrillera, David quiso un rub enfocado en cerdo: el sabor de unas sweet baby back ribs o de unas alitas. Salió el pork rub que hoy se llama Sweet BBQ Rub — dulce, adictivo y con poca sal, así que es difícil pasarse de sazón.",
       cook: "Cubre la pieza sin miedo y déjala tomar color en calor indirecto. Como lleva azúcar, barniza y sella al final para que no se queme." },
 
-    { id: "sweet-bbq-rub-bolsa", name: "Sweet BBQ Rub — recarga 1.5 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.5 kg",
+    { id: "sweet-bbq-rub-bolsa", name: "Sweet BBQ Rub — recarga 1.35 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.35 kg",
       img: f("sweet-bbq-rub-bolsa"), imgs: [f("sweet-bbq-rub-bolsa"), f("sweet-bbq-rub")],
-      alt: "Bolsa de recarga de 1.5 kg de Sweet BBQ Rub",
-      desc: "El Sweet BBQ Rub en bolsa de 1.5 kg, para ahumadas largas y para quien ya lo adoptó como sazonador de diario.",
+      alt: "Bolsa de recarga de 1.35 kg de Sweet BBQ Rub",
+      desc: "El Sweet BBQ Rub en bolsa de 1.35 kg, para ahumadas largas y para quien ya lo adoptó como sazonador de diario.",
       cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor." },
 
-    { id: "brisket-rub", name: "Brisket Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 450 g",
+    { id: "brisket-rub", name: "Brisket Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco",
       img: f("brisket-rub"), imgs: [f("brisket-rub"), f("brisket-rub-bolsa")],
       alt: "Frasco de Brisket Rub de Carnes Hildebrandt",
       desc: "El tercero de la familia, hecho para las piezas que pasan horas en el ahumador. Grano grueso, mucha pimienta y el perfil clásico de Texas — sal y pimienta bien puestas, sin tapar el sabor de la carne.",
       cook: "Cubre el brisket la noche anterior y déjalo en frío. Al día siguiente, ahumador a 110 °C y paciencia con la meseta de temperatura." },
 
-    { id: "brisket-rub-bolsa", name: "Brisket Rub — recarga 1.5 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.5 kg",
+    { id: "brisket-rub-bolsa", name: "Brisket Rub — bolsa de recarga", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa",
       img: f("brisket-rub-bolsa"), imgs: [f("brisket-rub-bolsa"), f("brisket-rub")],
-      alt: "Bolsa de recarga de 1.5 kg de Brisket Rub",
-      desc: "Brisket Rub en 1.5 kg. Un brisket entero se lleva buena parte de un frasco, así que esta es la presentación de quien ahúma en serio.",
+      alt: "Bolsa de recarga de Brisket Rub",
+      desc: "Brisket Rub en bolsa de recarga. Un brisket entero se lleva buena parte de un frasco, así que esta es la presentación de quien ahúma en serio.",
       cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor." },
 
-    { id: "sal-ahumada", name: "Sal Ahumada", cat: "sazon", price: 185, unit: "pieza", approx: "frasco 450 g",
-      img: f("sal-ahumada"), imgs: [f("sal-ahumada"), f("sal-ahumada-2")],
-      alt: "Frasco de Sal Ahumada — smoked salt",
+    { id: "sal-ahumada", name: "Sal Ahumada", cat: "sazon", price: 185, unit: "pieza", approx: "frasco",
+      img: f("sal-ahumada"), alt: "Frasco de Sal Ahumada — smoked salt",
       desc: "Sal ahumada de grano, para dar humo sin prender el ahumador. Es el atajo cuando se antoja ese sabor y la parrillada es entre semana.",
       cook: "Úsala al final, ya fuera del fuego: el humo se nota más cuando no se cocina encima. También levanta verduras asadas y papas al horno." },
 
-    { id: "salt-pepper", name: "Salt & Pepper", cat: "sazon", price: 175, unit: "pieza", approx: "frasco 450 g",
+    { id: "salt-pepper", name: "Salt & Pepper", cat: "sazon", price: 175, unit: "pieza", approx: "frasco",
       img: f("salt-pepper"), alt: "Frasco de Salt & Pepper — sal de mar y pimienta fresca",
       desc: "Sal de mar y pimienta molida fresca, en la proporción que usamos en el mostrador. El sazonador de todos los días — el que no falla con nada.",
       cook: "Para un corte grueso, sazona por los dos lados y por el canto de grasa. Y si vas a rebanar, un poco más al servir." },
 
     // ================= TERERÉ Y YERBA MATE ====================
     { id: "yerba-verdeflor", name: "Yerba Verdeflor 500 g", cat: "terere", price: 165, unit: "pieza", approx: "5 sabores",
-      img: f("yerba-verdeflor"),
-      imgs: [f("yerba-verdeflor"), f("yerba-verdeflor-2"), f("yerba-verdeflor-3"), f("yerba-verdeflor-4"), f("yerba-verdeflor-5")],
-      alt: "Paquetes de yerba mate Verdeflor en varios sabores",
+      img: f("yerba-verdeflor-menta"),
+      imgs: [f("yerba-verdeflor-menta"), f("yerba-verdeflor-manzanilla"), f("yerba-verdeflor-naranja"),
+             f("yerba-verdeflor-serranas"), f("yerba-verdeflor-jengibre")],
+      alt: "Paquetes de yerba mate Verdeflor en sus cinco sabores",
       desc: "Yerba argentina elaborada con palo, compuesta con hierbas. La tenemos en Menta, Manzanilla, Naranja, Hierbas Serranas y Menta con Jengibre — suave y aromática, la puerta de entrada para quien apenas empieza con el mate.",
       cook: "Dinos el sabor al confirmar el pedido por WhatsApp. Para tereré, agua bien fría y hielo; para mate, agua a 70–80 °C, nunca hirviendo." },
 
     { id: "yerba-campesino", name: "Yerba Campesino", cat: "terere", price: 185, unit: "pieza", approx: "500 g y 1 kg",
-      img: f("yerba-campesino"),
-      imgs: [f("yerba-campesino"), f("yerba-campesino-2"), f("yerba-campesino-3"), f("yerba-campesino-4"), f("yerba-campesino-5")],
+      img: f("yerba-campesino-clasica"),
+      imgs: [f("yerba-campesino-clasica"), f("yerba-campesino-burrito")],
       alt: "Paquetes de yerba mate Campesino de Paraguay",
       desc: "Yerba paraguaya, la de sabor más franco del estante. La Clásica viene en 1 kg; las compuestas en 500 g — Burrito y Té Verde, Menta Limón y Cedrón, Refrescante con extra menta, y la Mezcla Maestra con burrito y moringa.",
       cook: "La Clásica pide tereré bien helado. Dinos cuál quieres al confirmar por WhatsApp y te decimos qué hay en el mostrador ese día." },
 
-    { id: "yerba-cbse", name: "Yerba CBSé 500 g", cat: "terere", price: 195, unit: "pieza", approx: "4 sabores",
-      img: f("yerba-cbse"),
-      imgs: [f("yerba-cbse"), f("yerba-cbse-2"), f("yerba-cbse-3"), f("yerba-cbse-4")],
-      alt: "Paquetes de yerba mate CBSé saborizada",
-      desc: "La saborizada argentina de siempre. Frutos del Bosque y Pomelo para los que van por lo dulce, Guaraná para las tardes que se hacen largas, y Hierbas del Litoral con cedrón, menta y cilantro.",
-      cook: "Va muy bien en tereré con jugo de limón o naranja. Dinos el sabor al confirmar el pedido." },
-
-    { id: "yerba-amanda", name: "Yerba Amanda 500 g", cat: "terere", price: 190, unit: "pieza", approx: "2 sabores",
-      img: f("yerba-amanda"), imgs: [f("yerba-amanda"), f("yerba-amanda-2")],
-      alt: "Paquetes de yerba mate Amanda",
-      desc: "Argentina, de Misiones, envasada en origen. La tenemos en Hierbas Serranas — poleo, peperina y menta — y en Limón, más ligera y cítrica.",
-      cook: "El paquete trae impresos los cuatro pasos para cebar un mate, por si es tu primera vez. Dinos el sabor al confirmar." },
-
-    { id: "yerba-kurupi", name: "Yerba Kurupí 500 g", cat: "terere", price: 175, unit: "pieza", approx: "2 sabores",
-      img: f("yerba-kurupi"), imgs: [f("yerba-kurupi"), f("yerba-kurupi-2")],
-      alt: "Paquetes de yerba mate Kurupí compuesta con hierbas",
-      desc: "Paraguaya, compuesta con hierbas y de las más buscadas para tereré. En Menta y Limón, o en Menta y Boldo si la quieres más herbal.",
-      cook: "Tereré: llena la guampa, hielo hasta arriba y el agua bien fría desde el principio. Dinos el sabor al confirmar." },
-
-    { id: "yerba-playadito", name: "Yerba Playadito 500 g", cat: "terere", price: 185, unit: "pieza",
-      img: f("yerba-playadito"), alt: "Paquete de yerba mate Playadito elaborada con palo",
-      desc: "De Colonia Liebig, Corrientes, cultivada y envasada en origen desde 1926. Con palo y bajo contenido de polvo — suave, pareja, y de las que no amargan aunque te distraigas.",
-      cook: "La favorita para mate de la mañana: agua a 75 °C y no la muevas de más para que aguante muchas cebadas." },
-
     { id: "mate-guampa", name: "Mate con virola labrada", cat: "terere", price: 890, unit: "pieza", from: true,
-      img: f("mate-guampa"), imgs: [f("mate-guampa"), f("mate-guampa-2"), f("mate-guampa-3")],
-      alt: "Mates con textura de cuero y virola metálica labrada",
+      img: f("mate-guampa-negro"),
+      imgs: [f("mate-guampa-negro"), f("mate-guampa-gris"), f("mate-guampa-terracota")],
+      alt: "Mates con textura de cuero y virola metálica labrada, en negro, gris y terracota",
       desc: "Interior de acero, exterior texturizado y una virola metálica labrada en la boca. Los tenemos en negro, gris y terracota — el mate para presumir en la mesa.",
       cook: "Lávalo a mano, sin detergentes fuertes, y sécalo boca abajo. Si guardas la yerba dentro, se pone rancia: mejor vacío." },
 
     { id: "mate-termico", name: "Mate térmico con bombilla", cat: "terere", price: 490, unit: "pieza",
-      img: f("mate-termico"),
-      imgs: [f("mate-termico"), f("mate-termico-2"), f("mate-termico-3"), f("mate-termico-4"), f("mate-termico-5")],
-      alt: "Mates térmicos de acero en varios colores con bombilla",
-      desc: "Doble pared de acero, así que el tereré sigue helado y el mate caliente. Viene con bombilla y cepillo de limpieza. Hay en negro, blanco, verde, terracota y acabado madera.",
+      img: f("mate-termico-negro"),
+      imgs: [f("mate-termico-negro"), f("mate-termico-madera")],
+      alt: "Mates térmicos de acero con bombilla y cepillo de limpieza",
+      desc: "Doble pared de acero, así que el tereré sigue helado y el mate caliente. Viene con bombilla y cepillo de limpieza. En la foto van el negro y el de acabado madera; en el mostrador hay más colores.",
       cook: "Enjuaga la bombilla apenas termines — es lo único que de verdad se tapa. Dinos el color al confirmar tu pedido." },
 
     // ================= CUCHILLERÍA ============================
     { id: "cuchillo-bulledge", name: "Cuchillos Bull-Edge", cat: "cuchillos", price: 850, unit: "pieza", from: true,
-      img: f("cuchillo-bulledge"),
-      imgs: [f("cuchillo-bulledge"), f("cuchillo-bulledge-2"), f("cuchillo-bulledge-3"),
-             f("cuchillo-bulledge-4"), f("cuchillo-bulledge-5"), f("cuchillo-bulledge-6")],
-      alt: "Cuchillos Bull-Edge de acero damasco y martillado en su exhibidor",
-      desc: "La pared de cuchillos de la boutique: hojas de acero damasco y acero martillado, con mango de madera, hueso o resina. Cada pieza es distinta — hay santoku, chef, deshuesador y carnicero.",
+      img: f("cuchillo-bulledge-carnicero"),
+      imgs: [f("cuchillo-bulledge-carnicero"), f("cuchillo-bulledge-damasco"),
+             f("cuchillo-bulledge-santoku"), f("cuchillo-bulledge-hacha"), f("cuchillo-bulledge-exhibidor")],
+      alt: "Cuchillos Bull-Edge de acero damasco con mango de madera de olivo",
+      desc: "La pared de cuchillos de la boutique: hoja de acero damasco y mango de madera de olivo, cada pieza con su propio dibujo en el acero. Hay carnicero, santoku y hacha de cocina, y los precios cambian según la pieza.",
       cook: "Nunca al lavavajillas y nunca sobre vidrio o mármol: madera o plástico. Un asentador cada tanto y no vuelves a afilar en años." },
 
-    { id: "cuchillos-tramontina", name: "Cuchillería Tramontina profesional", cat: "cuchillos", price: 320, unit: "pieza", from: true,
-      img: f("cuchillos-tramontina"), imgs: [f("cuchillos-tramontina"), f("local-cuchillos-w")],
-      alt: "Cuchillos Tramontina de mango blanco para carnicería",
-      desc: "Los de trabajo: mango blanco antideslizante, hoja flexible y grado profesional. Son los que usamos detrás del mostrador, y hay deshuesador, fileteador y cuchillo de carnicero.",
-      cook: "Aguantan uso diario y afilado frecuente. Lávalos y sécalos de inmediato para que el filo no se pique." },
-
-    { id: "set-churrasco", name: "Juego de cuchillos y trinches para carne", cat: "cuchillos", price: 1290, unit: "pieza", approx: "estuche de madera",
-      img: f("set-churrasco"), imgs: [f("set-churrasco"), f("set-churrasco-3")],
-      alt: "Estuche de madera con cuchillos y trinches para carne",
-      desc: "Estuche de madera con cuchillos y trinches para la mesa, mango de madera. El regalo que siempre cae bien en una casa donde se asa.",
-      cook: "Lávalos a mano y sécalos antes de guardarlos en el estuche, para que la madera no tome humedad." },
-
-    // ================= TABLAS Y MANDILES ======================
-    { id: "tabla-holz", name: "Tabla HOLZ grabada", cat: "tablas", price: 790, unit: "pieza", from: true,
-      img: f("tabla-holz"), imgs: [f("tabla-holz"), f("tabla-holz-2"), f("tabla-holz-3")],
-      alt: "Tablas de madera HOLZ grabadas con Carnes Hildebrandt",
-      desc: "Tablas de madera maciza HOLZ, con vetas contrastadas y el grabado de Carnes Hildebrandt al frente. Hay de varios tamaños, desde la de trabajo hasta la que sale a la mesa con el corte encima.",
-      cook: "Lávala a mano y sécala de inmediato — nunca en remojo. Un poco de aceite mineral cada tanto y te dura años." },
-
-    { id: "mandil-piel", name: "Mandil de piel", cat: "tablas", price: 2200, unit: "pieza",
-      img: f("mandil-piel"), imgs: [f("mandil-piel"), f("mandil-piel-2"), f("mandil-piel-3"), f("mandil-piel-4")],
-      alt: "Mandiles de piel con bolsas y portacuchillos",
-      desc: "Mandil de piel con bolsas al frente, portacuchillos y argolla para el trapo. Correas ajustables. En vino, negro, azul y natural — la piel se va marcando con el uso y cada uno acaba siendo distinto.",
+    // ================= MANDILES Y MESA ========================
+    { id: "mandil-piel", name: "Mandil de piel", cat: "asado", price: 2200, unit: "pieza", approx: "7 colores",
+      img: f("mandil-cafe"),
+      imgs: [f("mandil-cafe"), f("mandil-negro"), f("mandil-vino"), f("mandil-camel"),
+             f("mandil-negro-cafe"), f("mandil-negro-camel"), f("mandil-pelo-vaca")],
+      alt: "Mandiles de piel con bolsas, portacuchillos y correas ajustables",
+      desc: "Mandil de piel con bolsas al frente, portacuchillos y argolla para el trapo. Correas ajustables. Hay en café, negro, vino y camel, dos combinados en negro con café y con camel, y uno con las bolsas en pelo de vaca — la piel se va marcando con el uso y cada uno acaba siendo distinto.",
       cook: "Límpialo con un trapo húmedo y déjalo secar al aire, lejos del calor directo. Una crema para piel de vez en cuando y listo." },
 
-    { id: "molcajete", name: "Molcajete de piedra volcánica", cat: "tablas", price: 890, unit: "pieza", from: true,
-      img: f("molcajete"), imgs: [f("molcajete"), f("molcajete-2")],
+    { id: "molcajete", name: "Molcajete de piedra volcánica", cat: "asado", price: 890, unit: "pieza", from: true,
+      img: f("molcajete"), imgs: [f("molcajete"), f("molcajete-cuadrado")],
       alt: "Molcajetes de piedra volcánica, redondo y cuadrado",
       desc: "Piedra volcánica labrada, en redondo y en cuadrado. Para la salsa que acompaña el asado — y porque una salsa molcajeteada sabe distinto, no hay vuelta.",
       cook: "Cúralo antes de estrenarlo: muele arroz crudo hasta que salga blanco, dos o tres tandas. Después, solo agua y cepillo — nada de jabón." },
 
-    // ================= PARA LA PARRILLA =======================
-    { id: "carbon", name: "Carbón para asar", cat: "parrilla", price: 190, unit: "pieza", approx: "bolsa",
-      img: f("carbon"), imgs: [f("carbon"), f("local-carbon-w")],
-      alt: "Bolsas de carbón natural en el estante de la tienda",
-      desc: "Carbón natural, del que enciende parejo y deja brasa estable — la diferencia entre pelear con el fuego y disfrutar el asado.",
-      cook: "Calcula una bolsa por cada ocho comensales y enciéndelo unos 30 minutos antes de poner la primera pieza." },
-
-    { id: "chips-ahumado", name: "Leña para ahumar", cat: "parrilla", price: 215, unit: "pieza", approx: "bolsa",
-      img: f("chips-ahumado"), alt: "Bolsas de leña en trozo para ahumar",
-      desc: "Madera en trozo para dar humo: manzano para el cerdo y las aves, nogal y mezquite cuando la pieza aguanta un humo más fuerte.",
-      cook: "Remójala 30 minutos y échala sobre la brasa ya hecha. Poca: el humo debe ser azul y ligero, no blanco y espeso." },
-
-    { id: "turbo-fan", name: "Encendedor turbo para brasas", cat: "parrilla", price: 690, unit: "pieza",
-      img: f("turbo-fan"), imgs: [f("turbo-fan"), f("turbo-fan-2")],
-      alt: "Ventilador turbo portátil para encender carbón",
+    { id: "turbo-fan", name: "Encendedor turbo para brasas", cat: "asado", price: 690, unit: "pieza",
+      img: f("turbo-fan"), imgs: [f("turbo-fan"), f("turbo-fan-player")],
+      alt: "Ventilador turbo portátil para encender carbón, en su caja",
       desc: "Ventilador de mano recargable: apuntas al carbón y en un par de minutos tienes brasa. Se acabó el cartón, el periódico y el soplar hasta marearse.",
       cook: "Ráfagas cortas y a distancia — si lo dejas fijo, levanta ceniza. Cárgalo antes de salir al rancho." },
-
-    { id: "sarten-lodge", name: "Sartén de hierro Lodge", cat: "parrilla", price: 890, unit: "pieza", from: true,
-      img: f("sarten-lodge"), imgs: [f("sarten-lodge"), f("sarten-lodge-2")],
-      alt: "Sartenes de hierro fundido Lodge en su empaque",
-      desc: "Hierro fundido curado de fábrica, hecho en Estados Unidos. Aguanta el fuego directo de la parrilla y es lo que da esa costra que un sartén ligero no consigue. Hay de 11 y 12 pulgadas.",
-      cook: "Precaliéntalo bien antes de poner la carne. Después, agua caliente y cepillo, secar al fuego y una capa fina de aceite." },
-
-    { id: "plancha-lodge", name: "Plancha reversible Lodge", cat: "parrilla", price: 1290, unit: "pieza",
-      img: f("plancha-lodge"), imgs: [f("plancha-lodge"), f("plancha-lodge-2")],
-      alt: "Plancha reversible de hierro fundido Lodge",
-      desc: "Dos superficies en una pieza de hierro fundido: lisa de un lado para verduras y huevo, con estrías del otro para marcar el corte. Con canal para la grasa. Sirve sobre la parrilla y sobre la estufa.",
-      cook: "Voltéala según lo que estés haciendo y déjala calentar completa antes de usarla — el hierro tarda, pero luego no se enfría." },
-
-    { id: "kit-parrillero", name: "Kit de asador con estuche", cat: "parrilla", price: 1190, unit: "pieza", approx: "estuche",
-      img: f("kit-parrillero"), imgs: [f("kit-parrillero"), f("set-churrasco-2")],
-      alt: "Estuche con juego de utensilios para asador",
-      desc: "Pinzas, espátula, trinche, brocha y cuchillo con mango de madera, todo en un estuche que se cierra y se lleva. El regalo seguro para el que siempre acaba en el asador.",
-      cook: "Lávalos a mano y sécalos antes de guardarlos: el estuche cerrado con humedad es el enemigo de la madera." },
 
     // ================= CORTES (PRÓXIMAMENTE) ==================
     { id: "cortes-res", name: "Cortes de res", cat: "carnes", soon: true,
@@ -220,13 +157,13 @@
       cook: "Todavía no en línea: la carne pide empaque y cadena de frío distintos a lo demás, y preferimos abrirlo bien a abrirlo rápido. Mientras tanto, apártala por WhatsApp y la dejamos lista." },
 
     { id: "cortes-wagyu", name: "Wagyu japonés y australiano", cat: "carnes", soon: true,
-      img: f("local-vitrinas"), imgs: [f("local-vitrinas"), f("local-rebanadora")],
+      img: f("local-vitrinas"), imgs: [f("local-vitrinas"), f("local-angus")],
       alt: "Vitrinas refrigeradas de la boutique",
       desc: "Un refrigerador dedicado a Wagyu, con disponibilidad limitada y rotación constante. Es la vitrina frente a la que todo mundo se detiene.",
       cook: "Todavía no en línea. Escríbenos por WhatsApp y te decimos qué piezas hay esta semana antes de que se vayan." },
 
     { id: "cortes-cerdo", name: "Cerdo y piezas para ahumar", cat: "carnes", soon: true,
-      img: f("local-rebanadora"), imgs: [f("local-rebanadora"), f("local-mostrador"), f("local-corte")],
+      img: f("local-rebanadora"), imgs: [f("local-rebanadora"), f("local-corte")],
       alt: "Rebanadora y área de preparación junto a las vitrinas",
       desc: "Costillar, chuleta, baby back ribs y las piezas grandes para ahumador: brisket, pecho y costilla. Lo que se cocina despacio y sale a la mesa el domingo.",
       cook: "Todavía no en línea. Pídelo por WhatsApp con un día de anticipación y lo dejamos preparado y porcionado." },
@@ -248,19 +185,17 @@
     ["sazon", "Sazonadores"],
     ["terere", "Tereré y yerba"],
     ["cuchillos", "Cuchillería"],
-    ["tablas", "Tablas y mandiles"],
-    ["parrilla", "Para la parrilla"],
+    ["asado", "Mandiles y mesa"],
     ["carnes", "Cortes"]
   ];
 
-  // El encabezado del consejo en la ficha: "En la parrilla" solo tiene
-  // sentido para la carne y el carbón, no para una yerba o una tabla.
+  // El encabezado del consejo en la ficha: "Cuidados" solo tiene sentido
+  // para un cuchillo o un mandil, no para una yerba o un sazonador.
   var TIPS = {
     sazon: "Cómo usarlo",
     terere: "Cómo prepararlo",
     cuchillos: "Cuidados",
-    tablas: "Cuidados",
-    parrilla: "En la parrilla",
+    asado: "Cuidados",
     carnes: "Mientras tanto"
   };
 
