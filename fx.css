@@ -727,6 +727,12 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
   display: flex;
   align-items: center;
   gap: 12px;
+  /* `width` explícito y no el de por sí. Anclado en `left: 50%` y sin
+     ancho, al aviso solo le queda media pantalla para acomodarse, así
+     que con un nombre largo —"Sal Parrillera — recarga 1.5 kg"— se
+     encogía al ancho de la palabra más larga y se volvía una columna
+     altísima: con el borde redondo de 999px, un óvalo. */
+  width: max-content;
   max-width: min(400px, 90vw);
   padding: 12px 16px;
   background: var(--paper);
@@ -751,6 +757,7 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
   color: #fff;
   font-size: 14px;
 }
+.fx-toast .tt { min-width: 0; }
 .fx-toast b { font-weight: 600; }
 .fx-toast button {
   margin-left: 4px;

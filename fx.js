@@ -166,14 +166,14 @@
   // tras otra. Se le quita el .reveal al contenedor para que no
   // haya dos animaciones peleando.
   // ==========================================================
-  // OJO: `.walk-track` NO va aquí. Es una tira que se desliza de lado,
-  // y animar cada foto por separado le hacía dos daños: el
-  // `translateY` de entrada le agregaba juego vertical al contenedor,
-  // y al deslizar rápido en el celular se veía un hueco en blanco
-  // mientras cada foto terminaba de aparecer. La tira entra completa,
-  // con el `.reveal` de siempre.
+  // `.walk-grid` sí entra aquí. Mientras fue una tira que se deslizaba
+  // de lado no podía: el `translateY` de entrada le agregaba juego
+  // vertical al contenedor y, al deslizar rápido en el celular, se veía
+  // un hueco en blanco mientras cada foto terminaba de aparecer. Ya
+  // como mosaico quieto, las fotos entran escalonadas como las demás.
   var GRIDS = ".cat-tiles, .store-grid, .cards-grid, .quote-grid, .steps, .perks, " +
-              ".brands-grid, .social-grid, .badges-grid, .timeline, .feature-list, .footer-links";
+              ".brands-grid, .social-grid, .badges-grid, .timeline, .feature-list, " +
+              ".footer-links, .walk-grid";
 
   $$(GRIDS).forEach(function (grid) {
     grid.classList.remove("reveal", "delay-1", "delay-2");

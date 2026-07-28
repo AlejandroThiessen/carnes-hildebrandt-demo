@@ -76,6 +76,18 @@ M = {
     "local-angus":      ("Store/local-angus-rebanadora", PORT, .50, .00),
     "local-rebanadora": ("Store/local-angus-rebanadora", PORT, .50, .62, .80),
 
+    # ---------- the shop, square: the meat sheets in the store ----------
+    # Los cortes son los únicos productos cuya foto sale del local y no del
+    # set de producto. En la ficha todas las fotos van en un cuadro 1:1, así
+    # que estas necesitan su propio recorte cuadrado; con el 3:4 quedaban
+    # dos franjas a los lados. Mismos anclajes que la versión vertical.
+    "local-corte-sq":      ("Store/local-mostrador-corte", SQ, 1.0, .45, .62),
+    "local-mostrador-sq":  ("Store/local-mostrador-corte", SQ, .00, .50),
+    "local-poster-sq":     ("Store/local-poster-cortes", SQ, .47, .50),
+    "local-vitrinas-sq":   ("Store/local-vitrinas", SQ, .50, .55),
+    "local-angus-sq":      ("Store/local-angus-rebanadora", SQ, .50, .00),
+    "local-rebanadora-sq": ("Store/local-angus-rebanadora", SQ, .50, .62, .80),
+
     # ---------- the shop, wide 3:2 (category tiles, page headers) ----------
     "local-sazon-w":      ("Store/local-sazonadores", WIDE, .50, .32),
     "local-salsas-w":     ("Store/local-cuchillos-salsas", WIDE, .50, .95),

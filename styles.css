@@ -782,56 +782,46 @@ a.card { display: block; color: inherit; text-decoration: none; }
    RESEÑAS (maqueta — se reemplazan por reseñas reales)
    ============================================================ */
 /* ============================================================
-   TIRA "DATE UNA VUELTA" — fotos del local
-   Se sale del contenedor a propósito: la última foto queda
-   cortada por el borde para que se note que hay más.
+   MOSAICO "DATE UNA VUELTA" — fotos del local
+
+   Esto era una tira que se deslizaba de lado, y en el celular se
+   arrastraba muy por detrás de la última foto: quedaba media
+   pantalla en blanco antes de que rebotara. El rebote elástico de
+   un contenedor con scroll propio no se deja apagar en todos los
+   navegadores, así que ya no hay contenedor con scroll: las diez
+   fotos se ven de corrido y no queda nada que arrastrar.
+
+   Es un flex y no un grid a propósito. Con `justify-content: center`,
+   el renglón que queda incompleto —tres columnas y diez fotos— se
+   acomoda centrado en vez de dejar un hueco a la derecha.
    ============================================================ */
-.walk {
-  /* El respiro de las orillas. Va aquí para que la tira y sus puntos de
-     anclaje midan lo mismo que el `padding-inline` del riel. */
-  --walk-gutter: max(4%, calc((100% - var(--container)) / 2));
-  overflow-x: auto;
-  /* Solo se mueve de lado. Sin esto el navegador calcula overflow-y
-     como `auto` (basta con que un eje no sea `visible`), la tira queda
-     con unos píxeles de juego vertical y en el celular se "despega"
-     al pasar el dedo.
-     Aquí iba además un `touch-action: pan-x` que hacía justo lo
-     contrario de lo que decía: al dedo que empezaba sobre una foto se
-     le prohibía el gesto vertical, así que la página se quedaba clavada
-     —y la tira ocupa el ancho completo, es fácil apoyar ahí el pulgar—.
-     Con `overflow-y: hidden` ya no hay juego vertical que corregir, así
-     que el gesto de arriba abajo vuelve a ser de la página. */
-  overflow-y: hidden;
-  /* `contain` frena el encadenado con la página, pero deja intacto el
-     rebote elástico del celular: de un empujón se arrastraba la tira un
-     buen tramo más allá de la última foto —pantalla vacía— y volvía
-     sola. `none` quita las dos cosas: la tira se planta en la última. */
-  overscroll-behavior-x: none;
-  /* Cada foto se ancla al borde de arranque y no al centro. Centrada, ni
-     la primera ni la última alcanzan nunca su anclaje —en las orillas
-     solo hay el respiro del contenedor—, así que el deslizamiento se
-     quedaba tironeando en las puntas. `scroll-padding` deja los anclajes
-     a plomo con el texto de la sección. */
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: var(--walk-gutter);
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(169, 127, 69, .55) transparent;
-  padding-bottom: 14px;
-}
-.walk::-webkit-scrollbar { height: 6px; }
-.walk::-webkit-scrollbar-track { background: rgba(36, 29, 23, .07); border-radius: 99px; }
-.walk::-webkit-scrollbar-thumb { background: rgba(169, 127, 69, .55); border-radius: 99px; }
-.walk-track {
+.walk-grid {
   display: flex;
-  gap: 16px;
-  width: max-content;
-  padding-inline: var(--walk-gutter);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
 }
 .walk-shot {
   position: relative;
-  flex: 0 0 clamp(190px, 22vw, 258px);
-  scroll-snap-align: start;
+  flex: 0 1 calc(50% - 7px);
+}
+/* Dos columnas en el celular dejan la foto angosta: el rótulo baja de
+   tamaño para seguir cabiendo en un renglón. */
+@media (max-width: 639px) {
+  .walk-shot figcaption {
+    left: 9px;
+    bottom: 9px;
+    padding: 5px 10px;
+    font-size: 10.5px;
+    letter-spacing: .02em;
+  }
+}
+@media (min-width: 640px) {
+  .walk-grid { gap: 16px; }
+  .walk-shot { flex-basis: calc(33.333% - 11px); }
+}
+@media (min-width: 1000px) {
+  .walk-shot { flex-basis: calc(20% - 13px); }
 }
 .walk-shot img {
   width: 100%;
@@ -845,7 +835,13 @@ a.card { display: block; color: inherit; text-decoration: none; }
   position: absolute;
   left: 12px;
   bottom: 12px;
+  /* En la tira las fotos eran más anchas y el rótulo siempre cabía. En
+     el mosaico las columnas se angostan y "Sales y sazonadores" se salía
+     de su foto: aquí se le pone el ancho de la foto como techo y, si no
+     alcanza, parte en dos renglones. */
+  max-width: calc(100% - 24px);
   padding: 6px 13px;
+  line-height: 1.25;
   background: rgba(255, 253, 248, .93);
   border-radius: 999px;
   font-size: 11.5px;

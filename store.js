@@ -41,39 +41,51 @@
   //           marcada "Próximamente" y manda a WhatsApp en vez de al
   //           carrito. Es lo que hoy pasa con la carne: se despacha en
   //           el mostrador mientras resolvemos empaque y envío en frío.
+  //   grupo  — OPCIONAL: el mismo producto en otra presentación. Los que
+  //   medida   comparten `grupo` salen en la ficha como un par de botones
+  //            rotulados con su `medida`, y al elegir uno la ficha entera
+  //            cambia — foto, precio y el botón de agregar. Cada medida
+  //            sigue siendo su propio producto con su propio id y precio,
+  //            así que al carrito va exactamente la que quedó elegida.
   var PRODUCTS = [
     // ================= SAZONADORES DE LA CASA =================
     { id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon", price: 195, unit: "pieza", approx: "frasco 420 g",
+      grupo: "sal-parrillera", medida: "Frasco 420 g",
       img: f("sal-parrillera"), imgs: [f("sal-parrillera"), f("sal-parrillera-bolsa")],
       alt: "Frasco de Sal Parrillera de Carnes Hildebrandt",
       desc: "El primer sazonador de la casa. Isaac y Abram empezaron a buscarlo a mediados de 2020: querían una sal pensada para carne de res y salieron meses después con esta mezcla de sal Himalaya, pimienta molida, chile cascabel, ajo y especias. Se elabora artesanalmente aquí, en los campos menonitas de Cuauhtémoc.",
       cook: "Espolvorea parejo unos 20 minutos antes del fuego, para que la sal alcance a trabajar la superficie del corte. También la tenemos en bolsa de recarga de 1.5 kg." },
 
     { id: "sal-parrillera-bolsa", name: "Sal Parrillera — recarga 1.5 kg", cat: "sazon", price: 690, unit: "pieza", approx: "bolsa 1.5 kg",
+      grupo: "sal-parrillera", medida: "Recarga 1.5 kg",
       img: f("sal-parrillera-bolsa"), imgs: [f("sal-parrillera-bolsa"), f("sal-parrillera")],
       alt: "Bolsa de recarga de 1.5 kg de Sal Parrillera",
       desc: "La misma Sal Parrillera del frasco, en bolsa de 1.5 kg. Para quien ya no quiere quedarse a media parrillada — o para quien cocina para mucha gente.",
       cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor de la estufa." },
 
     { id: "sweet-bbq-rub", name: "Sweet BBQ Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco 370 g",
+      grupo: "sweet-bbq-rub", medida: "Frasco 370 g",
       img: f("sweet-bbq-rub"), imgs: [f("sweet-bbq-rub"), f("sweet-bbq-rub-bolsa")],
       alt: "Frasco de Sweet BBQ Rub de Carnes Hildebrandt",
       desc: "Después de unos años con la Sal Parrillera, David quiso un rub enfocado en cerdo: el sabor de unas sweet baby back ribs o de unas alitas. Salió el pork rub que hoy se llama Sweet BBQ Rub — dulce, adictivo y con poca sal, así que es difícil pasarse de sazón.",
       cook: "Cubre la pieza sin miedo y déjala tomar color en calor indirecto. Como lleva azúcar, barniza y sella al final para que no se queme." },
 
     { id: "sweet-bbq-rub-bolsa", name: "Sweet BBQ Rub — recarga 1.35 kg", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa 1.35 kg",
+      grupo: "sweet-bbq-rub", medida: "Recarga 1.35 kg",
       img: f("sweet-bbq-rub-bolsa"), imgs: [f("sweet-bbq-rub-bolsa"), f("sweet-bbq-rub")],
       alt: "Bolsa de recarga de 1.35 kg de Sweet BBQ Rub",
       desc: "El Sweet BBQ Rub en bolsa de 1.35 kg, para ahumadas largas y para quien ya lo adoptó como sazonador de diario.",
       cook: "Rellena el frasco y guarda la bolsa cerrada, en seco y lejos del calor." },
 
     { id: "brisket-rub", name: "Brisket Rub", cat: "sazon", price: 210, unit: "pieza", approx: "frasco",
+      grupo: "brisket-rub", medida: "Frasco",
       img: f("brisket-rub"), imgs: [f("brisket-rub"), f("brisket-rub-bolsa")],
       alt: "Frasco de Brisket Rub de Carnes Hildebrandt",
       desc: "El tercero de la familia, hecho para las piezas que pasan horas en el ahumador. Grano grueso, mucha pimienta y el perfil clásico de Texas — sal y pimienta bien puestas, sin tapar el sabor de la carne.",
       cook: "Cubre el brisket la noche anterior y déjalo en frío. Al día siguiente, ahumador a 110 °C y paciencia con la meseta de temperatura." },
 
     { id: "brisket-rub-bolsa", name: "Brisket Rub — bolsa de recarga", cat: "sazon", price: 720, unit: "pieza", approx: "bolsa",
+      grupo: "brisket-rub", medida: "Bolsa de recarga",
       img: f("brisket-rub-bolsa"), imgs: [f("brisket-rub-bolsa"), f("brisket-rub")],
       alt: "Bolsa de recarga de Brisket Rub",
       desc: "Brisket Rub en bolsa de recarga. Un brisket entero se lleva buena parte de un frasco, así que esta es la presentación de quien ahúma en serio.",
@@ -151,25 +163,25 @@
 
     // ================= CORTES (PRÓXIMAMENTE) ==================
     { id: "cortes-res", name: "Cortes de res", cat: "carnes", soon: true,
-      img: f("local-corte"), imgs: [f("local-corte"), f("local-mostrador"), f("local-poster")],
+      img: f("local-corte-sq"), imgs: [f("local-corte-sq"), f("local-mostrador-sq"), f("local-poster-sq")],
       alt: "Corte de carne preparado detrás del mostrador",
       desc: "Rib eye, New York, tomahawk, T-bone, picaña, arrachera — USDA Prime y Choice, Certified Angus Beef y res nacional. Todo eso sigue en el mostrador, todos los días.",
       cook: "Todavía no en línea: la carne pide empaque y cadena de frío distintos a lo demás, y preferimos abrirlo bien a abrirlo rápido. Mientras tanto, apártala por WhatsApp y la dejamos lista." },
 
     { id: "cortes-wagyu", name: "Wagyu japonés y australiano", cat: "carnes", soon: true,
-      img: f("local-vitrinas"), imgs: [f("local-vitrinas"), f("local-angus")],
+      img: f("local-vitrinas-sq"), imgs: [f("local-vitrinas-sq"), f("local-angus-sq")],
       alt: "Vitrinas refrigeradas de la boutique",
       desc: "Un refrigerador dedicado a Wagyu, con disponibilidad limitada y rotación constante. Es la vitrina frente a la que todo mundo se detiene.",
       cook: "Todavía no en línea. Escríbenos por WhatsApp y te decimos qué piezas hay esta semana antes de que se vayan." },
 
     { id: "cortes-cerdo", name: "Cerdo y piezas para ahumar", cat: "carnes", soon: true,
-      img: f("local-rebanadora"), imgs: [f("local-rebanadora"), f("local-corte")],
+      img: f("local-rebanadora-sq"), imgs: [f("local-rebanadora-sq"), f("local-corte-sq")],
       alt: "Rebanadora y área de preparación junto a las vitrinas",
       desc: "Costillar, chuleta, baby back ribs y las piezas grandes para ahumador: brisket, pecho y costilla. Lo que se cocina despacio y sale a la mesa el domingo.",
       cook: "Todavía no en línea. Pídelo por WhatsApp con un día de anticipación y lo dejamos preparado y porcionado." },
 
     { id: "paquetes-parrilleros", name: "Paquetes parrilleros", cat: "carnes", soon: true,
-      img: f("local-angus"), imgs: [f("local-angus"), f("local-poster")],
+      img: f("local-angus-sq"), imgs: [f("local-angus-sq"), f("local-poster-sq")],
       alt: "Cartel de Certified Angus Beef dentro de la boutique",
       desc: "Surtidos armados por nosotros para que no tengas que decidir: cortes de res, algo de cerdo y acompañamientos, calculados por número de personas.",
       cook: "Todavía no en línea. Dinos cuántos son por WhatsApp y te armamos el paquete — la calculadora de aquí abajo te da el punto de partida." }
@@ -581,6 +593,7 @@
             '<span class="pv-tag" id="pv-tag"></span>' +
             '<h3 id="pv-title"></h3>' +
             '<p class="pv-price" id="pv-price"></p>' +
+            '<div class="pv-sizes" id="pv-sizes" role="group" aria-label="Presentación"></div>' +
             '<p class="pv-desc" id="pv-desc"></p>' +
             '<div class="pv-cook"><strong id="pv-cook-l">Cómo usarlo</strong><span id="pv-cook"></span></div>' +
           "</div>" +
@@ -606,7 +619,8 @@
       cook: document.getElementById("pv-cook"),
       cookL: document.getElementById("pv-cook-l"),
       fine: document.getElementById("pv-fine"),
-      actions: document.getElementById("pv-actions")
+      actions: document.getElementById("pv-actions"),
+      sizes: document.getElementById("pv-sizes")
     };
 
     pv.close.addEventListener("click", closeQuickView);
@@ -622,6 +636,14 @@
       pv.img.src = b.getAttribute("data-src");
       var all = pv.thumbs.querySelectorAll(".pv-thumb");
       for (var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i] === b);
+    });
+
+    // Presentaciones: la ficha se vuelve a llenar con el otro tamaño.
+    // No se reabre —eso reiniciaría el foco y de dónde se venía—, solo
+    // cambia de contenido, y con él el id que se manda al carrito.
+    pv.sizes.addEventListener("click", function (e) {
+      var b = e.target.closest(".pv-size");
+      if (b && b.getAttribute("data-id") !== pvId) fillQuickView(b.getAttribute("data-id"));
     });
 
     // El mismo par de controles que en la tarjeta
@@ -648,12 +670,20 @@
     pv.panel.classList.toggle("has-more", s.scrollHeight - s.clientHeight - s.scrollTop > 6);
   }
 
-  function openQuickView(id) {
+  // Las presentaciones de un producto, en el orden del catálogo. Sin
+  // `grupo` no hay nada que elegir y devuelve una lista vacía.
+  function sizesOf(p) {
+    if (!p.grupo) return [];
+    return PRODUCTS.filter(function (o) { return o.grupo === p.grupo; });
+  }
+
+  // Llena la ficha con un producto. Se usa al abrirla y también al
+  // cambiar de presentación con la ficha ya abierta, así que aquí no va
+  // nada de abrir, enfocar ni recordar de dónde se venía.
+  function fillQuickView(id) {
     var p = byId(id);
-    if (!p) return;
-    if (!pv) buildQuickView();
+    if (!p) return null;
     pvId = id;
-    pvLastFocus = document.activeElement;
 
     var shots = gallery(p);
     pv.img.src = shots[0];
@@ -671,6 +701,15 @@
     pv.cook.textContent = p.cook || "";
     pv.cookL.textContent = tipLabel(p);
 
+    var sizes = sizesOf(p);
+    pv.sizes.innerHTML = sizes.map(function (o) {
+      var on = o.id === p.id;
+      return '<button type="button" class="pv-size' + (on ? " on" : "") + '" data-id="' + o.id +
+        '" aria-pressed="' + on + '"><span class="pv-size-name">' + o.medida +
+        '</span><span class="pv-size-price">' + fmt.format(o.price) + "</span></button>";
+    }).join("");
+    pv.sizes.hidden = sizes.length < 2;
+
     if (p.soon) {
       pv.price.innerHTML = 'En el mostrador <span>· todavía no en línea</span>';
       pv.price.classList.add("p-price-soon");
@@ -683,19 +722,33 @@
       pv.actions.innerHTML = stepperHTML(p, rules(p).start, false) +
         '<button type="button" class="p-add" data-id="' + p.id + '">' +
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 10.3A2 2 0 0 0 9.45 16H17a2 2 0 0 0 1.95-1.55L20.8 7H6M12 8v5M9.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-          "Agregar al pedido</button>";
+          // El rótulo va envuelto: el botón es un flex con `gap`, y de
+          // sueltos "Agregar" y la cola se separaban el doble de lo
+          // debido. La cola se esconde en pantallas cortas — entera
+          // partía el botón en dos renglones, y ese segundo renglón se
+          // lo quitaba a la descripción.
+          '<span>Agregar<span class="p-add-tail"> al pedido</span></span></button>';
       pv.fine.textContent = "El total final se confirma por WhatsApp antes de cobrar. Precios de demostración.";
     }
+
+    // Y otra vez en el siguiente cuadro: la primera ficha se abre a veces
+    // antes de que la tipografía asiente y el alto del texto cambia.
+    syncPvFade();
+    requestAnimationFrame(syncPvFade);
+    return p;
+  }
+
+  function openQuickView(id) {
+    if (!pv) buildQuickView();
+    var last = document.activeElement;
+    if (!fillQuickView(id)) return;
+    pvLastFocus = last;
 
     pv.panel.classList.add("open");
     pv.overlay.classList.add("open");
     pv.panel.setAttribute("aria-hidden", "false");
     document.documentElement.style.overflow = "hidden";
     pv.close.focus();
-    // Y otra vez en el siguiente cuadro: la primera ficha se abre a veces
-    // antes de que la tipografía asiente y el alto del texto cambia.
-    syncPvFade();
-    requestAnimationFrame(syncPvFade);
   }
 
   function closeQuickView() {

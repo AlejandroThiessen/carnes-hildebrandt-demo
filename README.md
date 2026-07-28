@@ -26,11 +26,22 @@ Where that shows up:
 
 To flip a product back on later, delete its `soon: true` in `store.js` and give it a `price` and `unit` — nothing else changes.
 
+## Products that come in two sizes
+
+The three house rubs each sell as a jar and as a refill bag. They stay **two separate products** in `PRODUCTS` — own id, own photo, own price — and are tied together by a shared `grupo`, with `medida` naming the size:
+
+```js
+{ id: "sal-parrillera",       grupo: "sal-parrillera", medida: "Frasco 420 g",   price: 195, … }
+{ id: "sal-parrillera-bolsa", grupo: "sal-parrillera", medida: "Recarga 1.5 kg", price: 690, … }
+```
+
+The product sheet picks that up on its own: anything sharing a `grupo` shows as a row of buttons under the price, each with its own price on it, and choosing one swaps the whole sheet — photo, price, description and the id the cart receives. Add a third size by adding a third product with the same `grupo`; nothing else needs touching.
+
 ## The pages
 
 | Page | What's on it |
 |---|---|
-| `index.html` | Storefront home: hero with the shop's own photos, shop-by-category tiles, four featured products, **"Date una vuelta por los pasillos"** photo strip, the meat coming-soon band, the grill calculator, how-ordering-works, story teaser + "en números", sample reviews, map |
+| `index.html` | Storefront home: hero with the shop's own photos, shop-by-category tiles, four featured products, **"Date una vuelta por los pasillos"** photo mosaic, the meat coming-soon band, the grill calculator, how-ordering-works, story teaser + "en números", sample reviews, map |
 | `nosotros.html` | The story, timeline, **the seasonings' real origin story**, **their real misión/visión/valores**, brands/sourcing |
 | `cortes.html` | The full counter, split into what's online and what's counter-only + the Wagyu section (`#wagyu`) |
 | `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=terere` etc.), name search, full catalog, WhatsApp checkout |
@@ -54,7 +65,7 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 | `store.css` | Styles for the store grids and the cart drawer |
 | `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=10">` in the `<head>` and `<script src="fx.js?v=10"></script>` before `</body>`. That `?v=` number is the cache-buster: after editing any CSS or JS, bump it in all eight pages (`sed -i 's/?v=10"/?v=11"/g' *.html`) so browsers that already saw the site pick up the new files.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=11">` in the `<head>` and `<script src="fx.js?v=11"></script>` before `</body>`. That `?v=` number is the cache-buster: after editing any CSS or JS, bump it in all eight pages (`sed -i 's/?v=10"/?v=11"/g' *.html`) so browsers that already saw the site pick up the new files.
 
 ## The photos
 
@@ -68,18 +79,19 @@ python3 tools/export-fotos.py     # needs Pillow: pip install Pillow
 
 **Heads-up for a fresh clone:** `Photos/` is git-ignored, so the script's input is *not* in the repo — restore `Photos/Edited/` from the backup (Drive) before running it. You only need it to change the photos; the site itself runs off the committed `fotos/`.
 
-The script wipes `fotos/` and rebuilds all 69 JPEGs from `Photos/Edited/`. Its `M` table is the single place where crops live — one line per output: source photo, shape, anchor and optional zoom. To recrop something, change its anchor and re-run; to add a photo, add a line.
+The script wipes `fotos/` and rebuilds all 75 JPEGs from `Photos/Edited/`. Its `M` table is the single place where crops live — one line per output: source photo, shape, anchor and optional zoom. To recrop something, change its anchor and re-run; to add a photo, add a line.
 
 | Shape | Used for | Naming |
 |---|---|---|
 | Square, 860 px | Product cards and the product sheet | `sal-parrillera.jpg`, `mandil-vino.jpg`, … |
-| Portrait 3:4, 760 px | The home photo strip and the hero | `local-entrada.jpg`, `local-yerba.jpg`, … |
+| Square, 860 px (`-sq`) | The meat sheets, whose photos come from the shop and not the product shoot | `local-corte-sq.jpg`, `local-angus-sq.jpg`, … |
+| Portrait 3:4, 760 px | The home photo mosaic and the hero | `local-entrada.jpg`, `local-yerba.jpg`, … |
 | Landscape 3:2, 1400 px | Category tiles, page headers, split sections | `local-sazon-w.jpg`, `local-tablas-w.jpg`, … (`-w` = wide) |
 | Landscape 16:9, 1900 px | The storefront shot used as `og:image` | `local-fachada.jpg` |
 
 - **Product photos** are wired in `store.js` (`img:` for the card, `imgs: […]` for the sheet's thumbnail strip)
 - **Page headers** are the `--ph-img` inline style on each page's `.page-hero`
-- **The home photo strip** is the `.walk-track` block in `index.html` — add or remove `<figure class="walk-shot">` items freely
+- **The home photo mosaic** is the `.walk-grid` block in `index.html` — add or remove `<figure class="walk-shot">` items freely; the rows re-flow on their own and an odd last row centres itself
 - **Everything else** is a plain `<img src="fotos/…">` in the HTML
 
 A few `local-*` files are two different crops of the same photo (the counter and the Angus wall each carry four). That is deliberate — the shoot has 16 shop photos and the site has ~30 slots. If a page ever shows two crops of one photo side by side, retarget one in the `M` table.
@@ -97,7 +109,7 @@ What it adds:
 | **Page transitions** | Pages cross-fade into each other instead of flashing white; the header and WhatsApp button stay put. (Chrome/Edge/Safari; Firefox just navigates normally.) |
 | **Welcome curtain** | A brand splash that splits open — once per visit, not on every page |
 | **Headlines** | Every `h1`/`h2` rises into place word by word |
-| **Grids** | Category tiles, product cards, steps, reviews, perks and the photo strip come in one after another instead of as a block |
+| **Grids** | Category tiles, product cards, steps, reviews, perks and the photo mosaic come in one after another instead of as a block |
 | **Photos** | Framed photos rise behind a curtain; the home hero cycles through three shots of the shop with a slow zoom and a light sweep |
 | **Product cards** | Tilt in 3D under the cursor with a moving highlight, and a gold frame draws itself on hover |
 | **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears |
