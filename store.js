@@ -41,12 +41,15 @@
   //           marcada "Próximamente" y manda a WhatsApp en vez de al
   //           carrito. Es lo que hoy pasa con la carne: se despacha en
   //           el mostrador mientras resolvemos empaque y envío en frío.
-  //   grupo  — OPCIONAL: el mismo producto en otra presentación. Los que
-  //   medida   comparten `grupo` salen en la ficha como un par de botones
-  //            rotulados con su `medida`, y al elegir uno la ficha entera
-  //            cambia — foto, precio y el botón de agregar. Cada medida
-  //            sigue siendo su propio producto con su propio id y precio,
-  //            así que al carrito va exactamente la que quedó elegida.
+  //   grupo  — OPCIONAL: el mismo producto en otra presentación. En la
+  //   medida   REJILLA sale una sola tarjeta —la del primero del grupo que
+  //            aparezca aquí abajo—, anunciada "desde" el precio más bajo.
+  //            Dentro de la FICHA aparecen todas como botones rotulados
+  //            con su `medida`, y al elegir uno la ficha entera cambia —
+  //            foto, precio y el botón de agregar. Cada medida sigue
+  //            siendo su propio producto con su propio id y precio, así
+  //            que al carrito va exactamente la que quedó elegida, y la
+  //            búsqueda encuentra la tarjeta por el nombre de cualquiera.
   var PRODUCTS = [
     // ================= SAZONADORES DE LA CASA =================
     { id: "sal-parrillera", name: "Sal Parrillera", cat: "sazon", price: 195, unit: "pieza", approx: "frasco 420 g",
@@ -256,6 +259,31 @@
   function priceHTML(p) {
     return (p.from ? "desde " : "") + fmt.format(p.price) + " <span>" + priceLabel(p) + "</span>";
   }
+
+  // ----------------------------------------------------------
+  // UNA TARJETA POR PRODUCTO, NO POR PRESENTACIÓN
+  // ----------------------------------------------------------
+  // Los que comparten `grupo` (el frasco y su recarga) se enseñan en la
+  // rejilla con el primero que aparece en el catálogo; el otro tamaño se
+  // elige dentro de la ficha, que ya tiene los botones para eso. Sin
+  // esto la tienda abría con tres pares del mismo frasco y su bolsa.
+  function groupBase(g) {
+    for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].grupo === g) return PRODUCTS[i];
+    return null;
+  }
+  function isCardProduct(p) { return !p.grupo || groupBase(p.grupo) === p; }
+
+  // En la tarjeta, un producto con varias presentaciones se anuncia
+  // "desde" el más barato de ellas y dice cuántas hay.
+  function cardPriceHTML(p) {
+    var sizes = sizesOf(p);
+    if (sizes.length < 2) return priceHTML(p);
+    var min = sizes.reduce(function (a, o) { return Math.min(a, o.price); }, Infinity);
+    // "tamaños" y no "presentaciones": la palabra larga partía el renglón
+    // del precio en dos y dejaba las tarjetas del renglón disparejas.
+    return "desde " + fmt.format(min) +
+      ' <span>/ ' + p.unit + " · " + sizes.length + " tamaños</span>";
+  }
   function clampQty(p, q) {
     var r = rules(p);
     q = Math.round(q * 2) / 2;
@@ -354,7 +382,7 @@
         "</div>"
       : '<div class="p-body">' +
           "<h3>" + p.name + "</h3>" +
-          '<p class="p-price">' + priceHTML(p) + "</p>" +
+          '<p class="p-price">' + cardPriceHTML(p) + "</p>" +
           '<div class="p-actions">' +
             stepperHTML(p, r.start, false) +
             '<button type="button" class="p-add" data-id="' + p.id + '">' +
@@ -374,6 +402,17 @@
     return s.normalize ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : s;
   }
 
+  // Buscar "recarga" o "bolsa" tiene que encontrar la tarjeta, aunque el
+  // r\u00f3tulo de la recarga ya no est\u00e9 en la rejilla sino dentro de la ficha.
+  function matches(p, q) {
+    if (norm(p.name).indexOf(q) !== -1) return true;
+    var sizes = sizesOf(p);
+    for (var i = 0; i < sizes.length; i++) {
+      if (norm(sizes[i].name + " " + (sizes[i].medida || "")).indexOf(q) !== -1) return true;
+    }
+    return false;
+  }
+
   // `animate` en los cambios de filtro o búsqueda: las tarjetas
   // entran escalonadas en vez de aparecer de golpe. En el primer
   // dibujado no se anima — de esa entrada se encarga fx.js al hacer
@@ -381,8 +420,9 @@
   function renderStore(animate) {
     var q = norm(query.trim());
     var list = PRODUCTS.filter(function (p) {
+      if (!isCardProduct(p)) return false;   // la recarga se elige dentro de la ficha
       var okCat = activeCat === "todos" || p.cat === activeCat;
-      return okCat && (!q || norm(p.name).indexOf(q) !== -1);
+      return okCat && (!q || matches(p, q));
     });
     // Lo que sí se puede pedir hoy va primero; los cortes cierran la lista
     list.sort(function (a, b) { return (a.soon ? 1 : 0) - (b.soon ? 1 : 0); });
@@ -408,8 +448,11 @@
     history.replaceState(null, "", url);
   }
 
-  // Destacados de la página de inicio
-  var FEATURED = ["sal-parrillera", "sweet-bbq-rub", "yerba-campesino", "tabla-holz"];
+  // Destacados de la página de inicio: uno por categoría, para que la
+  // portada enseñe de qué se trata la tienda y no cuatro frascos.
+  // Los ids TIENEN que existir en PRODUCTS — uno que no exista se cae
+  // en silencio y la fila sale con un hueco.
+  var FEATURED = ["sal-parrillera", "yerba-campesino", "cuchillo-bulledge", "mandil-piel"];
   function renderFeatured() {
     featuredEl.innerHTML = FEATURED.map(byId).filter(Boolean).map(productCardHTML).join("");
   }

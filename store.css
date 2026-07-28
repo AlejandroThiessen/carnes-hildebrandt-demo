@@ -538,7 +538,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: min(940px, 94vw);
-  max-height: min(620px, 90vh);
+  /* Crece en pantallas altas en vez de quedarse en 620 px: con el tope
+     bajo, la descripción y el consejo salían cortados a media frase
+     aunque sobrara ventana de sobra por debajo. */
+  max-height: min(780px, 90vh);
   background: var(--paper);
   border-radius: 14px;
   overflow: hidden;
@@ -1002,6 +1005,9 @@
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   .store-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* El botón flotante de WhatsApp se sienta encima del "Agregar" de la
+     última fila: se le deja el hueco por debajo. */
+  .store-grid:last-of-type { padding-bottom: 58px; }
   .p-body { padding: 14px 14px 16px; }
   .p-body h3 { font-size: 16px; }
   .p-price { font-size: 15px; margin-bottom: 12px; }

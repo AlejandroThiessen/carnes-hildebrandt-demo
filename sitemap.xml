@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Al mover el sitio a su dominio propio hay que cambiar las URLs de aquí,
+     las de robots.txt y los <link rel="canonical"> de las ocho páginas. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/tienda.html</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/cortes.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/guia.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/envios.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/nosotros.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://alejandrothiessen.github.io/carnes-hildebrandt-demo/contacto.html</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>

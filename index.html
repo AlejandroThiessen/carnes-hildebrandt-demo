@@ -8,16 +8,69 @@
   <meta property="og:title" content="Carnes Hildebrandt — Boutique de Carnes">
   <meta property="og:description" content="Si lo que buscas es carne de alta calidad, llegaste para quedarte. Sazonadores de la casa, yerba y tereré, cuchillería y parrilla — ahora en línea.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="fotos/local-fachada.jpg">
+  <meta property="og:image" content="https://alejandrothiessen.github.io/carnes-hildebrandt-demo/fotos/local-fachada.jpg">
+  <link rel="canonical" href="https://alejandrothiessen.github.io/carnes-hildebrandt-demo/">
+  <meta property="og:url" content="https://alejandrothiessen.github.io/carnes-hildebrandt-demo/">
+  <meta property="og:site_name" content="Carnes Hildebrandt">
+  <meta property="og:locale" content="es_MX">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Carnes Hildebrandt — Boutique de Carnes">
+  <meta name="twitter:image" content="https://alejandrothiessen.github.io/carnes-hildebrandt-demo/fotos/local-fachada.jpg">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f6f0e5'/%3E%3Crect x='2' y='2' width='60' height='60' rx='12' fill='none' stroke='%23c69a5e' stroke-width='3'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='%23a63446' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=12">
-  <link rel="stylesheet" href="store.css?v=12">
-  <link rel="stylesheet" href="fx.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="store.css?v=13">
+  <link rel="stylesheet" href="fx.css?v=13">
+
+  <!-- Ficha del negocio para buscadores y mapas. Es lo que alimenta el
+       panel de Google al lado de los resultados, así que la dirección y
+       el horario de aquí abajo tienen que ser los definitivos: hoy son
+       los mismos datos por confirmar que marca el README. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Carnes Hildebrandt",
+    "description": "Boutique de carnes en Cuauhtémoc, Chihuahua: cortes nacionales e importados, Wagyu, sazonadores hechos en casa, yerba mate y tereré, cuchillería y todo para la parrilla.",
+    "url": "https://alejandrothiessen.github.io/carnes-hildebrandt-demo/",
+    "image": "https://alejandrothiessen.github.io/carnes-hildebrandt-demo/fotos/local-fachada.jpg",
+    "telephone": "+526251507388",
+    "priceRange": "$$",
+    "currenciesAccepted": "MXN",
+    "paymentAccepted": "Efectivo, Tarjeta de crédito, Tarjeta de débito",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Km 11 Corredor Comercial Menonita",
+      "addressLocality": "Cuauhtémoc",
+      "addressRegion": "Chihuahua",
+      "addressCountry": "MX"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "11:00",
+        "closes": "16:00"
+      }
+    ],
+    "sameAs": [
+      "https://www.facebook.com/CarnesHildebrandt/",
+      "https://www.instagram.com/carneshildebrandt/",
+      "https://www.tiktok.com/@carneshildebrandt"
+    ]
+  }
+  </script>
 </head>
 <body data-page="inicio">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
   <!-- ======= HEADER ======= -->
   <header class="site-header" id="inicio">
@@ -59,7 +112,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="contenido">
     <!-- ======= HERO (claro, enfocado en la tienda) ======= -->
     <section class="hero">
       <div class="container hero-grid">
@@ -87,9 +140,9 @@
           <!-- Las tres fotos se turnan solas (fx.js). Sin JavaScript
                se ve la primera, que es la que carga con prioridad. -->
           <div class="hero-stack" id="hero-stack">
-            <img class="is-on" src="fotos/local-mostrador.jpg" alt="Mostrador de Carnes Hildebrandt con el letrero de neón de los cortes de res" fetchpriority="high">
-            <img src="fotos/local-yerba.jpg" alt="Estante de yerba mate y mates en la boutique" loading="lazy">
-            <img src="fotos/local-cuchillos.jpg" alt="Pared de cuchillos y accesorios de parrilla" loading="lazy">
+            <img class="is-on" src="fotos/local-mostrador.jpg" width="760" height="1013" alt="Mostrador de Carnes Hildebrandt con el letrero de neón de los cortes de res" fetchpriority="high">
+            <img src="fotos/local-yerba.jpg" width="760" height="1013" alt="Estante de yerba mate y mates en la boutique" loading="lazy">
+            <img src="fotos/local-cuchillos.jpg" width="760" height="1013" alt="Pared de cuchillos y accesorios de parrilla" loading="lazy">
           </div>
           <span class="hero-chip">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="17" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -125,23 +178,25 @@
         </div>
         <div class="cat-tiles reveal">
           <a class="cat-tile cat-tile-wide" href="tienda.html?cat=sazon">
-            <img src="fotos/local-sazon-w.jpg" alt="Estante con sazonadores, salsas y leña de la boutique" loading="lazy">
+            <img src="fotos/local-sazon-w.jpg" width="1400" height="933" alt="Estante con sazonadores, salsas y leña de la boutique" loading="lazy">
             <span class="cat-tile-label"><span>Sazonadores<br><small>Hechos por la familia</small></span><span class="arrow" aria-hidden="true">→</span></span>
           </a>
           <a class="cat-tile cat-tile-wide" href="tienda.html?cat=terere">
-            <img src="fotos/local-yerba-w.jpg" alt="Estante de yerba mate, mates y bombillas" loading="lazy">
+            <img src="fotos/local-yerba-w.jpg" width="1400" height="933" alt="Estante de yerba mate, mates y bombillas" loading="lazy">
             <span class="cat-tile-label"><span>Tereré y yerba<br><small>Yerbas, mates y bombillas</small></span><span class="arrow" aria-hidden="true">→</span></span>
           </a>
           <a class="cat-tile" href="tienda.html?cat=cuchillos">
-            <img src="fotos/local-bulledge-w.jpg" alt="Cuchillos Bull-Edge de acero damasco en su exhibidor de madera" loading="lazy">
+            <img src="fotos/local-bulledge-w.jpg" width="1400" height="933" alt="Cuchillos Bull-Edge de acero damasco en su exhibidor de madera" loading="lazy">
             <span class="cat-tile-label"><span>Cuchillería<br><small>Bull-Edge de acero damasco</small></span><span class="arrow" aria-hidden="true">→</span></span>
           </a>
           <a class="cat-tile" href="tienda.html?cat=asado">
-            <img src="fotos/local-parrilla-w.jpg" alt="Mandiles de piel y accesorios de parrilla en la boutique" loading="lazy">
+            <img src="fotos/local-parrilla-w.jpg" width="1400" height="933" alt="Mandiles de piel y accesorios de parrilla en la boutique" loading="lazy">
             <span class="cat-tile-label"><span>Mandiles y mesa<br><small>Piel, molcajete y encendedor</small></span><span class="arrow" aria-hidden="true">→</span></span>
           </a>
+          <!-- Angus y no el mostrador: `local-mostrador-w` es otro recorte de
+               la misma foto que ya ocupa el hero, y las dos se veían juntas. -->
           <a class="cat-tile" href="tienda.html?cat=carnes">
-            <img src="fotos/local-mostrador-w.jpg" alt="Mostrador de cortes de Carnes Hildebrandt" loading="lazy">
+            <img src="fotos/local-angus-w.jpg" width="1400" height="933" alt="Cartel de Certified Angus Beef dentro de la boutique" loading="lazy">
             <span class="cat-tile-label"><span>Cortes<br><small>Próximamente en línea</small></span><span class="arrow" aria-hidden="true">→</span></span>
           </a>
         </div>
@@ -177,16 +232,16 @@
           </p>
         </div>
         <div class="walk-grid">
-          <figure class="walk-shot"><img src="fotos/local-entrada.jpg" alt="Entrada de la boutique con el letrero de abierto" loading="lazy"><figcaption>La entrada</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-vitrinas.jpg" alt="Pasillo de vitrinas refrigeradas" loading="lazy"><figcaption>Las vitrinas</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-corte.jpg" alt="Preparando un corte detrás del mostrador" loading="lazy"><figcaption>El mostrador</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-cuchillos.jpg" alt="Pared de cuchillos y accesorios" loading="lazy"><figcaption>La pared de cuchillos</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-yerba.jpg" alt="Estante de yerba mate y mates de colores" loading="lazy"><figcaption>Yerba y mates</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-sal.jpg" alt="Estante con sales, sazonadores y salsas" loading="lazy"><figcaption>Sales y sazonadores</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-tablas.jpg" alt="Tablas de madera HOLZ en exhibición" loading="lazy"><figcaption>Las tablas</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-parrilla.jpg" alt="Asador y utensilios de parrilla" loading="lazy"><figcaption>Todo para el fuego</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-caja.jpg" alt="Mostrador de caja de la boutique" loading="lazy"><figcaption>La caja</figcaption></figure>
-          <figure class="walk-shot"><img src="fotos/local-poster.jpg" alt="Póster de cortes de res montado en la boutique" loading="lazy"><figcaption>Los cortes, de memoria</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-entrada.jpg" width="760" height="1013" alt="Entrada de la boutique con el letrero de abierto" loading="lazy"><figcaption>La entrada</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-vitrinas.jpg" width="760" height="1013" alt="Pasillo de vitrinas refrigeradas" loading="lazy"><figcaption>Las vitrinas</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-corte.jpg" width="760" height="1013" alt="Preparando un corte detrás del mostrador" loading="lazy"><figcaption>El mostrador</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-cuchillos.jpg" width="760" height="1013" alt="Pared de cuchillos y accesorios" loading="lazy"><figcaption>La pared de cuchillos</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-yerba.jpg" width="760" height="1013" alt="Estante de yerba mate y mates de colores" loading="lazy"><figcaption>Yerba y mates</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-sal.jpg" width="760" height="1013" alt="Estante con sales, sazonadores y salsas" loading="lazy"><figcaption>Sales y sazonadores</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-tablas.jpg" width="760" height="1013" alt="Tablas de madera HOLZ en exhibición" loading="lazy"><figcaption>Las tablas</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-parrilla.jpg" width="760" height="1013" alt="Asador y utensilios de parrilla" loading="lazy"><figcaption>Todo para el fuego</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-caja.jpg" width="760" height="1013" alt="Mostrador de caja de la boutique" loading="lazy"><figcaption>La caja</figcaption></figure>
+          <figure class="walk-shot"><img src="fotos/local-poster.jpg" width="760" height="1013" alt="Póster de cortes de res montado en la boutique" loading="lazy"><figcaption>Los cortes, de memoria</figcaption></figure>
         </div>
         <p class="section-note reveal">
           Así se ve la boutique por dentro. <a href="contacto.html">Cómo llegar y horarios</a>.
@@ -202,8 +257,8 @@
           <h2>¿Cuánta carne <em>para tu asado</em>?</h2>
           <p class="section-lead">
             Dinos cuántos son y qué tan parrilleros vienen: calculamos los kilos, te dejamos
-            la lista de cortes para apartar en el mostrador y el carrito armado con el
-            sazonador y el carbón que le van.
+            la lista de cortes para apartar en el mostrador y el carrito armado con los
+            sazonadores que le van.
           </p>
         </div>
         <!-- fx.js arma la calculadora aquí dentro -->
@@ -300,20 +355,22 @@
           <a class="btn btn-solid" href="nosotros.html">Conoce nuestra historia</a>
         </div>
         <figure class="split-media keep-order frame reveal delay-1">
-          <img src="fotos/local-caja-w.jpg" alt="Mostrador de caja de Carnes Hildebrandt con el logotipo grabado" loading="lazy">
+          <img src="fotos/local-fachada-w.jpg" width="1400" height="933" alt="Fachada de la boutique de Carnes Hildebrandt sobre el Corredor Comercial Menonita" loading="lazy">
           <figcaption>La boutique en el Corredor Comercial Menonita.</figcaption>
         </figure>
       </div>
       <!-- Cifras: todas salen de lo que ya cuenta el sitio -->
       <div class="container">
         <div class="numbers">
+          <!-- El año va sin `data-count` a propósito: contar de 0 a 2021
+               lo hace parecer una cantidad y no una fecha. -->
           <div class="num-item">
-            <span class="num-value" data-count="2021">2021</span>
+            <span class="num-value">2021</span>
             <span class="num-label">Desde la cochera de casa</span>
           </div>
           <div class="num-item">
             <span class="num-value" data-count="32">32</span>
-            <span class="num-label">Estados a los que enviamos</span>
+            <span class="num-label">Estados — todo México</span>
           </div>
           <div class="num-item">
             <span class="num-value" data-count="4">4</span>
@@ -369,7 +426,7 @@
             </li>
             <li>
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-              <span>Lunes a sábado 9:00 – 19:00 · Domingo 11:00 – 16:00<sup>*</sup></span>
+              <span>Lunes a sábado 9:00 – 19:00 · Domingo 11:00 – 16:00</span>
             </li>
             <li>
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h4l1.5 5-2.5 1.5a12 12 0 0 0 5.5 5.5L16 12.5l5 1.5v4a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -423,7 +480,7 @@
         <div class="footer-col">
           <h4>La boutique</h4>
           <p>Km 11 Corredor Comercial Menonita,<br>Cuauhtémoc, Chihuahua, México</p>
-          <p>Lunes a sábado · 9:00 – 19:00<br>Domingo · 11:00 – 16:00<sup>*</sup></p>
+          <p>Lunes a sábado · 9:00 – 19:00<br>Domingo · 11:00 – 16:00</p>
           <p><a href="tel:+526251507388">625 150 7388</a> · <a href="https://wa.me/526251507388" target="_blank" rel="noopener">WhatsApp</a></p>
         </div>
       </div>
@@ -473,8 +530,8 @@
     <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
   </div>
 
-  <script src="main.js?v=12"></script>
-  <script src="store.js?v=12"></script>
-  <script src="fx.js?v=12"></script>
+  <script src="main.js?v=13"></script>
+  <script src="store.js?v=13"></script>
+  <script src="fx.js?v=13"></script>
 </body>
 </html>

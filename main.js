@@ -72,11 +72,36 @@
   if (year) year.textContent = String(new Date().getFullYear());
 
   // --- Aviso de maqueta ---------------------------------------
+  // Sale una vez pasada la primera pantalla: fijo desde el arranque se
+  // ponía justo encima del contenido —la línea de pagos del hero, el
+  // horario del domingo en Visítanos, una tarjeta de la tienda—. Y al
+  // cerrarlo se recuerda para todo el sitio, no solo para la página en
+  // la que se cerró. (El pie de página lo sigue diciendo siempre.)
   var ribbon = document.getElementById("demo-ribbon");
   var ribbonClose = document.getElementById("demo-ribbon-close");
-  if (ribbon && ribbonClose) {
+  var RIBBON_KEY = "ch_demo_seen";
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(RIBBON_KEY) === "1"; } catch (e) { /* modo privado */ }
+
+  if (ribbon && ribbonClose && !dismissed) {
+    var shown = false;
+    var showRibbon = function () {
+      if (shown) return;
+      shown = true;
+      ribbon.classList.add("is-ready");
+      window.removeEventListener("scroll", onRibbonScroll);
+    };
+    var onRibbonScroll = function () { if (window.scrollY > 320) showRibbon(); };
+    window.addEventListener("scroll", onRibbonScroll, { passive: true });
+    // Páginas cortas (404, Visítanos) donde no hay 320 px que bajar
+    if (document.documentElement.scrollHeight < window.innerHeight + 320) {
+      setTimeout(showRibbon, 1500);
+    }
     ribbonClose.addEventListener("click", function () {
       ribbon.classList.add("hidden");
+      try { localStorage.setItem(RIBBON_KEY, "1"); } catch (e) { /* modo privado */ }
     });
+  } else if (ribbon) {
+    ribbon.classList.add("hidden");
   }
 })();

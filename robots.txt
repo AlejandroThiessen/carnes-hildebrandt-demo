@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alejandrothiessen.github.io/carnes-hildebrandt-demo/sitemap.xml

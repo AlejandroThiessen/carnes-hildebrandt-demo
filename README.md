@@ -35,7 +35,11 @@ The three house rubs each sell as a jar and as a refill bag. They stay **two sep
 { id: "sal-parrillera-bolsa", grupo: "sal-parrillera", medida: "Recarga 1.5 kg", price: 690, … }
 ```
 
-The product sheet picks that up on its own: anything sharing a `grupo` shows as a row of buttons under the price, each with its own price on it, and choosing one swaps the whole sheet — photo, price, description and the id the cart receives. Add a third size by adding a third product with the same `grupo`; nothing else needs touching.
+**The grid shows one card per `grupo`, not one per size.** The card is the first of the group listed in `PRODUCTS`, and its price reads *"desde $195 · 2 tamaños"*. Search still finds it by the other sizes' names, so typing "recarga" or "bolsa" works.
+
+The product sheet is where the sizes live: anything sharing a `grupo` shows as a row of buttons under the price, each with its own price on it, and choosing one swaps the whole sheet — photo, price, description and the id the cart receives. Add a third size by adding a third product with the same `grupo`; nothing else needs touching.
+
+(Before this, both sizes had their own card, so the store opened on three near-identical pairs of jar-and-bag and the first screen said very little about what the shop actually sells.)
 
 ## The pages
 
@@ -64,8 +68,13 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 | `store.js` | The online store: product catalog, cart, WhatsApp checkout |
 | `store.css` | Styles for the store grids and the cart drawer |
 | `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
+| `sitemap.xml` / `robots.txt` | So search engines find all seven public pages. URLs inside them are absolute — update on a domain change |
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=11">` in the `<head>` and `<script src="fx.js?v=11"></script>` before `</body>`. That `?v=` number is the cache-buster: after editing any CSS or JS, bump it in all eight pages (`sed -i 's/?v=10"/?v=11"/g' *.html`) so browsers that already saw the site pick up the new files.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=13">` in the `<head>` and `<script src="fx.js?v=13"></script>` before `</body>`. That `?v=` number is the cache-buster: after editing any CSS or JS, bump it in all eight pages (`sed -i 's/?v=13"/?v=14"/g' *.html`) so browsers that already saw the site pick up the new files.
+
+**When the site moves to its own domain**, three things carry the old URL and have to change together: the `<link rel="canonical">` + `og:url` + `og:image` + `twitter:image` in each page's `<head>`, the `<loc>` entries in `sitemap.xml` and its line in `robots.txt`, and the `url`/`image` fields of the business card (`application/ld+json`) at the bottom of `index.html`'s `<head>`.
+
+**Images carry `width` and `height`** so the browser reserves their space and the page doesn't jump while they load. Two consequences: `styles.css` needs `img { height: auto }` (without it the photos render at the attribute's height and come out stretched), and a new `<img>` should get the real pixel size of its file — `python3 -c "from PIL import Image; print(Image.open('fotos/x.jpg').size)"`.
 
 ## The photos
 
@@ -125,9 +134,11 @@ Accessibility and safety nets are built in: with **"reduce motion"** turned on i
 `index.html` and `guia.html` both carry a **"¿Cuánta carne para tu asado?"** tool (the `<div id="grill-calc">` container; `fx.js` builds it). Pick how many people, how big their appetite, and the style of the cookout, and it works out the kilos — then splits the result in two:
 
 1. **"La lista para el mostrador"** — the cuts and their weights, with a WhatsApp button that sends the whole list pre-written, ready to reserve
-2. **"Y esto sí lo pides en línea"** — the seasoning, charcoal and smoking wood that match that style, priced and addable to the cart in one click
+2. **"Y esto sí lo pides en línea"** — the house seasonings that match that style, priced and addable to the cart in one click
 
-The per-person amounts are the usual butcher rules of thumb — **280 g / 380 g / 550 g** of meat per person for the three appetite levels — plus one bag of charcoal per eight guests. They live in the `HUNGER` and `STYLES` arrays near the bottom of `fx.js`; **have the owners adjust them to what they actually recommend at the counter.**
+The per-person amounts are the usual butcher rules of thumb — **280 g / 380 g / 550 g** of meat per person for the three appetite levels. They live in the `HUNGER` and `STYLES` arrays near the bottom of `fx.js`; **have the owners adjust them to what they actually recommend at the counter.**
+
+⚠️ **Every id in a style's `items` has to exist in `PRODUCTS`.** Ids that don't exist are skipped silently, which is exactly how the basket quietly emptied itself: charcoal, smoking chips and the HOLZ board were still listed here after they left the catalogue for want of a studio photo, so three of the four styles suggested a single jar. When those products come back, put their ids back in `items` — and `PER8` (right under `STYLES`) already holds the "one bag per eight guests" rule that charcoal used to use.
 
 ## The online store (no Shopify)
 

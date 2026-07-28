@@ -644,25 +644,36 @@
 
     // Cada estilo reparte el peso total entre cortes (que hoy se piden
     // en el mostrador, por eso son texto y no productos) y sugiere los
-    // sazonadores y el carbón que sí se pueden pedir en línea.
+    // sazonadores que sí se pueden pedir en línea.
+    //
+    // `items` SOLO puede traer ids que existan en PRODUCTS: los que no
+    // existen se caen en silencio y el carrito sugerido sale vacío. El
+    // carbón y la leña vivían aquí y salieron del catálogo al quedarse
+    // sin foto de estudio; en cuanto se fotografíen, basta con volver a
+    // ponerlos en estas listas (PER8 ya les calcula las bolsas).
     var STYLES = [
       ["norteno", "Clásico norteño",
         { cortes: [["Arrachera", .4], ["Rib eye", .3], ["Costilla de cerdo", .3]],
-          items: ["sal-parrillera", "carbon"] },
+          items: ["sal-parrillera", "sweet-bbq-rub"] },
         "Fuego de dos zonas y sal de grano. La arrachera al final, cuando ya todos están alrededor del asador."],
       ["premium", "Noche premium",
         { cortes: [["Rib eye", .45], ["New York", .35], ["Wagyu", .2]],
-          items: ["sal-parrillera", "carbon", "tabla-holz"] },
+          items: ["salt-pepper", "sal-parrillera"] },
         "Cortes gruesos (3–4 cm), término medio rojo y 6 minutos de reposo. El Wagyu, rebanado delgado para compartir al final."],
       ["ahumado", "Low &amp; slow",
         { cortes: [["Brisket", .6], ["Costillar de cerdo", .4]],
-          items: ["brisket-rub", "sweet-bbq-rub", "carbon", "chips-ahumado"] },
+          items: ["brisket-rub", "sweet-bbq-rub", "sal-ahumada"] },
         "Calcula 1 hora de ahumado por cada 500 g de brisket a 110 °C. Empieza temprano — y ten paciencia con la meseta."],
       ["mixto", "De todo un poco",
         { cortes: [["Rib eye", .3], ["Arrachera", .25], ["Costilla de cerdo", .25], ["Chuleta de cerdo", .2]],
-          items: ["sal-parrillera", "sweet-bbq-rub", "carbon"] },
+          items: ["sal-parrillera", "sweet-bbq-rub", "salt-pepper"] },
         "La apuesta segura cuando hay niños, abuelos y cuñados con opiniones. Empieza por el cerdo y cierra con la res."]
     ];
+
+    // Consumibles que se piden por número de comensales, no de a uno.
+    // Hoy ninguno está en el catálogo; la regla se queda lista para el
+    // carbón, que es el caso para el que se escribió.
+    var PER8 = ["carbon"];
 
     var people = 8, hunger = 1, style = 0, lastKg = 0, lastTotal = 0;
 
@@ -724,7 +735,7 @@
 
     // Convierte la mezcla del estilo elegido en cantidades reales.
     // `cuts` son los cortes (se apartan por WhatsApp) y `rows` lo que
-    // sí entra al carrito hoy: sazonadores, carbón y leña.
+    // sí entra al carrito hoy: los sazonadores de la casa.
     function basket() {
       var kg = people * HUNGER[hunger][2];
       var mix = STYLES[style][2];
@@ -737,8 +748,8 @@
       mix.items.forEach(function (id) {
         var p = byId(id);
         if (!p || p.soon) return;
-        // Del carbón sale una bolsa por cada ocho comensales; de lo demás, una
-        var q = id === "carbon" ? clamp(Math.ceil(people / 8), 1, 4) : 1;
+        // De lo que se consume por comensal sale una bolsa por cada ocho; de lo demás, una
+        var q = PER8.indexOf(id) > -1 ? clamp(Math.ceil(people / 8), 1, 4) : 1;
         rows.push({ p: p, qty: q, total: p.price * q });
       });
 
