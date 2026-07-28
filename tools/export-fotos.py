@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Build fotos/ (the web-sized set the site loads) from Photos/Edited/.
 
-Every output is a crop of one edited photo, resized to one of the four
-shapes the site uses and saved as a progressive JPEG.
+Every output is one edited photo resized to one of the shapes the site
+uses and saved as a progressive JPEG. Most are cropped to that shape;
+the FULL ones keep the photo's own proportion and stay whole.
 """
 import os, shutil
 from PIL import Image
@@ -12,6 +13,12 @@ SRC = os.path.join(ROOT, "Photos/Edited")
 OUT = os.path.join(ROOT, "fotos")
 
 SQ, PORT, WIDE, OG = (1, 860), (3 / 4, 760), (3 / 2, 1400), (16 / 9, 1900)
+
+# Sin proporción fija: la foto sale entera, con la del archivo. Se usa
+# donde la imagen tiene que verse completa y el hueco se adapta a ella,
+# así no hay recorte ni franjas arriba o a los lados. El número sigue
+# siendo el ancho de salida; los anclajes y el zoom se ignoran.
+FULL_W, FULL_P = (None, 1400), (None, 900)
 
 # out name -> (source photo, shape, anchor x, anchor y[, zoom])
 # anchor 0 = left/top, 0.5 = centred, 1 = right/bottom
@@ -72,7 +79,6 @@ M = {
     "local-parrilla":   ("Store/local-parrilla", PORT, .45, .55),
     "local-caja":       ("Store/local-caja", PORT, .50, .50),
     "local-poster":     ("Store/local-poster-cortes", PORT, .47, .50),
-    "local-valores":    ("Store/local-valores", PORT, .50, .05),
     "local-angus":      ("Store/local-angus-rebanadora", PORT, .50, .00),
     "local-rebanadora": ("Store/local-angus-rebanadora", PORT, .50, .62, .80),
 
@@ -106,7 +112,12 @@ M = {
     "local-poster-w":     ("Store/local-poster-cortes", WIDE, .50, .50),
     "local-entrada-w":    ("Store/local-fachada-entrada", WIDE, .55, .50),
     "local-fachada-w":    ("Store/local-fachada-lateral", WIDE, .50, .50),
-    "local-aerea-w":      ("Store/local-aerea", WIDE, .45, .50),
+
+    # ---------- enteras: la página de nosotros las muestra sin recortar ----
+    # La aérea recortada a 3:2 perdía media playa de estacionamiento y el
+    # tablero de valores a 3:4 se quedaba a media lista de valores.
+    "local-aerea-full":   ("Store/local-aerea", FULL_W, .50, .50),
+    "local-valores-full": ("Store/local-valores", FULL_P, .50, .50),
 
     # ---------- the storefront shot used as og:image, 16:9 ----------
     "local-fachada": ("Store/local-fachada-entrada", OG, .50, .50),
@@ -135,7 +146,10 @@ for name, spec in sorted(M.items()):
     zoom = spec[4] if len(spec) > 4 else 1.0
     src = os.path.join(SRC, rel + ".png")
     im = Image.open(src).convert("RGB")
-    im = crop_to(im, ratio, ax, ay, zoom)
+    if ratio is None:
+        ratio = im.width / im.height
+    else:
+        im = crop_to(im, ratio, ax, ay, zoom)
     scale = width / im.width
     im = im.resize((width, int(round(width / ratio))), Image.LANCZOS)
     dst = os.path.join(OUT, name + ".jpg")

@@ -402,6 +402,11 @@ h2.on-dark em { color: var(--red); }
   border-radius: 6px;
   background: #d8cdbb;
 }
+/* Fotos que se muestran enteras: el marco toma la proporción exacta del
+   archivo (--fit-ar), así no hay recorte ni franjas arriba o a los lados. */
+.frame.frame-fit img {
+  aspect-ratio: var(--fit-ar);
+}
 .frame::after {
   content: "";
   position: absolute;
