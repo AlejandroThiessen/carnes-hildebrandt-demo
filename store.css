@@ -233,6 +233,8 @@
 /* Destacados del inicio: pocas tarjetas que llenan el ancho */
 .store-grid.featured { grid-template-columns: repeat(auto-fit, minmax(min(245px, 100%), 1fr)); }
 .p-card {
+  display: flex;
+  flex-direction: column;
   background: var(--paper);
   border: 1px solid rgba(36, 29, 23, .09);
   border-radius: 10px;
@@ -263,7 +265,12 @@
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
-.p-body { padding: 18px 18px 20px; }
+.p-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 18px 18px 20px;
+}
 .p-body h3 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -271,10 +278,15 @@
   line-height: 1.25;
   margin-bottom: 6px;
 }
+/* Precio y botones pegados al fondo de la tarjeta: con un nombre de dos
+   líneas el "Agregar" bajaba y dejaba de alinearse con el de las
+   tarjetas vecinas. El hueco que sobra se va entre el nombre y el
+   precio, así toda la fila cierra a la misma altura. */
 .p-price {
   font-size: 17px;
   font-weight: 700;
   color: var(--red-deep);
+  margin-top: auto;
   margin-bottom: 15px;
 }
 .p-price span { font-size: 12px; font-weight: 500; color: var(--text-mut); }
