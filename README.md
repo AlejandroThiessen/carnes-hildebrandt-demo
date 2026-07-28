@@ -54,7 +54,7 @@ Old single-page links still work: `/#tienda`, `/#nosotros`, etc. redirect to the
 | `store.css` | Styles for the store grids and the cart drawer |
 | `fx.css` / `fx.js` | The motion & effects layer (see below) — **fully optional** |
 
-**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=9">` in the `<head>` and `<script src="fx.js?v=9"></script>` before `</body>`.
+**Editing note:** the header, footer, cart drawer, and floating buttons are duplicated in every HTML page (no build step = no template includes). If you change one of those blocks, copy the change to all pages. The same goes for the two `fx` lines — `<link rel="stylesheet" href="fx.css?v=10">` in the `<head>` and `<script src="fx.js?v=10"></script>` before `</body>`. That `?v=` number is the cache-buster: after editing any CSS or JS, bump it in all eight pages (`sed -i 's/?v=10"/?v=11"/g' *.html`) so browsers that already saw the site pick up the new files.
 
 ## The photos
 

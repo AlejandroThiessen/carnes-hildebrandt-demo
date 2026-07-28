@@ -787,16 +787,33 @@ a.card { display: block; color: inherit; text-decoration: none; }
    cortada por el borde para que se note que hay más.
    ============================================================ */
 .walk {
+  /* El respiro de las orillas. Va aquí para que la tira y sus puntos de
+     anclaje midan lo mismo que el `padding-inline` del riel. */
+  --walk-gutter: max(4%, calc((100% - var(--container)) / 2));
   overflow-x: auto;
   /* Solo se mueve de lado. Sin esto el navegador calcula overflow-y
      como `auto` (basta con que un eje no sea `visible`), la tira queda
      con unos píxeles de juego vertical y en el celular se "despega"
-     al pasar el dedo. `touch-action: pan-x` remata: el deslizamiento
-     vertical se lo queda la página, no la tira. */
+     al pasar el dedo.
+     Aquí iba además un `touch-action: pan-x` que hacía justo lo
+     contrario de lo que decía: al dedo que empezaba sobre una foto se
+     le prohibía el gesto vertical, así que la página se quedaba clavada
+     —y la tira ocupa el ancho completo, es fácil apoyar ahí el pulgar—.
+     Con `overflow-y: hidden` ya no hay juego vertical que corregir, así
+     que el gesto de arriba abajo vuelve a ser de la página. */
   overflow-y: hidden;
-  overscroll-behavior: contain;
-  touch-action: pan-x;
+  /* `contain` frena el encadenado con la página, pero deja intacto el
+     rebote elástico del celular: de un empujón se arrastraba la tira un
+     buen tramo más allá de la última foto —pantalla vacía— y volvía
+     sola. `none` quita las dos cosas: la tira se planta en la última. */
+  overscroll-behavior-x: none;
+  /* Cada foto se ancla al borde de arranque y no al centro. Centrada, ni
+     la primera ni la última alcanzan nunca su anclaje —en las orillas
+     solo hay el respiro del contenedor—, así que el deslizamiento se
+     quedaba tironeando en las puntas. `scroll-padding` deja los anclajes
+     a plomo con el texto de la sección. */
   scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--walk-gutter);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(169, 127, 69, .55) transparent;
@@ -809,12 +826,12 @@ a.card { display: block; color: inherit; text-decoration: none; }
   display: flex;
   gap: 16px;
   width: max-content;
-  padding-inline: max(4%, calc((100% - var(--container)) / 2));
+  padding-inline: var(--walk-gutter);
 }
 .walk-shot {
   position: relative;
   flex: 0 0 clamp(190px, 22vw, 258px);
-  scroll-snap-align: center;
+  scroll-snap-align: start;
 }
 .walk-shot img {
   width: 100%;

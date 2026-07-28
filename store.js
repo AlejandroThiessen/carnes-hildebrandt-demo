@@ -612,6 +612,9 @@
     pv.close.addEventListener("click", closeQuickView);
     pv.overlay.addEventListener("click", closeQuickView);
 
+    pv.scroll.addEventListener("scroll", syncPvFade, { passive: true });
+    window.addEventListener("resize", syncPvFade);
+
     // Miniaturas: cambian la foto grande
     pv.thumbs.addEventListener("click", function (e) {
       var b = e.target.closest(".pv-thumb");
@@ -635,6 +638,14 @@
         openCart();
       }
     });
+  }
+
+  // Enciende el degradado del pie mientras quede texto por debajo del
+  // borde. Los 6px de margen evitan que parpadee al final del recorrido.
+  function syncPvFade() {
+    if (!pv) return;
+    var s = pv.scroll;
+    pv.panel.classList.toggle("has-more", s.scrollHeight - s.clientHeight - s.scrollTop > 6);
   }
 
   function openQuickView(id) {
@@ -681,6 +692,10 @@
     pv.panel.setAttribute("aria-hidden", "false");
     document.documentElement.style.overflow = "hidden";
     pv.close.focus();
+    // Y otra vez en el siguiente cuadro: la primera ficha se abre a veces
+    // antes de que la tipografía asiente y el alto del texto cambia.
+    syncPvFade();
+    requestAnimationFrame(syncPvFade);
   }
 
   function closeQuickView() {
