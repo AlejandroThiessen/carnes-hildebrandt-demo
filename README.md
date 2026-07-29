@@ -47,7 +47,7 @@ The product sheet is where the sizes live: anything sharing a `grupo` shows as a
 |---|---|
 | `index.html` | Storefront home: hero with the shop's own photos, shop-by-category tiles, four featured products, **"Date una vuelta por los pasillos"** photo mosaic, the meat coming-soon band, the grill calculator, how-ordering-works, story teaser + "en números", sample reviews, map |
 | `nosotros.html` | The story, timeline, **the seasonings' real origin story**, **their real misión/visión/valores**, brands/sourcing |
-| `cortes.html` | The full counter, split into what's online and what's counter-only + the Wagyu section (`#wagyu`) |
+| `cortes.html` | The full counter, split into what's online and what's counter-only + the Wagyu section (`#wagyu`). Each card's photo is a link to the same place as its "Pedir en línea" (`tienda.html?cat=…`, or WhatsApp on the two counter-only cards) — tapping the picture was a dead click |
 | `tienda.html` | The online store: category filters (linkable as `tienda.html?cat=terere` etc.), name search, full catalog, WhatsApp checkout |
 | `guia.html` | "Guía del parrillero": which cut for what, the grill calculator, doneness temperatures, butcher tips |
 | `envios.html` | How ordering works, shipping perks, FAQ (`#faq`) — including **"¿Puedo pedir carne desde la tienda en línea?"** |
@@ -121,11 +121,11 @@ What it adds:
 | **Grids** | Category tiles, product cards, steps, reviews, perks and the photo mosaic come in one after another instead of as a block |
 | **Photos** | Framed photos rise behind a curtain; the home hero cycles through three shots of the shop with a slow zoom and a light sweep |
 | **Product cards** | Tilt in 3D under the cursor with a moving highlight, and a gold frame draws itself on hover |
-| **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears |
+| **Add to cart** | The photo flies into the cart icon, the icon jolts, and a small confirmation appears — full sentence on desktop, a one-line pill (`✓ Agregado · 1 pieza · Ver`) on phones, where the long version used to cover a whole product card |
 | **Closing bands** | Live embers drift up over the red band, and the giant outlined word drifts with the scroll |
 | **Category tiles** | Editorial layout — "Sazonadores" and "Tereré y yerba" run double width — and each photo drifts inside its tile as you scroll |
 | **Store page** | The filter/search bar sticks under the header, and cards animate back in each time you filter or search |
-| **Small stuff** | Reading-progress bar, header that shrinks as you scroll, cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the ribbon speeding up with your scroll, counters that count up |
+| **Small stuff** | Reading-progress bar, header that shrinks with the scroll itself (`main.js` writes a 0→1 `--hp` on the header each frame over the first 72 px, so the height follows your finger instead of playing a fixed .35 s animation the moment you cross a threshold), cursor ring on desktop, buttons that lean toward the pointer and catch a glint, the ribbon speeding up with your scroll, counters that count up |
 
 Accessibility and safety nets are built in: with **"reduce motion"** turned on in the operating system, everything is shown immediately and nothing animates; the curtain and the calculator are drawn by JavaScript, so with JS off they simply never appear rather than leaving anything blank; and content is force-revealed if you land mid-page via an anchor or a reload.
 

@@ -530,16 +530,28 @@
   // ==========================================================
   // 14 · AVISO FLOTANTE (toast)
   // ==========================================================
+  // En celular el aviso tapaba media tarjeta: el nombre largo lo partía
+  // en dos renglones y con el borde de 999px salía un óvalo de 350×67.
+  // Por eso cada aviso trae dos redacciones —`text` y `brief`— y el CSS
+  // elige; en pantalla chica también dura menos, porque la tarjeta ya
+  // dice "✓ Agregado" y la foto vuela al carrito.
+  var NARROW = window.matchMedia ? window.matchMedia("(max-width: 640px)") : null;
   var toast = null, toastTimer = null;
-  function say(html, action) {
+
+  function say(o) {
     if (!toast) {
       toast = doc.createElement("div");
       toast.className = "fx-toast";
       toast.setAttribute("role", "status");
       doc.body.appendChild(toast);
     }
-    toast.innerHTML = '<span class="tk">✓</span><span class="tt">' + html + "</span>" +
-      (action ? '<button type="button">' + action + "</button>" : "");
+    toast.innerHTML = '<span class="tk">✓</span>' +
+      '<span class="tt">' + o.text + "</span>" +
+      '<span class="tb">' + (o.brief || o.text) + "</span>" +
+      (o.action
+        ? '<button type="button"><span class="al">' + o.action + "</span>" +
+          '<span class="ab">' + (o.actionBrief || o.action) + "</span></button>"
+        : "");
     var btn = $("button", toast);
     if (btn) {
       btn.addEventListener("click", function () {
@@ -549,7 +561,7 @@
     }
     requestAnimationFrame(function () { toast.classList.add("on"); });
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(hideToast, 4200);
+    toastTimer = setTimeout(hideToast, NARROW && NARROW.matches ? 2600 : 4200);
   }
   function hideToast() {
     if (toast) toast.classList.remove("on");
@@ -606,8 +618,13 @@
     var qty = card ? $(".qs-value", card) : (sheet ? $(".qs-value", sheet) : null);
     if (!card && !sheet) return;
     flyToCart(src);
-    say("<b>" + (name ? name.textContent : "Producto") + "</b>" +
-        (qty ? " · " + qty.textContent : "") + " en tu pedido", "Ver carrito");
+    say({
+      text: "<b>" + (name ? name.textContent : "Producto") + "</b>" +
+            (qty ? " · " + qty.textContent : "") + " en tu pedido",
+      brief: "<b>Agregado</b>" + (qty ? " · " + qty.textContent : ""),
+      action: "Ver carrito",
+      actionBrief: "Ver"
+    });
   }, true);
 
   // --- Barra de la tienda pegada bajo el encabezado ------------
@@ -826,7 +843,12 @@
       var b = basket();
       b.rows.forEach(function (r) { window.CHStore.add(r.p.id, r.qty); });
       flyToCart(null);
-      say("<b>" + b.rows.length + " productos</b> para " + people + " personas en tu pedido", "Ver carrito");
+      say({
+        text: "<b>" + b.rows.length + " productos</b> para " + people + " personas en tu pedido",
+        brief: "<b>" + b.rows.length + " productos</b> agregados",
+        action: "Ver carrito",
+        actionBrief: "Ver"
+      });
       window.CHStore.open();
     });
 

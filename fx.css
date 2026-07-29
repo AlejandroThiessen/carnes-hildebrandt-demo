@@ -133,14 +133,31 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
 /* ============================================================
    4 · ENCABEZADO QUE SE ENCOGE
    ============================================================ */
-.site-header { transition: background .35s ease, box-shadow .35s ease, height .35s var(--ease-out); }
-.site-header.scrolled { height: 62px; }
-.site-header .brand-mark,
-.site-header .brand-name,
-.site-header .brand-sub { transition: all .35s var(--ease-out); }
-.site-header.scrolled .brand-mark { width: 25px; height: 25px; }
-.site-header.scrolled .brand-name { font-size: 15px; }
-.site-header.scrolled .brand-sub { opacity: 0; height: 0; overflow: hidden; }
+/* `--hp` la escribe main.js en cada cuadro de scroll: 0 arriba del
+   todo, 1 encogido. Nada de aquí lleva `transition` a propósito —el
+   tamaño sigue al dedo, no a un reloj—. Sin JS se queda en 0 y el
+   encabezado simplemente no encoge. */
+.site-header {
+  --hp: 0;
+  height: calc(var(--header-h) - (var(--header-h) - 62px) * var(--hp));
+  transition: background .35s ease, box-shadow .35s ease;
+}
+.site-header .brand-mark {
+  width: calc(30px - 5px * var(--hp));
+  height: calc(30px - 5px * var(--hp));
+}
+/* La bajada de la marca solo existe donde el subtítulo se ve: por
+   debajo de 640 px styles.css ya la deja en 15px y la oculta. */
+@media (min-width: 641px) {
+  .site-header .brand-name { font-size: calc(17px - 2px * var(--hp)); }
+  /* Altura fija de salida: de `auto` a 0 no se puede interpolar y el
+     bloque de la marca saltaba de un cuadro al otro. */
+  .site-header .brand-sub {
+    height: calc(12px * (1 - var(--hp)));
+    opacity: calc(1 - var(--hp) * 1.7);
+    overflow: hidden;
+  }
+}
 /* El menú móvil cuelga del borde real del encabezado, sea cual sea su altura */
 @media (max-width: 940px) {
   .site-nav { top: 100% !important; }
@@ -758,6 +775,8 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
   font-size: 14px;
 }
 .fx-toast .tt { min-width: 0; }
+.fx-toast .tb { display: none; }
+.fx-toast .ab { display: none; }
 .fx-toast b { font-weight: 600; }
 .fx-toast button {
   margin-left: 4px;
@@ -774,8 +793,26 @@ html.fx-loading, html.fx-loading body { overflow: hidden; }
   white-space: nowrap;
 }
 .fx-toast button:hover { color: var(--red-deep); }
+/* Celular: la versión corta, de un solo renglón. El aviso largo se
+   comía una tarjeta entera de la tienda. */
 @media (max-width: 640px) {
-  .fx-toast { bottom: 84px; font-size: 12.5px; }
+  .fx-toast {
+    bottom: 84px;
+    gap: 8px;
+    max-width: calc(100vw - 32px);
+    padding: 7px 12px 7px 8px;
+    font-size: 12.5px;
+    box-shadow: 0 12px 28px -14px rgba(36, 29, 23, .5);
+  }
+  .fx-toast .tk { width: 20px; height: 20px; font-size: 11px; }
+  .fx-toast .tt { display: none; }
+  .fx-toast .tb { display: block; white-space: nowrap; }
+  .fx-toast button { margin-left: 2px; font-size: 11px; }
+  .fx-toast .al { display: none; }
+  .fx-toast .ab { display: inline; }
+  /* Mientras el aviso de maqueta siga en pantalla, el toast se sube
+     por encima: en vertical los dos caben justo en la misma franja. */
+  body:has(.demo-ribbon.is-ready:not(.hidden)) .fx-toast { bottom: 138px; }
 }
 
 /* ============================================================

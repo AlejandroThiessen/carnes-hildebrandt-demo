@@ -20,9 +20,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=13">
-  <link rel="stylesheet" href="store.css?v=13">
-  <link rel="stylesheet" href="fx.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="store.css?v=14">
+  <link rel="stylesheet" href="fx.css?v=14">
 </head>
 <body data-page="cortes">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -94,7 +94,10 @@
         <div class="cards-grid">
           <article class="card card-featured reveal">
             <span class="ribbon">Hecho por la familia</span>
-            <div class="card-media"><img src="fotos/local-sazon-w.jpg" width="1400" height="933" alt="Estante de sazonadores y salsas de la boutique" loading="lazy"></div>
+            <!-- La foto lleva al mismo sitio que "Pedir en línea": tocarla
+                 era un clic muerto. `tabindex="-1"` para no repetir la
+                 parada de teclado —el enlace de abajo ya la tiene—. -->
+            <a class="card-media" href="tienda.html?cat=sazon" tabindex="-1"><img src="fotos/local-sazon-w.jpg" width="1400" height="933" alt="Estante de sazonadores y salsas de la boutique" loading="lazy"></a>
             <div class="card-body">
               <h3>Sazonadores de la casa</h3>
               <p>La Sal Parrillera nació en 2020, después de meses de pruebas: sal Himalaya, pimienta, chile cascabel, ajo y especias. Detrás vinieron el Sweet BBQ Rub, el Brisket Rub y las sales. Se elaboran aquí mismo, en los campos menonitas de Cuauhtémoc.</p>
@@ -103,7 +106,7 @@
             </div>
           </article>
           <article class="card reveal delay-1">
-            <div class="card-media"><img src="fotos/local-yerba-w.jpg" width="1400" height="933" alt="Estante de yerba mate, mates y bombillas" loading="lazy"></div>
+            <a class="card-media" href="tienda.html?cat=terere" tabindex="-1"><img src="fotos/local-yerba-w.jpg" width="1400" height="933" alt="Estante de yerba mate, mates y bombillas" loading="lazy"></a>
             <div class="card-body">
               <h3>Tereré y yerba mate</h3>
               <p>Yerbas argentinas y paraguayas, con palo y compuestas con hierbas, más los mates y bombillas para cebarlas. Un estante entero de la boutique.</p>
@@ -112,7 +115,7 @@
             </div>
           </article>
           <article class="card reveal delay-2">
-            <div class="card-media"><img src="fotos/local-cuchillos-w.jpg" width="1400" height="933" alt="Pared de cuchillos de la boutique" loading="lazy"></div>
+            <a class="card-media" href="tienda.html?cat=cuchillos" tabindex="-1"><img src="fotos/local-cuchillos-w.jpg" width="1400" height="933" alt="Pared de cuchillos de la boutique" loading="lazy"></a>
             <div class="card-body">
               <h3>Cuchillería</h3>
               <p>La pared de cuchillos: hojas de acero damasco y martillado Bull-Edge, la línea profesional Tramontina y juegos de mesa para carne.</p>
@@ -121,7 +124,7 @@
             </div>
           </article>
           <article class="card reveal">
-            <div class="card-media"><img src="fotos/local-tablas-w.jpg" width="1400" height="933" alt="Tablas de madera HOLZ grabadas con la marca" loading="lazy"></div>
+            <a class="card-media" href="tienda.html?cat=asado" tabindex="-1"><img src="fotos/local-tablas-w.jpg" width="1400" height="933" alt="Tablas de madera HOLZ grabadas con la marca" loading="lazy"></a>
             <div class="card-body">
               <h3>Tablas y mandiles</h3>
               <p>Tablas de madera maciza HOLZ grabadas con la marca, mandiles de piel con portacuchillos —en siete colores— y molcajetes de piedra volcánica.</p>
@@ -130,7 +133,7 @@
             </div>
           </article>
           <article class="card reveal delay-1">
-            <div class="card-media"><img src="fotos/local-carbon-w.jpg" width="1400" height="933" alt="Estante de carbón y leña para ahumar" loading="lazy"></div>
+            <a class="card-media" href="https://wa.me/526251507388?text=Hola%2C%20%C2%BFqu%C3%A9%20tienen%20para%20la%20parrilla%20en%20el%20mostrador%3F" target="_blank" rel="noopener" tabindex="-1"><img src="fotos/local-carbon-w.jpg" width="1400" height="933" alt="Estante de carbón y leña para ahumar" loading="lazy"></a>
             <div class="card-body">
               <h3>Todo para la parrilla</h3>
               <p>Carbón, leña para ahumar, hierro fundido Lodge, kits de asador y el encendedor turbo que te ahorra media hora de soplar.</p>
@@ -139,7 +142,7 @@
             </div>
           </article>
           <article class="card reveal delay-2">
-            <div class="card-media"><img src="fotos/local-salsas-w.jpg" width="1400" height="933" alt="Estante de salsas y sazonadores importados" loading="lazy"></div>
+            <a class="card-media" href="https://wa.me/526251507388?text=Hola%2C%20%C2%BFqu%C3%A9%20salsas%20tienen%20en%20el%20mostrador%3F" target="_blank" rel="noopener" tabindex="-1"><img src="fotos/local-salsas-w.jpg" width="1400" height="933" alt="Estante de salsas y sazonadores importados" loading="lazy"></a>
             <div class="card-body">
               <h3>Salsas y marcas invitadas</h3>
               <p>Además de lo nuestro, el mostrador tiene salsas BBQ, rubs y encurtidos de otras marcas que probamos antes de subirlos al estante.</p>
@@ -335,8 +338,8 @@
     <button id="demo-ribbon-close" aria-label="Cerrar aviso">×</button>
   </div>
 
-  <script src="main.js?v=13"></script>
-  <script src="store.js?v=13"></script>
-  <script src="fx.js?v=13"></script>
+  <script src="main.js?v=14"></script>
+  <script src="store.js?v=14"></script>
+  <script src="fx.js?v=14"></script>
 </body>
 </html>
