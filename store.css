@@ -49,10 +49,16 @@
    deja animar el plegado sin inventarle un alto fijo. */
 .store-toolbar {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto;
   margin-bottom: 14px;
-  transition: grid-template-rows .38s var(--ease-out);
 }
+/* El anclado de scroll del navegador está para tapar saltos que uno no
+   pidió; aquí la barra encoge a propósito y cuadro a cuadro, y el
+   navegador respondía corriendo el scroll para "arreglarlo" —lo que
+   movía el propio valor del que depende el plegado—. Apagado en la
+   tienda: las fotos ya reservan su hueco con `width`/`height`, así que
+   no queda ningún salto real que compensar. */
+body[data-page="tienda"] { overflow-anchor: none; }
 .store-toolbar-body {
   display: flex;
   flex-wrap: wrap;
@@ -483,26 +489,29 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+  /* `--tp` (0 abierta · 1 plegada) y `--tbh` (alto abierto, medido) los
+     escribe store.js. Sin `transition` a propósito: el plegado sigue al
+     scroll cuadro a cuadro, y cuando se toca el botón es store.js quien
+     anima el número. `--tbh` incluye los 12 px de aire de arriba, por eso
+     el relleno también baja: con `border-box`, un `height: 0` con relleno
+     fijo deja una franja de 12 px sin cerrar. */
+  .store-toolbar { --tp: 0; }
   .store-toolbar-toggle .stt-caret {
     flex: 0 0 auto;
     width: 18px;
     height: 18px;
     color: var(--text-mut);
-    transition: transform .38s var(--ease-out);
+    transform: rotate(calc(-90deg * var(--tp)));
   }
-  .store-toolbar-body {
+  /* `js-fold` la pone store.js una vez medido: sin JS la barra se queda
+     abierta y entera, que es lo que debe pasar. */
+  .store-toolbar-body { padding-top: 12px; }
+  .store-toolbar.js-fold .store-toolbar-body {
     overflow: hidden;
-    padding-top: 12px;
-    opacity: 1;
-    transition: opacity .28s ease, padding-top .38s var(--ease-out);
+    height: calc(var(--tbh) * (1 - var(--tp)));
+    padding-top: calc(12px * (1 - var(--tp)));
+    opacity: calc(1 - var(--tp) * 1.35);
   }
-  .store-toolbar.collapsed { grid-template-rows: auto 0fr; }
-  .store-toolbar.collapsed .store-toolbar-body {
-    opacity: 0;
-    padding-top: 0;
-    pointer-events: none;
-  }
-  .store-toolbar.collapsed .stt-caret { transform: rotate(-90deg); }
   .store-toolbar.collapsed .store-toolbar-toggle {
     border-color: rgba(169, 127, 69, .5);
     background: var(--bone);
@@ -510,8 +519,11 @@
   /* Los filtros ya no compiten con la búsqueda por el ancho */
   .store-toolbar-body .store-search { max-width: none; }
 }
+/* Con "reducir movimiento" el botón cambia de estado sin animar: eso lo
+   decide store.js, que es quien mueve el número. Aquí solo queda el
+   realce del propio botón. */
 @media (prefers-reduced-motion: reduce) {
-  .store-toolbar, .store-toolbar-body, .stt-caret { transition: none; }
+  .store-toolbar-toggle { transition: none; }
 }
 
 /* ============================================================

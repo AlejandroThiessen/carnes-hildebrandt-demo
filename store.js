@@ -503,9 +503,55 @@
     // así el plegado sigue vivo aunque se borre la capa de efectos.
     bar.classList.add("is-sticky");
 
-    function setOpen(open) {
+    // --- Plegado continuo ---------------------------------------
+    // `tp` va de 0 (abierta) a 1 (plegada) y lo escribe el scroll en
+    // cada cuadro. Antes era una clase con una transición sobre
+    // `grid-template-rows: auto 1fr → auto 0fr`, que Chrome no
+    // interpola: los 181 px del cuerpo se iban enteros en un cuadro.
+    // Y el umbral se leía del rect de la barra —un valor que el propio
+    // plegado mueve—, así que bajando entraba en bucle: plegar la
+    // corría, el observador lo leía como "ya no está pegada", la
+    // reabría, y vuelta a empezar cuadro tras cuadro.
+    var CALM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var FOLD = 260;      // px de scroll en los que se pliega
+    var tp = 0;
+    var anim = 0;        // animación en curso (al tocar el botón)
+    var manual = false;  // mandó el usuario, no el scroll
+    var manualOpen = false;
+
+    function paint(v) {
+      tp = v;
+      bar.style.setProperty("--tp", v.toFixed(4));
+      var open = v < .5;
       bar.classList.toggle("collapsed", !open);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    // Alto real del cuerpo abierto, para que el `calc` del CSS tenga
+    // de dónde bajar. Cambia con el ancho (los chips se reacomodan) y
+    // con las tipografías, así que se vuelve a medir cuando toca.
+    function measure() {
+      if (!isMobile()) return;
+      bar.classList.remove("js-fold");
+      var h = body.offsetHeight;
+      bar.style.setProperty("--tbh", h + "px");
+      bar.classList.add("js-fold");
+    }
+
+    function animateTo(target) {
+      if (anim) { cancelAnimationFrame(anim); anim = 0; }
+      if (CALM) { paint(target); return; }
+      var from = tp, t0 = 0;
+      anim = requestAnimationFrame(function step(now) {
+        if (!t0) t0 = now;
+        var k = (now - t0) / 340;
+        if (k >= 1) { anim = 0; paint(target); return; }
+        // easeInOut, no easeOut: arrancando de golpe se vuelve a ver el
+        // tirón que estamos quitando —sale y entra despacio.
+        var e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        paint(from + (target - from) * e);
+        anim = requestAnimationFrame(step);
+      });
     }
 
     // El renglón resume en qué está parada la tienda
@@ -518,12 +564,12 @@
     // Si la abrió el usuario, se queda abierta: sin esto el primer
     // scroll —hasta el mínimo que hace el navegador al enfocar el
     // botón— volvía a plegarla en la cara de quien acababa de abrirla.
-    var userOpened = false;
-
+    // El mando se devuelve al scroll cuando este pide lo mismo que el
+    // usuario dejó puesto, así que el relevo nunca da un tirón.
     btn.addEventListener("click", function () {
-      var open = bar.classList.contains("collapsed");
-      setOpen(open);
-      userOpened = open;
+      manualOpen = tp > .5;
+      manual = true;
+      animateTo(manualOpen ? 0 : 1);
     });
 
     // Dónde empieza la barra en el documento, ignorando lo que el
@@ -538,57 +584,71 @@
       return host ? host.getBoundingClientRect().top + window.pageYOffset : 0;
     }
 
-    // Al elegir categoría: bajar a los resultados y quedarse plegada.
-    // El destino deja la barra justo en su punto de pegado (62 px), y
-    // de paso eso evita que el observador de scroll la vuelva a abrir.
-    // Mientras corre el desplazamiento suave que dispara `pick`, el
-    // observador de abajo no debe reabrir la barra: el destino la deja
-    // justo en el borde de pegado y cualquier cuadro intermedio puede
-    // leerse como "ya no está pegada".
-    var lockUntil = 0;
+    // Cuánto le toca estar plegada según dónde va el scroll. Se mide
+    // contra `layoutTop`, que no se mueve cuando la barra encoge: por
+    // eso el plegado no puede realimentarse a sí mismo.
+    function fromScroll() {
+      var stick = Math.max(layoutTop() - 62, 0);   // scroll donde queda pegada
+      var p = (window.pageYOffset - (stick - FOLD)) / FOLD;
+      return p < 0 ? 0 : p > 1 ? 1 : p;
+    }
 
+    // Al elegir categoría: bajar a los resultados y quedarse plegada.
+    // El destino deja la barra justo en su punto de pegado (62 px), o
+    // sea tp = 1, así que al acabar la animación el scroll ya está de
+    // acuerdo y toma el relevo sin saltos.
     function pick() {
       sync();
       if (!isMobile()) return;
-      setOpen(false);
-      userOpened = false;
-      lockUntil = Date.now() + 900;
+      manual = false;
+      animateTo(1);
       var target = Math.max(layoutTop() - 62, 0);
       if (Math.abs(window.pageYOffset - target) > 4) {
         window.scrollTo({ top: target, behavior: "smooth" });
       }
     }
 
-    // Se pliega sola en cuanto la barra se pega al encabezado, y se
-    // vuelve a abrir al regresar arriba. `passive` para no frenar el
-    // desplazamiento.
+    // Se pliega y se abre siguiendo al dedo. `passive` para no frenar
+    // el desplazamiento.
     var ticking = false;
     window.addEventListener("scroll", function () {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
         ticking = false;
-        if (!isMobile() || Date.now() < lockUntil) return;
-        // Dos umbrales a propósito: si se plegara y se abriera en el
-        // mismo píxel, la barra parpadearía al quedar justo en el borde.
-        var top = bar.getBoundingClientRect().top;
-        if (top > 96) {
-          // De vuelta arriba: la barra se muestra entera otra vez
-          userOpened = false;
-          if (bar.classList.contains("collapsed")) setOpen(true);
-        } else if (top <= 66 && !bar.classList.contains("collapsed")) {
-          if (!userOpened && !body.contains(document.activeElement)) setOpen(false);
+        if (!isMobile() || anim) return;
+        var t = fromScroll();
+        if (manual) {
+          // Se le devuelve el mando al scroll solo cuando pide lo que
+          // el usuario ya tiene en pantalla; en medio, manda el usuario.
+          if (manualOpen ? t <= tp : t >= tp) manual = false;
+          else return;
         }
+        // Con foco dentro (el buscador abierto) no se pliega en la cara
+        if (t > tp && body.contains(document.activeElement)) return;
+        paint(t);
       });
     }, { passive: true });
 
     // Al pasar a escritorio la barra siempre queda abierta
     window.matchMedia(MOBILE).addEventListener("change", function (e) {
-      if (!e.matches) setOpen(true);
+      manual = false;
+      if (e.matches) { measure(); paint(fromScroll()); }
+      else paint(0);
     });
 
+    var reflow;
+    window.addEventListener("resize", function () {
+      clearTimeout(reflow);
+      reflow = setTimeout(function () { measure(); }, 150);
+    }, { passive: true });
+    // Las tipografías llegan tarde y reacomodan los chips
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
     sync();
-    return { pick: pick, sync: sync };
+    measure();
+    paint(fromScroll());
+    return { pick: pick, sync: sync, measure: measure };
   })();
 
   if (searchEl) {

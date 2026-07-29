@@ -148,7 +148,14 @@ The cart button in the header works on **every** page; the full catalog lives in
 
 `sazon` · `terere` · `cuchillos` · `asado` · `carnes` (coming soon)
 
-**The filter bar folds up on phones.** Six chips plus the search box ate about a third of a phone screen, so on `≤780px` the bar collapses to one line showing the active category as soon as it sticks under the header; tapping it reopens it, and picking a category drops you at the top of the results with the bar folded again. It lives in `store.js` (the `toolbar` block) and `store.css`, **not** in `fx.js` — it's store navigation, so it has to survive deleting the effects layer. On desktop the toggle is hidden and the bar behaves exactly as before.
+**The filter bar folds up on phones.** Six chips plus the search box ate about a third of a phone screen, so on `≤780px` the bar folds down to one line showing the active category; tapping it reopens it, and picking a category drops you at the top of the results with the bar folded again. It lives in `store.js` (the `toolbar` block) and `store.css`, **not** in `fx.js` — it's store navigation, so it has to survive deleting the effects layer. On desktop the toggle is hidden and the bar behaves exactly as before.
+
+The fold is **scroll-linked**: `store.js` keeps a `--tp` from 0 (open) to 1 (folded) and writes it every frame across the last 260 px before the bar reaches its sticky position, so the filters close under your finger and reopen the same way going back up. Tapping the toggle hands control to a 340 ms ease-in-out on the same number; the scroll only takes over again once it asks for what you already have on screen, so the handover never jumps. Two things it replaced:
+
+- a `transition` on `grid-template-rows: auto 1fr → auto 0fr`, which **Chrome does not interpolate** — all 181 px of the body vanished in a single frame;
+- a threshold read off `bar.getBoundingClientRect().top`, a value the fold itself moves. Folding shifted the bar, the next frame read the shift as "not stuck any more" and reopened it, and it ping-ponged open/closed frame after frame all the way down.
+
+`body[data-page="tienda"]` also turns off `overflow-anchor`. Scroll anchoring exists to hide layout shifts you didn't ask for; here the bar shrinks deliberately, and the browser kept nudging the scroll to compensate — which moved the very value the fold reads. The store's images all carry `width`/`height`, so there's no genuine shift left for it to fix.
 
 **Product fields** (`PRODUCTS` in `store.js`):
 
